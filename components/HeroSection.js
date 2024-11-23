@@ -4,24 +4,16 @@ import {
   Heading,
   Text,
   Button,
-  Image,
-  IconButton,
 } from "@chakra-ui/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF } from "@react-three/drei";
+
+const LamborghiniModel = () => {
+  const { scene } = useGLTF("/lamborghini.glb");
+  return <primitive object={scene} scale={2} position={[1, -1.5, -1]} />;
+};
 
 const HeroSection = () => {
-  const images = ["/car1.png", "/car2.png"];
-  const [currentImage, setCurrentImage] = useState(0);
-
-  const handleNext = () => {
-    setCurrentImage((prev) => (prev + 1) % images.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
-  };
-
   return (
     <Flex
       direction={{ base: "column", md: "row" }}
@@ -31,10 +23,9 @@ const HeroSection = () => {
       align="center"
       justify="space-between"
       pl="80px" // Accounts for sidebar width
-      pr="2rem"
     >
       {/* Left Content */}
-      <Box flex="1" textAlign={{ base: "center", md: "left" }} p="2rem">
+      <Box flex="1" textAlign={{ base: "center", md: "left" }} p="1rem" width="30%">
         <Heading
           fontSize={{ base: "4xl", md: "7xl" }}
           textTransform="uppercase"
@@ -70,54 +61,20 @@ const HeroSection = () => {
       </Box>
 
       {/* Right Content */}
-      <Box flex="1" position="relative" textAlign="center">
-        <Image
-          src={images[currentImage]}
-          alt="Car"
-          boxSize="80%"
-          mx="auto"
-          filter="drop-shadow(0px 0px 20px green)"
-        />
-        <Flex
-          position="absolute"
-          bottom="10%"
-          left="50%"
-          transform="translateX(-50%)"
-          align="center"
-          gap="2rem"
+      <Box flex="1" position="relative" textAlign="center" height="100%" width="70%">
+        <Canvas
+          style={{
+            width: "90%",
+            height: "90%",
+            zIndex: 10
+          }}
+          camera={{ position: [4, 2, 8], fov: 50 }} // Adjusted camera for side view
         >
-          <IconButton
-            icon={<ChevronLeftIcon />}
-            aria-label="Previous"
-            border="2px solid white"
-            borderRadius="50%"
-            bg="transparent"
-            color="white"
-            _hover={{
-              bg: "rgba(0, 255, 0, 0.2)",
-              transform: "scale(1.1)",
-              transition: "0.3s",
-            }}
-            onClick={handlePrev}
-          />
-          <Text fontWeight="bold" textTransform="uppercase">
-            Location
-          </Text>
-          <IconButton
-            icon={<ChevronRightIcon />}
-            aria-label="Next"
-            border="2px solid white"
-            borderRadius="50%"
-            bg="transparent"
-            color="white"
-            _hover={{
-              bg: "rgba(0, 255, 0, 0.2)",
-              transform: "scale(1.1)",
-              transition: "0.3s",
-            }}
-            onClick={handleNext}
-          />
-        </Flex>
+          <OrbitControls />
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[10, 10, 5]} intensity={1} />
+          <LamborghiniModel />
+        </Canvas>
       </Box>
     </Flex>
   );
