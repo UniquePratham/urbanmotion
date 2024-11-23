@@ -1,33 +1,42 @@
-import { Box, Flex, Link, Button, Text } from "@chakra-ui/react";
+import { Flex, Box, Link, Image, Text } from "@chakra-ui/react";
 
 const Navbar = () => {
   return (
     <Flex
       as="nav"
-      justifyContent="space-between"
+      position="fixed"
+      top="0"
+      left="0"
+      w="100%"
+      bg="rgba(0, 0, 0, 0.8)"
+      backdropFilter="blur(15px)"
+      zIndex="10"
       align="center"
-      padding="1.5rem"
-      bg="gray.800"
-      color="white"
-      boxShadow="md"
+      justify="space-between"
+      p="1.5rem 2rem"
     >
-      <Text fontSize="xl" fontWeight="bold" color="green.300">
-        rent
-      </Text>
-      <Flex gap="4">
-        <Link href="#" _hover={{ color: "green.300" }}>
-          Home
-        </Link>
-        <Link href="#" _hover={{ color: "green.300" }}>
-          Cars
-        </Link>
-        <Link href="#" _hover={{ color: "green.300" }}>
-          Our Services
-        </Link>
+      <Image src="/hori.png" alt="Logo" h="40px" />
+      <Flex gap="2.5rem">
+        {["Home", "Service Tracking", "Gallery", "About", "Contact Us"].map(
+          (item) => (
+            <Link
+              key={item}
+              href={`/${item.toLowerCase().replace(" ", "-")}`}
+              fontWeight="bold"
+              fontSize="15px"
+              textTransform="uppercase"
+              color="white"
+              _hover={{
+                color: "green.300",
+                transform: "scale(1.1)",
+                transition: "0.15s",
+              }}
+            >
+              {item}
+            </Link>
+          )
+        )}
       </Flex>
-      <Button bg="green.400" color="white" _hover={{ bg: "green.500" }}>
-        Contact Us
-      </Button>
     </Flex>
   );
 };

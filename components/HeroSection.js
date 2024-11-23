@@ -5,90 +5,122 @@ import {
   Text,
   Button,
   Image,
-  Input,
-  Stack,
+  IconButton,
 } from "@chakra-ui/react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { useState } from "react";
 
 const HeroSection = () => {
+  const images = ["/car1.png", "/car2.png"];
+  const [currentImage, setCurrentImage] = useState(0);
+
+  const handleNext = () => {
+    setCurrentImage((prev) => (prev + 1) % images.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
+  };
+
   return (
     <Flex
-      direction="column"
-      bg="gray.900"
+      direction={{ base: "column", md: "row" }}
+      height="100vh"
+      bg="black"
       color="white"
-      padding="2rem"
       align="center"
-      justify="center"
-      textAlign="center"
+      justify="space-between"
+      pl="80px" // Accounts for sidebar width
+      pr="2rem"
     >
-      {/* Top Section */}
-      <Flex
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        width="100%"
-        maxW="1200px"
-        mb="4"
-      >
-        <Box textAlign="left">
-          <Heading size="lg" mb="2">
-            100+
-          </Heading>
-          <Text>Types of machines</Text>
-        </Box>
-        <Image
-          src="/car.jpg" // Replace with your image path
-          alt="Car"
-          borderRadius="lg"
-          width="50%"
-        />
-        <Box textAlign="left">
-          <Heading size="lg" mb="2">
-            20k+
-          </Heading>
-          <Text>Clients served</Text>
-        </Box>
-      </Flex>
-
-      {/* Main Content */}
-      <Heading size="2xl" mb="4" fontWeight="bold">
-        Rent the best cars
-      </Heading>
-      <Text maxW="700px" mb="6">
-        We want you to have a stress-free rental experience, so we make it easy
-        to hire a car by providing simple search tools, customer reviews, and
-        plenty of pick-up locations across the city.
-      </Text>
-      <Button
-        bg="green.400"
-        color="white"
-        _hover={{ bg: "green.500" }}
-        size="lg"
-        mb="6"
-      >
-        Open Catalog
-      </Button>
-
-      {/* Search Section */}
-      <Stack
-        direction="row"
-        bg="gray.800"
-        borderRadius="lg"
-        padding="1rem"
-        spacing="4"
-        maxW="800px"
-        width="100%"
-        align="center"
-      >
-        <Input placeholder="Choose a location" bg="gray.700" color="white" />
-        <Input placeholder="Pick-up date" bg="gray.700" color="white" />
-        <Input placeholder="Return date" bg="gray.700" color="white" />
-        <Button bg="green.400" color="white" _hover={{ bg: "green.500" }}>
-          Search
+      {/* Left Content */}
+      <Box flex="1" textAlign={{ base: "center", md: "left" }} p="2rem">
+        <Heading
+          fontSize={{ base: "4xl", md: "7xl" }}
+          textTransform="uppercase"
+          mb="6"
+        >
+          <Text as="span" color="white">
+            Easiest Car{" "}
+          </Text>
+          <Text as="span" color="#00db00">
+            Rentals
+          </Text>
+        </Heading>
+        <Text fontSize="2xl" textTransform="uppercase" color="#00db00" mb="6">
+          Find the Best Car For Rent Today
+        </Text>
+        <Text fontSize="lg" mb="6" maxW="400px" lineHeight="1.8">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </Text>
+        <Button
+          bgGradient="linear(to-r, #00db00, green.600)"
+          color="white"
+          _hover={{
+            bgGradient: "linear(to-r, #00db00, green.500)",
+            transform: "scale(1.1)",
+            transition: "0.3s",
+          }}
+          size="lg"
+          textTransform="uppercase"
+        >
+          Book Now
         </Button>
-      </Stack>
+      </Box>
+
+      {/* Right Content */}
+      <Box flex="1" position="relative" textAlign="center">
+        <Image
+          src={images[currentImage]}
+          alt="Car"
+          boxSize="80%"
+          mx="auto"
+          filter="drop-shadow(0px 0px 20px green)"
+        />
+        <Flex
+          position="absolute"
+          bottom="10%"
+          left="50%"
+          transform="translateX(-50%)"
+          align="center"
+          gap="2rem"
+        >
+          <IconButton
+            icon={<ChevronLeftIcon />}
+            aria-label="Previous"
+            border="2px solid white"
+            borderRadius="50%"
+            bg="transparent"
+            color="white"
+            _hover={{
+              bg: "rgba(0, 255, 0, 0.2)",
+              transform: "scale(1.1)",
+              transition: "0.3s",
+            }}
+            onClick={handlePrev}
+          />
+          <Text fontWeight="bold" textTransform="uppercase">
+            Location
+          </Text>
+          <IconButton
+            icon={<ChevronRightIcon />}
+            aria-label="Next"
+            border="2px solid white"
+            borderRadius="50%"
+            bg="transparent"
+            color="white"
+            _hover={{
+              bg: "rgba(0, 255, 0, 0.2)",
+              transform: "scale(1.1)",
+              transition: "0.3s",
+            }}
+            onClick={handleNext}
+          />
+        </Flex>
+      </Box>
     </Flex>
   );
 };
 
 export default HeroSection;
-    
