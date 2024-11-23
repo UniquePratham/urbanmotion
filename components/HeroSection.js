@@ -1,16 +1,28 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  Button,
-} from "@chakra-ui/react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
+import { Box, Flex, Heading, Text, Button } from "@chakra-ui/react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useGLTF, OrbitControls } from "@react-three/drei";
+import { useRef } from "react";
 
+// Lamborghini model with motion
 const LamborghiniModel = () => {
   const { scene } = useGLTF("/lamborghini.glb");
-  return <primitive object={scene} scale={2} position={[1, -1.5, -1]} />;
+  const modelRef = useRef();
+
+  // Adding motion to the model (rotation)
+  useFrame(() => {
+    if (modelRef.current) {
+      modelRef.current.rotation.y += 0.001; // Adjust rotation speed
+    }
+  });
+
+  return (
+    <primitive
+      ref={modelRef}
+      object={scene}
+      scale={2}
+      position={[1, -1.5, -1]}
+    />
+  );
 };
 
 const HeroSection = () => {
@@ -25,7 +37,12 @@ const HeroSection = () => {
       pl="80px" // Accounts for sidebar width
     >
       {/* Left Content */}
-      <Box flex="1" textAlign={{ base: "center", md: "left" }} p="1rem" width="30%">
+      <Box
+        flex="1"
+        textAlign={{ base: "center", md: "left" }}
+        p="1rem"
+        width="30%"
+      >
         <Heading
           fontSize={{ base: "4xl", md: "7xl" }}
           textTransform="uppercase"
@@ -42,8 +59,8 @@ const HeroSection = () => {
           Find the Best Car For Rent Today
         </Text>
         <Text fontSize="lg" mb="6" maxW="400px" lineHeight="1.8">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Experience unmatched convenience and luxury with our premium car
+          rental services. Book now and hit the road in style.
         </Text>
         <Button
           bgGradient="linear(to-r, #00db00, green.600)"
@@ -61,16 +78,23 @@ const HeroSection = () => {
       </Box>
 
       {/* Right Content */}
-      <Box flex="1" position="relative" textAlign="center" height="100%" width="70%">
+      <Box
+        flex="2"
+        position="relative"
+        textAlign="center"
+        height="100%"
+        width="70%"
+      >
         <Canvas
           style={{
-            width: "90%",
-            height: "90%",
-            zIndex: 10
+            width: "100%",
+            height: "100%",
+            zIndex: 10,
           }}
           camera={{ position: [4, 2, 8], fov: 50 }} // Adjusted camera for side view
+          gl={{ preserveDrawingBuffer: true }} // To maintain smooth rendering
         >
-          <OrbitControls />
+          <OrbitControls enablePan={false} enableZoom={false} />
           <ambientLight intensity={0.5} />
           <directionalLight position={[10, 10, 5]} intensity={1} />
           <LamborghiniModel />
