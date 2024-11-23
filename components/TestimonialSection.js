@@ -8,10 +8,22 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+
+const MotionBox = motion(Box);
+const MotionImage = motion(Image);
 
 const TestimonialSection = () => {
+  // Create a reference for the component
+  const ref = useRef(null);
+
+  // Trigger animation when the component comes into view
+  const isInView = useInView(ref, { once: true, margin: "-50px" }); // Adds an offset of 50px
+
   return (
     <Flex
+      ref={ref} // Attach ref to the parent container
       bg="#000" // Dark background
       color="white"
       p={{ base: "2rem", md: "4rem" }}
@@ -23,12 +35,15 @@ const TestimonialSection = () => {
       overflow="hidden"
     >
       {/* Left Content */}
-      <Box
+      <MotionBox
         flex="1"
         p={{ base: "1rem", md: "3rem" }}
         textAlign={{ base: "center", md: "left" }}
         zIndex="10" // Ensure the text is above the images
         maxWidth={{ base: "100%", md: "50%" }}
+        initial={{ opacity: 0, x: -50 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}} // Animate only when in view
+        transition={{ duration: 1 }}
       >
         <Heading
           fontSize={{ base: "3xl", md: "5xl" }} // Larger heading
@@ -70,7 +85,7 @@ const TestimonialSection = () => {
           ))}
         </Flex>
         <Avatar src="/profile.png" name="Adam Brian" />
-      </Box>
+      </MotionBox>
 
       {/* Right Content */}
       <Box
@@ -79,32 +94,41 @@ const TestimonialSection = () => {
         textAlign="center"
         maxWidth={{ base: "100%", md: "50%" }}
         zIndex="0"
+        height="100%" // Ensure this box takes up the full height
       >
         {/* Image 1 */}
-        <Image
+        <MotionImage
           src="/image1.png"
           alt="Car 1"
-          width={{ base: "90%", md: "85%" }}
-          height="auto"
+          width={{ base: "80%", md: "50%" }} // Adjust the width for responsiveness
+          height={{ base: "25rem", md: "33.5rem" }}
           objectFit="cover"
           position="absolute"
-          left="50%"
-          transform="translateX(-50%)"
-          top="10%"
+          left="0%" // Positioning to the left
+          top="5%" // Distance from the top
           boxShadow="lg"
+          zIndex="2" // Ensures this is above the second image
+          margin={4}
+          initial={{ opacity: 0, x: -100 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}} // Animate only when in view
+          transition={{ duration: 1.2 }}
         />
         {/* Image 2 */}
-        <Image
+        <MotionImage
           src="/image2.png"
           alt="Car 2"
-          width={{ base: "90%", md: "85%" }}
-          height="auto"
+          width={{ base: "80%", md: "50%" }} // Adjust the width for responsiveness
+          height={{ base: "25rem", md: "33.5rem" }}
           objectFit="cover"
           position="absolute"
-          left="50%"
-          transform="translateX(-50%)"
-          top="40%"
+          right="-5%" // Slightly shifted to the right
+          bottom="5%" // Lower positioning
           boxShadow="lg"
+          zIndex="1" // Positioned behind the first image
+          margin={4}
+          initial={{ opacity: 0, x: 100 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}} // Animate only when in view
+          transition={{ duration: 1.4 }}
         />
       </Box>
     </Flex>
