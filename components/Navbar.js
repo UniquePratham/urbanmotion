@@ -7,7 +7,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { FaBars, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaUserCircle, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 
 const Navbar = () => {
@@ -26,7 +26,7 @@ const Navbar = () => {
       w="100%"
       bg="rgba(0, 0, 0, 0.8)"
       backdropFilter="blur(15px)"
-      zIndex="10"
+      zIndex="11"
       align="center"
       justify="space-between"
       p="1.5rem 2rem"
@@ -75,7 +75,7 @@ const Navbar = () => {
       {/* Hamburger Icon for Mobile */}
       <IconButton
         aria-label="Menu"
-        icon={<FaBars />}
+        icon={isOpen ? <FaTimes /> : <FaBars />} // Toggle between FaBars and FaTimes
         display={{ base: "flex", md: "none" }}
         bg="transparent"
         color="white"
@@ -84,7 +84,10 @@ const Navbar = () => {
           color: "green.300",
         }}
         onClick={toggleMenu}
+        transition="transform 0.2s" // Smooth animation
+        transform={isOpen ? "rotate(90deg)" : "rotate(0deg)"} // Optional rotation effect
       />
+
 
       {/* Mobile Menu */}
       {isOpen && (
@@ -132,7 +135,7 @@ const Navbar = () => {
             }}
             onClick={() => setIsOpen(false)} // Close menu on click
           >
-            <FaUserCircle style={{ width:"15px", marginRight: "0.5rem" }} />
+            <FaUserCircle style={{ width: "15px", marginRight: "0.5rem" }} />
             Login
           </Link>
         </VStack>
