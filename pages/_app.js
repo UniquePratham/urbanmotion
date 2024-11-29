@@ -8,7 +8,7 @@ export default function App({ Component, pageProps }) {
   return (
     <ChakraProvider theme={theme}>
       <Head>
-        <title>UrbanMotion - Your Car Solution</title>
+        <title>UrbanMotion | Rent Your Dream Car</title>
         <meta
           name="description"
           content="UrbanMotion - Your Car Solution"
