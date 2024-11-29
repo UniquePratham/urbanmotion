@@ -19,7 +19,7 @@ const cars = [
     id: 1,
     image: "/car1.png",
     name: "Hyundai Solaris",
-    description: "4 seated car for you",
+    description: "4-seater car for you",
     price: 229,
     originalPrice: 300,
     rating: 4.5,
@@ -28,52 +28,50 @@ const cars = [
     id: 2,
     image: "/car2.png",
     name: "Hyundai Solaris",
-    description: "4 seated car for you",
-    price: 229,
-    originalPrice: 300,
+    description: "Compact and stylish",
+    price: 249,
+    originalPrice: 320,
     rating: 4.2,
   },
   {
     id: 3,
     image: "/car3.png",
-    name: "Hyundai Solaris",
-    description: "4 seated car for you",
-    price: 229,
-    originalPrice: 300,
+    name: "Hyundai Tucson",
+    description: "Luxury SUV for adventure",
+    price: 299,
+    originalPrice: 400,
     rating: 4.7,
   },
   {
     id: 4,
-    image: "/car3.png",
-    name: "Hyundai Solaris",
-    description: "4 seated car for you",
-    price: 229,
-    originalPrice: 300,
-    rating: 4.7,
-  },
-  {
-    id: 5,
-    image: "/car3.png",
-    name: "Hyundai Solaris",
-    description: "4 seated car for you",
-    price: 229,
-    originalPrice: 300,
-    rating: 4.7,
+    image: "/car4.png",
+    name: "Toyota Corolla",
+    description: "Reliable sedan for city life",
+    price: 189,
+    originalPrice: 250,
+    rating: 4.8,
   },
 ];
 
 const BookCar = () => {
   return (
-    <Box bg="#10141e" color="white" ml={{ md: "60px" }} py="8" px="6">
-      <Box textAlign="center" mb="6">
-        <Heading as="h1" fontSize="4xl" fontWeight="bold" mb="8">
-          Book your{" "}
+    <Box bg="#0f131c" color="#10141e" py="12" px={{ base: "4", lg: "12" }}>
+      {/* Heading and Search Section */}
+      <Box textAlign="center" mb="8">
+        <Heading
+          as="h1"
+          color="white"
+          fontSize={{ base: "3xl", md: "4xl" }}
+          fontWeight="bold"
+          mb="6"
+        >
+          Book Your{" "}
           <Text as="span" color="#00db00">
-            car today!
+            Car Today!
           </Text>
         </Heading>
-        <Flex justify="center" align="center" mb="6">
-          <InputGroup w="700px">
+        <Flex justify="center" align="center" mb="8">
+          <InputGroup maxW="700px" w="100%">
             <InputLeftElement pointerEvents="none">
               <FaSearch color="gray.500" />
             </InputLeftElement>
@@ -90,26 +88,27 @@ const BookCar = () => {
         </Flex>
       </Box>
 
-      <Flex justify="center" gap="4" wrap="wrap" mb="8">
+      {/* Filters Section */}
+      <Flex justify="center" gap="4" wrap="wrap" mb="8" mx="auto" maxW="1000px">
         <Select
           placeholder="Select Brand"
           bg="white"
           color="gray.800"
-          w="200px"
+          w={{ base: "100%", md: "200px" }}
           _hover={{ borderColor: "#00db00" }}
         />
         <Select
           placeholder="Select Size"
           bg="white"
           color="gray.800"
-          w="200px"
+          w={{ base: "100%", md: "200px" }}
           _hover={{ borderColor: "#00db00" }}
         />
         <Select
           placeholder="Price Range"
           bg="white"
           color="gray.800"
-          w="200px"
+          w={{ base: "100%", md: "200px" }}
           _hover={{ borderColor: "#00db00" }}
         />
         <Button bg="#00db00" color="white" _hover={{ bg: "cyan.400" }}>
@@ -117,28 +116,31 @@ const BookCar = () => {
         </Button>
       </Flex>
 
+      {/* Cars Grid Section */}
       <SimpleGrid
-        columns={{ base: 1, md: 2, lg: 4 }}
-        spacing="0"
+        columns={{ base: 1, sm: 2, lg: 3 }}
+        spacing="6"
         mx="auto"
-        maxWidth="100%"
+        maxWidth={{ base: "100%", lg: "80%" }}
       >
         {cars.map((car) => (
           <Box
             key={car.id}
-            bg="gray.900"
-            p="4"
-            mt={4}
+            bg="rgba(15, 19, 28, 0.8)" // Semi-transparent dark color
+            p="6"
             borderRadius="md"
             boxShadow="lg"
+            border="1px solid rgba(0, 219, 0, 0.6)" // Greenish border with opacity
+            backdropFilter="blur(10px)" // Glass effect
             _hover={{ transform: "scale(1.05)", boxShadow: "2xl" }}
             transition="all 0.3s ease"
-            maxW="xs"
+            maxW="sm"
+            mx="auto"
             w="100%"
           >
             <Image src={car.image} alt={car.name} borderRadius="md" />
             <Flex mt="4" align="center" justify="space-between">
-              <Text fontSize="xl" fontWeight="bold">
+              <Text fontSize="xl" fontWeight="bold" color="white">
                 {car.name}
               </Text>
               <Flex gap="1">
@@ -148,7 +150,7 @@ const BookCar = () => {
                 {car.rating % 1 !== 0 && (
                   <FaStar key="half" color="yellow.400" />
                 )}
-                <Text ml="2" fontSize="sm" color="gray.400">
+                <Text ml="2" fontSize="sm" color="gray.300">
                   {car.rating.toFixed(1)}
                 </Text>
               </Flex>
@@ -161,21 +163,20 @@ const BookCar = () => {
               <Text
                 as="span"
                 fontSize="sm"
-                color="gray.400"
+                color="gray.500"
                 textDecoration="line-through"
               >
                 ${car.originalPrice}
               </Text>
             </Text>
-
             <Flex mt="4" justify="space-between" align="center">
               <IconButton
                 icon={<FaShoppingCart />}
                 aria-label="Add to Cart"
                 variant="outline"
-                colorScheme="teal"
+                colorScheme="green"
                 size="sm"
-                _hover={{ bg: "cyan.400" }}
+                _hover={{ bg: "green.100" }}
               />
               <Button
                 bg="#00db00"
