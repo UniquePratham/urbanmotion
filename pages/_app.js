@@ -1,8 +1,12 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import Head from "next/head";
+
+import theme from "../theme"; // Path to your theme.js
+
+
 export default function App({ Component, pageProps }) {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Head>
         <title>UrbanMotion - Your Car Solution</title>
         <meta

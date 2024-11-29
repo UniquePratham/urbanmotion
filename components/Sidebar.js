@@ -1,5 +1,12 @@
 import { Flex, Icon, Link } from "@chakra-ui/react";
-import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaTwitter,
+  FaLinkedin,
+  FaInstagram,
+  FaYoutube,
+  FaGithub,
+} from "react-icons/fa";
 
 const Sidebar = () => {
   return (
@@ -9,48 +16,39 @@ const Sidebar = () => {
       left="0"
       top="0"
       h="100vh"
-      w="60px"
+      w="40px"
       bg="linear-gradient(180deg, #0f0, #004d00)"
       justify="center"
       align="center"
-      gap="1.5rem"
+      display={{ base: "none", md: "flex" }} // Hides on mobile
     >
-      <Link href="#" isExternal>
-        <Icon
-          as={FaFacebook}
-          boxSize="7"
-          color="white"
+      {[
+        { icon: FaFacebook, link: "https://facebook.com" },
+        { icon: FaTwitter, link: "https://twitter.com" },
+        { icon: FaLinkedin, link: "https://linkedin.com" },
+        { icon: FaInstagram, link: "https://instagram.com" },
+        { icon: FaYoutube, link: "https://youtube.com" },
+        { icon: FaGithub, link: "https://github.com" },
+      ].map((item, index) => (
+        <Link
+          key={index}
+          href={item.link}
+          isExternal
+          w="100%" // Makes the link span the full width of the sidebar
+          h="50px"
+          bg="black"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
           _hover={{
-            color: "green.300",
-            transform: "scale(1.2)",
+            bg: "#004d00",
+            transform: "scale(1.1)",
             transition: "0.3s",
           }}
-        />
-      </Link>
-      <Link href="#" isExternal>
-        <Icon
-          as={FaTwitter}
-          boxSize="7"
-          color="white"
-          _hover={{
-            color: "green.300",
-            transform: "scale(1.2)",
-            transition: "0.3s",
-          }}
-        />
-      </Link>
-      <Link href="#" isExternal>
-        <Icon
-          as={FaLinkedin}
-          boxSize="7"
-          color="white"
-          _hover={{
-            color: "green.300",
-            transform: "scale(1.2)",
-            transition: "0.3s",
-          }}
-        />
-      </Link>
+        >
+          <Icon as={item.icon} boxSize="5" color="white" />
+        </Link>
+      ))}
     </Flex>
   );
 };
