@@ -36,7 +36,7 @@ const Navbar = () => {
 
       {/* Desktop Links */}
       <Flex display={{ base: "none", md: "flex" }} gap="2.5rem" align="center">
-        {["About", "Perks", "Gallery", "Team"].map((item) => (
+        {["About", "Perks", "Gallery"].map((item) => (
           <Link
             key={item}
             href={`/${item.toLowerCase().replace(" ", "-")}`}
