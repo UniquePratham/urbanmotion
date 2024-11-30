@@ -46,7 +46,7 @@ const FeatureHighlights = () => {
           textAlign="center"
           p={6}
           borderWidth="1px"
-          borderColor="green.500"
+          borderColor="#00db00"
           borderRadius="lg"
           boxShadow="xl"
           w={{ base: "90%", sm: "300px", md: "250px" }}
@@ -56,7 +56,7 @@ const FeatureHighlights = () => {
             boxShadow: "2xl",
           }}
         >
-          <Icon as={feature.icon} my={{md:"20px"}} boxSize={{md:"20",base:"12"}} color="green.400" />{" "}
+          <Icon as={feature.icon} my={{md:"20px"}} boxSize={{md:"20",base:"12"}} color="#00db00" />{" "}
           {/* Larger icon size */}
           <Text fontWeight="bold" fontSize={{md:"2xl",base:"xl"}} mb={{md:"2"}} mt={4}>
             {feature.title}

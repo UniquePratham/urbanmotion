@@ -8,6 +8,7 @@ import {
   VStack,
   HStack,
   Icon,
+  Image,
 } from "@chakra-ui/react";
 import {
   FaFacebook,
@@ -28,26 +29,31 @@ const Footer = () => {
     { icon: FaGithub, link: "https://github.com" },
   ];
 
+  const footerLinks = [
+    { label: "Terms", href: "/terms" },
+    { label: "Privacy", href: "/privacy" },
+    { label: "FAQ", href: "/faq" },
+    { label: "Account", href: "/account" },
+    { label: "Support", href: "/support" },
+    { label: "Careers", href: "/careers" },
+  ];
+
   return (
     <Box
       as="footer"
-      bgImage="url('/footerbg.jpg')" // Add your image to public folder
+      bgImage="url('https://static.vecteezy.com/system/resources/thumbnails/033/164/427/small_2x/3d-abstract-digital-technology-green-light-particles-wave-free-png.png')"
       bgSize="cover"
       bgPosition="center"
+      bgColor="black"
       position="relative"
+      zIndex="-100" // Ensure the footer is below the sidebar
       color="white"
       py={12}
+      px={{ base: 4, md: 12 }}
     >
-      {/* Green Overlay */}
-      <Box
-        position="absolute"
-        top="0"
-        left="0"
-        w="100%"
-        h="100%"
-        bg="rgba(0, 0, 0, 0.4)" // Transparent green overlay
-        zIndex="0"
-      />
+      <Flex justify="center" align="center" mb={8}>
+        <Image src="/hori.png" alt="UrbanMotion Logo" w="150px" />
+      </Flex>
 
       <Flex
         direction="column"
@@ -56,7 +62,6 @@ const Footer = () => {
         position="relative"
         zIndex="1"
         textAlign="center"
-        px={4}
         maxW="1200px"
         mx="auto"
       >
@@ -109,32 +114,37 @@ const Footer = () => {
           ))}
         </HStack>
 
-        {/* Footer Text */}
+        {/* Footer Links */}
         <Flex
           direction={{ base: "column", md: "row" }}
           justify="space-between"
           align="center"
           w="100%"
           px={{ base: 2, md: 10 }}
+          mb={6}
         >
           <Text fontWeight="bold" fontSize="lg">
-            Nixie
+            UrbanMotion
           </Text>
           <HStack spacing={4} mt={{ base: 4, md: 0 }}>
-            <Link href="/terms" fontSize="sm" color="white" _hover={{ color: "gray.300" }}>
-              Terms
-            </Link>
-            <Link href="/privacy" fontSize="sm" color="white" _hover={{ color: "gray.300" }}>
-              Privacy
-            </Link>
-            <Link href="/faq" fontSize="sm" color="white" _hover={{ color: "gray.300" }}>
-              FAQ
-            </Link>
-            <Link href="/account" fontSize="sm" color="white" _hover={{ color: "gray.300" }}>
-              Account
-            </Link>
+            {footerLinks.map((link, index) => (
+              <Link
+                key={index}
+                href={link.href}
+                fontSize="sm"
+                color="white"
+                _hover={{ color: "gray.300" }}
+              >
+                {link.label}
+              </Link>
+            ))}
           </HStack>
         </Flex>
+
+        {/* Copyright */}
+        <Text fontSize="sm" mt={4} color="gray.400">
+          © 2024 UrbanMotion. All rights reserved.
+        </Text>
       </Flex>
     </Box>
   );

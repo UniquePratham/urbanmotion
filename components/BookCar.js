@@ -44,7 +44,25 @@ const cars = [
   },
   {
     id: 4,
-    image: "/car4.png",
+    image: "/car3.png",
+    name: "Toyota Corolla",
+    description: "Reliable sedan for city life",
+    price: 189,
+    originalPrice: 250,
+    rating: 4.8,
+  },
+  {
+    id: 4,
+    image: "/car3.png",
+    name: "Toyota Corolla",
+    description: "Reliable sedan for city life",
+    price: 189,
+    originalPrice: 250,
+    rating: 4.8,
+  },
+  {
+    id: 4,
+    image: "/car3.png",
     name: "Toyota Corolla",
     description: "Reliable sedan for city life",
     price: 189,
@@ -55,7 +73,17 @@ const cars = [
 
 const BookCar = () => {
   return (
-    <Box bg="#0f131c" color="#10141e" py="12" px={{ base: "4", lg: "12" }}>
+    <Box
+      bgColor="#0f131c"
+      color="#10141e"
+      py="12"
+      px={{ base: "4", lg: "12" }}
+      backgroundImage="url('/green_bg.png')"
+      backgroundSize="cover"
+      backgroundPosition="center"
+      backgroundRepeat="no-repeat"
+      // backgroundBlendMode="overlay"
+    >
       {/* Heading and Search Section */}
       <Box textAlign="center" mb="8">
         <Heading
