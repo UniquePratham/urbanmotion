@@ -21,6 +21,7 @@ const Sidebar = () => {
       justify="center"
       align="center"
       display={{ base: "none", md: "flex" }} // Hides on mobile
+      zIndex="2"
     >
       {[
         { icon: FaFacebook, link: "https://facebook.com" },
@@ -45,6 +46,7 @@ const Sidebar = () => {
             transform: "scale(1.1)",
             transition: "0.3s",
           }}
+          zIndex="2"
         >
           <Icon as={item.icon} boxSize="5" color="white" />
         </Link>

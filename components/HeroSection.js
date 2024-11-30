@@ -21,7 +21,7 @@ const fadeIn = keyframes`
 const LamborghiniModel = () => {
   const { scene } = useGLTF("/lamborghini.glb");
   const modelRef = useRef();
-  const [spinSpeed, setSpinSpeed] = useState(0.2); // Initial fast spin speed
+  const [spinSpeed, setSpinSpeed] = useState(0.002); // Initial fast spin speed
 
   useEffect(() => {
     // Fast spin for 0.5 seconds after the model fully loads
@@ -73,6 +73,7 @@ const HeroSection = () => {
       initial="hidden"
       animate="visible"
       style={{ width: "100%", height: "100vh", overflow: "hidden" }}
+      overflowX="hidden"
     >
       <Flex
         direction={{ base: "column", md: "row" }}
@@ -92,22 +93,20 @@ const HeroSection = () => {
           top={{ base: "80px", md: "0" }}
           left="0"
           width="100%"
-          height={{ base: "100%", md: "100%" }}
+          height={{ base: "100%", md: "100vh" }}
           bg= {{ base: "rgba(0, 0, 0, 0.3)", md: "rgba(0, 219, 0, 0.1)" }}
-          zIndex="5"
+          zIndex={{ base: "1", md: "1" }}
           animation={`${fadeIn} 2s ease-in-out`} // Add animation for smooth appearance
         />
-
-        {/* Mobile: Background Image   */}
 
         {/* Left Content */}
         <Box
           flex="1"
           textAlign={{ base: "center", md: "left" }}
-          p="1rem"
+          px="1rem"
           width={{ base: "100%", md: "30%" }}
           position={{ base: "absolute", md: "none" }}
-          top={{ base: "150px", md: "0" }}
+          top={{ base: "150px", md: "100px" }}
         >
           <Heading
             fontSize={{ base: "3xl", md: "7xl" }}
@@ -149,12 +148,15 @@ const HeroSection = () => {
             size="lg"
             textTransform="uppercase"
             onClick={() => router.push("/BookCar")} // Redirect to BookCar
+            cursor="pointer"
+            zIndex="2"
           >
             Book Now
           </Button>
         </Box>
-
-        {/* Right Content (3D Model for Desktop) */}
+        
+        {/* Mobile: Background Image   */}
+          {/* Right Content (3D Model for Desktop) */}
         {/* Desktop: Show 3D Model */}
         <Box
           flex="2"
@@ -163,17 +165,20 @@ const HeroSection = () => {
           height="100%"
           width="70%"
           display={{ base: "none", md: "block" }}
+          left="260"
+          bottom="20"
         >
           <Canvas
             style={{
               width: "100%",
               height: "100%",
-              zIndex: 10,
+              zIndex: 1,
             }}
             camera={{ position: [4, 2, 8], fov: 50 }}
-            gl={{ preserveDrawingBuffer: true }}
+            gl={{ antialias: true, preserveDrawingBuffer: false }}
+            pointerEvents="none" // Prevent blocking interactions
           >
-            <OrbitControls enablePan={false} enableZoom={false} />
+            <OrbitControls enablePan={false} enableZoom={false} /> 
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
             <LamborghiniModel />
