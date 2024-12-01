@@ -43,9 +43,9 @@ const Navbar = () => {
             fontWeight="bold"
             fontSize="15px"
             textTransform="uppercase"
-            color="white"
+            color="#00db00"
             _hover={{
-              color: "green.300",
+              color: "white",
               transform: "scale(1.1)",
               transition: "0.15s",
             }}
@@ -56,18 +56,22 @@ const Navbar = () => {
         {/* Login Button */}
         <Link
           href="/signin"
-          display="flex"
+          display="inline-flex"
           alignItems="center"
-          fontWeight="bold"
           fontSize="15px"
-          color="white"
+          color="black"
+          bg="#00db00"
+          px="14px"
+          py="6px"
+          borderRadius="sm" // Slightly rounded
           _hover={{
-            color: "green.300",
-            transform: "scale(1.1)",
-            transition: "0.15s",
+            bg: "white",
+            color: "black",
+            transform: "scale(1.05)", // Subtle scaling
+            transition: "0.2s ease-in-out",
           }}
         >
-          <FaUserCircle style={{ marginRight: "0.5rem" }} />
+          <FaUserCircle style={{ marginRight: "8px" }} />
           Login
         </Link>
       </Flex>
@@ -78,16 +82,15 @@ const Navbar = () => {
         icon={isOpen ? <FaTimes /> : <FaBars />} // Toggle between FaBars and FaTimes
         display={{ base: "flex", md: "none" }}
         bg="transparent"
-        color="white"
+        color="#00db00"
         fontSize="24px"
         _hover={{
-          color: "green.300",
+          color: "white",
         }}
         onClick={toggleMenu}
         transition="transform 0.2s" // Smooth animation
         transform={isOpen ? "rotate(90deg)" : "rotate(0deg)"} // Optional rotation effect
       />
-
 
       {/* Mobile Menu */}
       {isOpen && (
@@ -96,7 +99,8 @@ const Navbar = () => {
           top="100%"
           left="0"
           w="100%"
-          bg="rgba(0, 0, 0, 0.95)"
+          bg="rgba(0, 0, 0, 0.8)"
+          backdropFilter="blur(15px)"
           p="1rem"
           spacing="1rem"
           align="center"
@@ -123,19 +127,22 @@ const Navbar = () => {
           {/* Login Button */}
           <Link
             href="/signin"
-            display="flex"
+            display="inline-flex"
             alignItems="center"
-            fontWeight="bold"
             fontSize="15px"
-            color="white"
+            color="black"
+            bg="#00db00"
+            px="14px"
+            py="6px"
+            borderRadius="sm" // Slightly rounded
             _hover={{
-              color: "green.300",
-              transform: "scale(1.1)",
-              transition: "0.15s",
+              bg: "white",
+              color: "black",
+              transform: "scale(1.05)", // Subtle scaling
+              transition: "0.2s ease-in-out",
             }}
-            onClick={() => setIsOpen(false)} // Close menu on click
           >
-            <FaUserCircle style={{ width: "15px", marginRight: "0.5rem" }} />
+            <FaUserCircle style={{ marginRight: "8px" }} />
             Login
           </Link>
         </VStack>

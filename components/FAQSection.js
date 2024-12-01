@@ -61,41 +61,50 @@ const FAQSection = () => {
   ];
 
   return (
-    <Box bgColor="black" p={6} ml={{ md: "2%" }} color="white" w="98%">
+    <Box
+      bgGradient="linear(to-r, black, gray.800)"
+      p={8}
+      color="white"
+      w="100%"
+      mx="auto"
+    >
+      {/* Section Title */}
       <Text
         fontSize={{ base: "2xl", md: "3xl" }}
         fontWeight="bold"
-        mb={6}
+        mb={8}
         textAlign="center"
+        textTransform="uppercase"
+        letterSpacing="wide"
       >
-        <Text as="span" color="white">
-          Frequently Asked{" "}
-        </Text>
+        Frequently Asked{" "}
         <Text as="span" color="#00dc00">
           Questions
         </Text>
       </Text>
+
+      {/* FAQ Items */}
       <Accordion allowToggle>
         {faqs.map((faq, index) => (
           <AccordionItem
             key={index}
-            bg="rgba(255, 255, 255, 0.1)"
+            bg="gray.700"
             borderRadius="md"
             mb={4}
+            boxShadow="lg"
           >
             <h2>
               <AccordionButton
-                px={4}
-                py={3}
+                px={6}
+                py={4}
                 borderRadius="md"
-                _hover={{ bg: "rgba(0, 219, 0, 0.2)" }}
+                _hover={{ bg: "gray.600" }}
               >
                 <Box
                   flex="1"
                   textAlign="left"
-                  fontWeight="bold"
-                  fontSize="lg"
-                  color="#00dc00"
+                  fontWeight="semibold"
+                  fontSize={{ base: "md", md: "lg" }}
                 >
                   {faq.question}
                 </Box>
@@ -105,10 +114,10 @@ const FAQSection = () => {
             <AccordionPanel
               px={6}
               py={4}
-              fontSize="md"
-              color="white"
-              borderLeft="2px solid #00dc00"
-              borderRight="2px solid #00dc00"
+              fontSize={{ base: "sm", md: "md" }}
+              bg="gray.800"
+              color="gray.300"
+              borderTop="1px solid #00dc00"
             >
               {faq.answer}
             </AccordionPanel>
