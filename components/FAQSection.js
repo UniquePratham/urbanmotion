@@ -67,6 +67,7 @@ const FAQSection = () => {
       color="white"
       w="100%"
       mx="auto"
+      ml={{md:"30px"}}
     >
       {/* Section Title */}
       <Text
