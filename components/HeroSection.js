@@ -94,7 +94,7 @@ const HeroSection = () => {
           left="0"
           width="100%"
           height={{ base: "100%", md: "100vh" }}
-          bg= {{ base: "rgba(0, 0, 0, 0.3)", md: "rgba(0, 219, 0, 0.1)" }}
+          bg={{ base: "rgba(0, 0, 0, 0.3)", md: "rgba(0, 100, 0, 0.1)" }}
           zIndex={{ base: "1", md: "1" }}
           animation={`${fadeIn} 2s ease-in-out`} // Add animation for smooth appearance
         />
@@ -107,6 +107,7 @@ const HeroSection = () => {
           width={{ base: "100%", md: "30%" }}
           position={{ base: "absolute", md: "none" }}
           top={{ base: "150px", md: "100px" }}
+          mt={{md:"70px"}}
         >
           <Heading
             fontSize={{ base: "3xl", md: "7xl" }}
@@ -154,9 +155,9 @@ const HeroSection = () => {
             Book Now
           </Button>
         </Box>
-        
+
         {/* Mobile: Background Image   */}
-          {/* Right Content (3D Model for Desktop) */}
+        {/* Right Content (3D Model for Desktop) */}
         {/* Desktop: Show 3D Model */}
         <Box
           flex="2"
@@ -173,12 +174,13 @@ const HeroSection = () => {
               width: "100%",
               height: "100%",
               zIndex: 1,
+              marginTop: "80px",
             }}
             camera={{ position: [4, 2, 8], fov: 50 }}
             gl={{ antialias: true, preserveDrawingBuffer: false }}
             pointerEvents="none" // Prevent blocking interactions
           >
-            <OrbitControls enablePan={false} enableZoom={false} /> 
+            <OrbitControls enablePan={false} enableZoom={false} />
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
             <LamborghiniModel />
