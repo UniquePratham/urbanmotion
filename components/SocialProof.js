@@ -3,7 +3,12 @@ import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
 
 const SocialProof = () => (
   <Box textAlign="center" py={16} px={8}>
-    <Heading fontSize="4xl" color="white">
+    <Heading fontSize="4xl" color="white"  _hover={{
+            opacity:0.8,
+            textShadow:"0px 0px 20px #00db00",
+            transition: "opacity 0.5s ease,textShadow 0.3s ease"
+          }}
+          cursor="crosshair">
       What Our{" "}
       <Text as="span" color="#00db00">
         Customers Say
