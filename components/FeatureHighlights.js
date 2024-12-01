@@ -37,7 +37,6 @@ const FeatureHighlights = () => {
       justify="center"
       wrap="wrap"
       gap={6}
-      borderRadius="md"
       minHeight={{ base: "400px", md: "500px" }} // Consistent height across all screen sizes
     >
       {features.map((feature, index) => (
@@ -56,9 +55,19 @@ const FeatureHighlights = () => {
             boxShadow: "2xl",
           }}
         >
-          <Icon as={feature.icon} my={{md:"20px"}} boxSize={{md:"20",base:"12"}} color="#00db00" />{" "}
+          <Icon
+            as={feature.icon}
+            my={{ md: "20px" }}
+            boxSize={{ md: "20", base: "12" }}
+            color="#00db00"
+          />{" "}
           {/* Larger icon size */}
-          <Text fontWeight="bold" fontSize={{md:"2xl",base:"xl"}} mb={{md:"2"}} mt={4}>
+          <Text
+            fontWeight="bold"
+            fontSize={{ md: "2xl", base: "xl" }}
+            mb={{ md: "2" }}
+            mt={4}
+          >
             {feature.title}
           </Text>
           <Text fontSize="sm" mt={2} color="gray.300">
