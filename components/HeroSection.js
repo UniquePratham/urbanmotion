@@ -93,8 +93,8 @@ const HeroSection = () => {
           top={{ base: "80px", md: "0" }}
           left="0"
           width="100%"
-          height={{ base: "100%", md: "100vh" }}
-          bg={{ base: "rgba(0, 0, 0, 0.3)", md: "rgba(0, 100, 0, 0.1)" }}
+          height={{ base: "90vh", md: "100vh" }}
+          bg={{ base: "rgba(0, 0, 0, 0.5)", md: "rgba(0, 100, 0, 0.1)" }}
           zIndex={{ base: "1", md: "1" }}
           animation={`${fadeIn} 2s ease-in-out`} // Add animation for smooth appearance
         />
@@ -108,11 +108,19 @@ const HeroSection = () => {
           position={{ base: "absolute", md: "none" }}
           top={{ base: "150px", md: "100px" }}
           mt={{md:"70px"}}
+          zIndex={2}
         >
           <Heading
-            fontSize={{ base: "3xl", md: "7xl" }}
+            fontSize={{ base: "6xl", md: "7xl" }}
             textTransform="uppercase"
-            mb="4"
+            textShadow={{base:"0px 0px 50px white",md:"unset"}}
+            mb={{base:"15",md:"4"}}
+            _hover={{
+              opacity:0.8,
+              textShadow:"0px 0px 20px #00db00",
+              transition: "opacity 0.5s ease,textShadow 0.3s ease"
+            }}
+            cursor="crosshair"
           >
             <Text as="span" color="white">
               Easiest Car{" "}
@@ -122,9 +130,10 @@ const HeroSection = () => {
             </Text>
           </Heading>
           <Text
-            fontSize={{ base: "md", md: "2xl" }}
+            fontSize={{ base: "xl", md: "2xl" }}
             textTransform="uppercase"
-            color="#00db00"
+            color={{base:"lightgreen",md:"#00db00"}}
+            textShadow="0px 0px 20px black"
             mb="4"
           >
             Find the Best Car For Rent Today
