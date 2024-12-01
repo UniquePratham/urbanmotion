@@ -1,13 +1,17 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Flex, Icon } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion"; // Import motion from framer-motion
+import { motion } from "framer-motion";
+import { FaCarSide, FaPercentage } from "react-icons/fa";
 
 const DiscountBanner = () => {
-  // Messages for sliding
+  // Dynamic sale percentage based on the current date
+  const currentMonth = new Date().getMonth() + 1; // Months are 0-based
+  const salePercentage = currentMonth % 2 === 0 ? 30 : 20; // Example: Alternates between 30% and 20%
+
   const messages = [
-    "Black Friday Discounts - Up to 50% off on luxury rentals!",
-    "Exclusive Coupon for First-Time Users - Save 20% now!",
-    "Explore our website for the best deals on premium services!",
+    `Exclusive Deals This Month - Up to ${salePercentage}% off on premium car rentals!`,
+    "First-Time Users Get a Bonus Discount - Explore Now!",
+    "Book Early and Save Big - Quality Services at Affordable Prices!",
   ];
 
   const [currentMessage, setCurrentMessage] = useState(0);
@@ -23,23 +27,38 @@ const DiscountBanner = () => {
 
   return (
     <Box
-      bg="#ccffcc" // Light green background color
+      bg="#00db00" // Light green background color
       color="black"
-      p={4}
+      py={4}
+      px={2}
       textAlign="center"
       overflow="hidden"
-      whiteSpace="nowrap"
     >
       <motion.div
         key={currentMessage} // Key to trigger re-render for animation
-        initial={{ x: "100%", opacity: 0 }} // Start off-screen and transparent
-        animate={{ x: 0, opacity: 1 }} // Slide to the center and fade in
-        exit={{ x: "-100%", opacity: 0 }} // Slide out to the left and fade out
-        transition={{ type: "tween", duration: 1 }} // Animation settings
+        initial={{ x: "100%", opacity: 0 }} // Start off-screen
+        animate={{ x: 0, opacity: 1 }} // Slide to center
+        exit={{ x: "-100%", opacity: 0 }} // Slide out to the left
+        transition={{ type: "tween", duration: 1.2 }} // Smooth animation
       >
-        <Text fontSize={{ base: "md", md: "lg" }} fontWeight="bold">
-          {messages[currentMessage]}
-        </Text>
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          direction={{ base: "column", md: "row" }}
+          gap={3}
+        >
+          <Icon as={FaCarSide} w={6} h={6} color="black" />
+          <Text
+            fontSize={{ base: "sm", md: "lg" }}
+            fontWeight="medium"
+            textAlign="center"
+            whiteSpace="normal" // Prevent text overflow
+            mx={2} // Margin for spacing
+          >
+            {messages[currentMessage]}
+          </Text>
+          {/* <Icon as={FaPercentage} w={6} h={6} color="black" /> */}
+        </Flex>
       </motion.div>
     </Box>
   );

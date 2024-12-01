@@ -15,41 +15,38 @@ const MotionBox = motion(Box);
 const MotionImage = motion(Image);
 
 const TestimonialSection = () => {
-  // Create a reference for the component
   const ref = useRef(null);
-
-  // Trigger animation when the component comes into view
-  const isInView = useInView(ref, { once: true, margin: "-50px" }); // Adds an offset of 50px
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   return (
     <Flex
-      ref={ref} // Attach ref to the parent container
-      bg="#000" // Dark background
+      ref={ref}
+      bg={{ base: "rgba(0, 0, 0, 0.8)", md: "#000" }} // Dim background for mobile
       color="white"
       p={{ base: "2rem", md: "4rem" }}
       align="center"
       justify="center"
       direction={{ base: "column", md: "row" }}
-      height={{ base: "90vh", md: "100vh" }} // Full viewport height
+      height={{ base: "auto", md: "100vh" }}
       position="relative"
       overflow="hidden"
-      flexDirection={{base:"column-reverse",md:"unset"}}
+      flexDirection={{ base: "column-reverse", md: "unset" }}
     >
       {/* Left Content */}
       <MotionBox
         flex="1"
         p={{ base: "1rem", md: "3rem" }}
         textAlign={{ base: "center", md: "left" }}
-        zIndex="12" // Ensure the text is above the images
+        zIndex="12"
         maxWidth={{ base: "100%", md: "50%" }}
         initial={{ opacity: 0, x: -50 }}
-        animate={isInView ? { opacity: 1, x: 0 } : {}} // Animate only when in view
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 1 }}
         position={{ base: "absolute", md: "unset" }}
-        top="150"
+        top={{ base: "150px", md: "unset" }}
       >
         <Heading
-          fontSize={{ base: "3xl", md: "5xl" }} // Larger heading
+          fontSize={{ base: "3xl", md: "5xl" }}
           lineHeight="1.3"
           mb="6"
           textTransform="uppercase"
@@ -61,16 +58,23 @@ const TestimonialSection = () => {
           Rental Cars
         </Heading>
         <Text fontSize={{ base: "md", md: "lg" }} mb="4">
-          Self-driving cars are the future of safety and efficiency.
+          Drive smarter with the latest self-driving technologies. Our rentals
+          are designed for luxury, safety, and an unforgettable experience. Rent
+          now to redefine your journey.
+        </Text>
+        <Text fontSize={{ base: "md", md: "lg" }} mb="4">
+          Discover the freedom of self-driving cars, where precision meets
+          innovation. Whether for business or leisure, enjoy every mile with
+          unmatched comfort and efficiency.
         </Text>
         <Text fontSize={{ base: "sm", md: "md" }} fontStyle="italic" mb="6">
-          “The future of driving is smarter and safer.”
+          “This is a game-changer! The comfort and technology blew me away.”
         </Text>
         <Text fontSize="lg" fontWeight="bold" mb="2">
-          Adam Brian
+          Eleanor Smith
         </Text>
         <Text fontSize="sm" mb="4">
-          Blogger
+          Automotive Journalist
         </Text>
         <Flex
           align="center"
@@ -87,7 +91,7 @@ const TestimonialSection = () => {
             />
           ))}
         </Flex>
-        <Avatar src="/profile.png" name="Adam Brian" />
+        <Avatar src="/profile_2.png" name="Eleanor Smith" />
       </MotionBox>
 
       {/* Right Content */}
@@ -97,23 +101,23 @@ const TestimonialSection = () => {
         textAlign="center"
         maxWidth={{ base: "100%", md: "50%" }}
         zIndex="0"
-        height="100%" // Ensure this box takes up the full height
+        height="100%"
       >
         {/* Image 1 */}
         <MotionImage
           src="/image1.png"
           alt="Car 1"
-          width={{ base: "90%", md: "50%" }} // Adjust the width for responsiveness
+          width={{ base: "90%", md: "50%" }}
           height={{ base: "22rem", md: "33.5rem" }}
           objectFit="cover"
           position={{ base: "relative", md: "absolute" }}
           left={{ base: "-20", md: "0%" }}
-          top={{ base: "0%", md: "5%" }} // Distance from the top
+          top={{ base: "0%", md: "5%" }}
           boxShadow="lg"
-          zIndex="10" // Ensures this is above the second image
+          zIndex="10"
           margin={4}
           initial={{ opacity: 0, x: -100 }}
-          animate={isInView ? { opacity: 1, x: 0 } : {}} // Animate only when in view
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1.2 }}
           opacity="0.9"
           borderRadius="1rem"
@@ -122,17 +126,17 @@ const TestimonialSection = () => {
         <MotionImage
           src="/image2.png"
           alt="Car 2"
-          width={{ base: "90%", md: "50%" }} // Adjust the width for responsiveness
+          width={{ base: "90%", md: "50%" }}
           height={{ base: "22rem", md: "33.5rem" }}
           objectFit="cover"
-          right={{ base: "-20", md: "-5%" }} // Slightly shifted to the right
+          right={{ base: "-20", md: "-5%" }}
           position={{ base: "relative", md: "absolute" }}
-          bottom={{ base: "25%", md: "5%" }} // Lower positioning
+          bottom={{ base: "25%", md: "5%" }}
           boxShadow="lg"
-          zIndex="11" // Positioned behind the first image
+          zIndex="11"
           margin={4}
           initial={{ opacity: 0, x: 100 }}
-          animate={isInView ? { opacity: 1, x: 0 } : {}} // Animate only when in view
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1.4 }}
           opacity="0.2"
           borderRadius="1rem"
