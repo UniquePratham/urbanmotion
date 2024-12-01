@@ -3,11 +3,11 @@ import {
   Flex,
   Text,
   Link,
-  Input,
-  Button,
   VStack,
   HStack,
   Icon,
+  Input,
+  Button,
   Image,
 } from "@chakra-ui/react";
 import {
@@ -29,122 +29,155 @@ const Footer = () => {
     { icon: FaGithub, link: "https://github.com" },
   ];
 
-  const footerLinks = [
-    { label: "Terms", href: "/terms" },
-    { label: "Privacy", href: "/privacy" },
-    { label: "FAQ", href: "/faq" },
-    { label: "Account", href: "/account" },
-    { label: "Support", href: "/support" },
+  const navbarLinks = [
+    { label: "Home", href: "/" },
+    { label: "About Us", href: "/about" },
+    { label: "Services", href: "/services" },
+    { label: "Projects", href: "/projects" },
     { label: "Careers", href: "/careers" },
+    { label: "Contact Us", href: "/contact" },
   ];
 
   return (
     <Box
       as="footer"
+      bg="gray.900"
+      color="white"
+      py={10}
+      px={{ base: 4, md: 12 }}
       bgImage="url('https://static.vecteezy.com/system/resources/thumbnails/033/164/427/small_2x/3d-abstract-digital-technology-green-light-particles-wave-free-png.png')"
       bgSize="cover"
       bgPosition="center"
-      bgColor="black"
-      position="relative"
-      zIndex="100" // Ensure the footer is below the sidebar
-      color="white"
-      py={12}
-      px={{ base: 4, md: 12 }}
     >
-      <Flex justify="center" align="center" mb={8}>
+      {/* Logo Section */}
+      <Flex justify="center" mb={8}>
         <Image src="/hori.png" alt="UrbanMotion Logo" w="150px" />
       </Flex>
 
       <Flex
-        direction="column"
-        align="center"
-        justify="center"
-        position="relative"
-        zIndex="1"
-        textAlign="center"
+        direction={{ base: "column", md: "row" }}
+        justify="space-between"
+        align="start"
         maxW="1200px"
         mx="auto"
+        mb={10}
       >
-        {/* Email Subscription */}
-        <VStack spacing={4} mb={10}>
+        {/* Navigation Links */}
+        <VStack align="flex-start" spacing={4} mb={{ base: 6, md: 0 }}>
           <Text fontSize="lg" fontWeight="bold">
-            Sign up for coupons, updates, and other fun stuff!
+            Quick Links
           </Text>
-          <HStack spacing={2}>
+          {navbarLinks.map((link, index) => (
+            <Link
+              key={index}
+              href={link.href}
+              color="gray.300"
+              _hover={{ color: "white" }}
+              fontSize="sm"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </VStack>
+
+        {/* Newsletter Subscription */}
+        <VStack align="flex-start" spacing={4} w={{ base: "100%", md: "40%" }}>
+          <Text fontSize="lg" fontWeight="bold">
+            Subscribe to Our Newsletter
+          </Text>
+          <Text color="gray.400" fontSize="sm">
+            Stay updated with the latest news, events, and offers. Subscribe to
+            our newsletter now!
+          </Text>
+          <HStack w="100%">
             <Input
               placeholder="Enter your email"
-              bg="white"
-              color="black"
-              borderRadius="full"
-              w={{ base: "250px", md: "400px" }}
+              bg="gray.800"
+              border="none"
               _placeholder={{ color: "gray.500" }}
+              color="white"
+              borderRadius="md"
+              w="100%"
             />
             <Button
-              bg="#00db00"
+              bg="green.400"
               color="white"
-              borderRadius="full"
-              _hover={{
-                bg: "white",
-                color: "#00db00",
-                transform: "scale(1.1)",
-              }}
-              transition="all 0.3s"
+              _hover={{ bg: "green.500" }}
+              px={6}
+              borderRadius="md"
             >
-              Submit
+              Subscribe
             </Button>
           </HStack>
         </VStack>
 
-        {/* Social Media Icons */}
-        <HStack spacing={6} mb={8}>
-          {socialLinks.map((social, index) => (
-            <Link
-              key={index}
-              href={social.link}
-              isExternal
-              aria-label={social.link}
-              _hover={{
-                color: "white",
-                transform: "scale(1.2)",
-                transition: "transform 0.2s",
-              }}
-            >
-              <Icon as={social.icon} boxSize={6} />
-            </Link>
-          ))}
-        </HStack>
-
-        {/* Footer Links */}
-        <Flex
-          direction={{ base: "column", md: "row" }}
-          justify="space-between"
-          align="center"
-          w="100%"
-          px={{ base: 2, md: 10 }}
-          mb={6}
-        >
-          <Text fontWeight="bold" fontSize="lg">
-            UrbanMotion
+        {/* Social Media Links */}
+        <VStack align="flex-start" spacing={4}>
+          <Text fontSize="lg" fontWeight="bold">
+            Follow Us
           </Text>
-          <HStack spacing={4} mt={{ base: 4, md: 0 }}>
-            {footerLinks.map((link, index) => (
+          <HStack spacing={4}>
+            {socialLinks.map((social, index) => (
               <Link
                 key={index}
-                href={link.href}
-                fontSize="sm"
-                color="white"
-                _hover={{ color: "gray.300" }}
+                href={social.link}
+                isExternal
+                aria-label={social.link}
+                _hover={{ color: "green.400" }}
               >
-                {link.label}
+                <Icon as={social.icon} boxSize={6} />
               </Link>
             ))}
           </HStack>
-        </Flex>
+        </VStack>
+      </Flex>
 
-        {/* Copyright */}
-        <Text fontSize="sm" mt={4} color="gray.400">
+      {/* Divider */}
+      <Box
+        borderTop="1px solid"
+        borderColor="gray.700"
+        mt={8}
+        mb={4}
+        w="100%"
+      />
+
+      {/* Footer Bottom */}
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        justify="space-between"
+        align="center"
+        maxW="1200px"
+        mx="auto"
+      >
+        <Text fontSize="sm" color="gray.500">
           © 2024 UrbanMotion. All rights reserved.
         </Text>
+        <HStack spacing={4}>
+          <Link
+            href="/terms"
+            fontSize="sm"
+            color="gray.300"
+            _hover={{ color: "white" }}
+          >
+            Terms
+          </Link>
+          <Link
+            href="/privacy"
+            fontSize="sm"
+            color="gray.300"
+            _hover={{ color: "white" }}
+          >
+            Privacy
+          </Link>
+          <Link
+            href="/faq"
+            fontSize="sm"
+            color="gray.300"
+            _hover={{ color: "white" }}
+          >
+            FAQ
+          </Link>
+        </HStack>
       </Flex>
     </Box>
   );
