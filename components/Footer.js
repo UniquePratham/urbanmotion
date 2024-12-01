@@ -46,7 +46,7 @@ const Footer = () => {
       bgPosition="center"
       bgColor="black"
       position="relative"
-      zIndex="-100" // Ensure the footer is below the sidebar
+      zIndex="100" // Ensure the footer is below the sidebar
       color="white"
       py={12}
       px={{ base: 4, md: 12 }}

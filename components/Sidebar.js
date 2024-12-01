@@ -21,7 +21,7 @@ const Sidebar = () => {
       justify="center"
       align="center"
       display={{ base: "none", md: "flex" }} // Hides on mobile
-      zIndex="2"
+      zIndex="200"
     >
       {[
         { icon: FaFacebook, link: "https://facebook.com" },

@@ -26,7 +26,7 @@ const Navbar = () => {
       w="100%"
       bg="rgba(0, 0, 0, 0.8)"
       backdropFilter="blur(15px)"
-      zIndex="11"
+      zIndex="300"
       align="center"
       justify="space-between"
       p="1.5rem 2rem"
