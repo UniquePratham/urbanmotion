@@ -10,9 +10,21 @@ import {
 import { StarIcon } from "@chakra-ui/icons";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { keyframes } from "@emotion/react";
 
 const MotionBox = motion(Box);
 const MotionImage = motion(Image);
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
 
 const TestimonialSection = () => {
   const ref = useRef(null);
@@ -32,6 +44,18 @@ const TestimonialSection = () => {
       overflow="hidden"
       flexDirection={{ base: "column-reverse", md: "unset" }}
     >
+       <Box
+          position="absolute"
+          display={{base:"block",md:"none"}}
+          top={{ base: "0px", md: "0" }}
+          left="0"
+          width="100%"
+          height={{ base: "120vh", md: "100vh" }}
+          bg={{ base: "rgba(0, 0, 0, 0.6)", md: "rgba(0, 100, 0, 0.1)" }}
+          zIndex={{ base: "1", md: "1" }}
+          animation={`${fadeIn} 2s ease-in-out`} // Add animation for smooth appearance
+        />
+
       {/* Left Content */}
       <MotionBox
         flex="1"

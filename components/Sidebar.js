@@ -24,12 +24,10 @@ const Sidebar = () => {
       zIndex="200"
     >
       {[
-        { icon: FaFacebook, link: "https://facebook.com" },
-        { icon: FaTwitter, link: "https://twitter.com" },
-        { icon: FaLinkedin, link: "https://linkedin.com" },
-        { icon: FaInstagram, link: "https://instagram.com" },
+        { icon: FaTwitter, link: "https://x.com/TheUrbanMotion" },
+        { icon: FaLinkedin, link: "https://www.linkedin.com/in/urbanmotion-urban-motion-89832433b/" },
         { icon: FaYoutube, link: "https://youtube.com" },
-        { icon: FaGithub, link: "https://github.com" },
+        { icon: FaGithub, link: "https://github.com/subhro1530/URBANMOTION" },
       ].map((item, index) => (
         <Link
           key={index}
@@ -47,6 +45,7 @@ const Sidebar = () => {
             transition: "0.3s",
           }}
           zIndex="2"
+          about="_blank"
         >
           <Icon as={item.icon} boxSize="5" color="white" />
         </Link>
