@@ -72,8 +72,7 @@ const HeroSection = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      style={{ width: "100%", height: "100vh", overflow: "hidden" }}
-      overflowX="hidden"
+      style={{ width: "100%", height: "100vh", overflow: "hidden", overflowX: "hidden" }}
     >
       <Flex
         direction={{ base: "column", md: "row" }}
