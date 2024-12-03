@@ -23,7 +23,7 @@ const Footer = () => {
   const socialLinks = [
     { icon: FaTwitter, link: "https://x.com/TheUrbanMotion" },
     { icon: FaLinkedin, link: "https://www.linkedin.com/in/urbanmotion-urban-motion-89832433b/" },
-    { icon: FaYoutube, link: "https://youtube.com" },
+    { icon: FaYoutube, link: "https://www.youtube.com/watch?v=kUvV3JfFAqY" },
     { icon: FaGithub, link: "https://github.com/subhro1530/urbanmotion" },
   ];
 

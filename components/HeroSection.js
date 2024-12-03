@@ -114,11 +114,6 @@ const HeroSection = () => {
             textTransform="uppercase"
             textShadow={{base:"0px 0px 50px white",md:"unset"}}
             mb={{base:"15",md:"4"}}
-            _hover={{
-              opacity:0.8,
-              textShadow:"0px 0px 20px #00db00",
-              transition: "opacity 0.5s ease,textShadow 0.3s ease"
-            }}
             cursor="crosshair"
           >
             <Text as="span" color="white">
