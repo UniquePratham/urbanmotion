@@ -21,12 +21,10 @@ import {
 
 const Footer = () => {
   const socialLinks = [
-    { icon: FaFacebook, link: "https://facebook.com" },
-    { icon: FaTwitter, link: "https://twitter.com" },
-    { icon: FaLinkedin, link: "https://linkedin.com" },
-    { icon: FaInstagram, link: "https://instagram.com" },
+    { icon: FaTwitter, link: "https://x.com/TheUrbanMotion" },
+    { icon: FaLinkedin, link: "https://www.linkedin.com/in/urbanmotion-urban-motion-89832433b/" },
     { icon: FaYoutube, link: "https://youtube.com" },
-    { icon: FaGithub, link: "https://github.com" },
+    { icon: FaGithub, link: "https://github.com/subhro1530/urbanmotion" },
   ];
 
   const navbarLinks = [
@@ -72,7 +70,7 @@ const Footer = () => {
               key={index}
               href={link.href}
               color="gray.300"
-              _hover={{ color: "white" }}
+              _hover={{ color: "#00db00" }}
               fontSize="sm"
             >
               {link.label}
@@ -100,9 +98,9 @@ const Footer = () => {
               w="100%"
             />
             <Button
-              bg="green.400"
+              bg="#00db00"
               color="white"
-              _hover={{ bg: "green.500" }}
+              _hover={{ bg: "black",color:"#00db00", border:"2px solid #00db00" }}
               px={6}
               borderRadius="md"
             >
@@ -123,7 +121,7 @@ const Footer = () => {
                 href={social.link}
                 isExternal
                 aria-label={social.link}
-                _hover={{ color: "green.400" }}
+                _hover={{ color: "#00db00" }}
               >
                 <Icon as={social.icon} boxSize={6} />
               </Link>
@@ -170,7 +168,7 @@ const Footer = () => {
             Privacy
           </Link>
           <Link
-            href="/faq"
+            href="#faq"
             fontSize="sm"
             color="gray.300"
             _hover={{ color: "white" }}

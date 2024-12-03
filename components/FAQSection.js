@@ -7,6 +7,9 @@ import {
   AccordionIcon,
   Text,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+
+const MotionBox = motion(Box); // Wrapping Box for animations
 
 const FAQSection = () => {
   const faqs = [
@@ -67,7 +70,7 @@ const FAQSection = () => {
       color="white"
       w="100%"
       mx="auto"
-      ml={{md:"30px"}}
+      id="faq"
     >
       {/* Section Title */}
       <Text
@@ -112,16 +115,25 @@ const FAQSection = () => {
                 <AccordionIcon color="#00dc00" />
               </AccordionButton>
             </h2>
-            <AccordionPanel
+
+            <MotionBox
+              as={AccordionPanel}
               px={6}
               py={4}
               fontSize={{ base: "sm", md: "md" }}
               bg="gray.800"
               color="gray.300"
               borderTop="1px solid #00dc00"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{
+                duration: 0.4,
+                ease: "easeInOut",
+              }}
             >
               {faq.answer}
-            </AccordionPanel>
+            </MotionBox>
           </AccordionItem>
         ))}
       </Accordion>

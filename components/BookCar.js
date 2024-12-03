@@ -13,6 +13,8 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { FaShoppingCart, FaStar, FaSearch } from "react-icons/fa";
+import { motion,useInView } from "framer-motion";
+import { useRef } from "react";
 
 const cars = [
   {
@@ -44,34 +46,39 @@ const cars = [
   },
   {
     id: 4,
-    image: "/car3.png",
-    name: "Toyota Corolla",
+    image: "/car2.png",
+    name: "Hyundai Tucson",
     description: "Reliable sedan for city life",
     price: 189,
     originalPrice: 250,
-    rating: 4.8,
+    rating: 4.1,
   },
   {
-    id: 4,
+    id: 5,
     image: "/car3.png",
     name: "Toyota Corolla",
     description: "Reliable sedan for city life",
     price: 189,
     originalPrice: 250,
-    rating: 4.8,
+    rating: 4.7,
   },
   {
-    id: 4,
-    image: "/car3.png",
-    name: "Toyota Corolla",
+    id: 6,
+    image: "/car1.png",
+    name: "Hyundai Solaris",
     description: "Reliable sedan for city life",
     price: 189,
     originalPrice: 250,
-    rating: 4.8,
+    rating: 4.4,
   },
 ];
 
+const MotionBox = motion(Box);
+
 const BookCar = () => {
+  const ref = useRef(null); // Ref for the container
+  const isInView = useInView(ref, { once: true, threshold: 0.2 }); // Detect when visible
+
   return (
     <Box
       bgColor="#0f131c"
@@ -82,7 +89,6 @@ const BookCar = () => {
       backgroundSize="cover"
       backgroundPosition="center"
       backgroundRepeat="no-repeat"
-      // backgroundBlendMode="overlay"
     >
       {/* Heading and Search Section */}
       <Box textAlign="center" mb="8">
@@ -143,29 +149,35 @@ const BookCar = () => {
           Search
         </Button>
       </Flex>
-
       {/* Cars Grid Section */}
       <SimpleGrid
+        ref={ref} // Attach the ref here
         columns={{ base: 1, sm: 2, lg: 3 }}
         spacing="6"
         mx="auto"
         maxWidth={{ base: "100%", lg: "80%" }}
       >
-        {cars.map((car) => (
-          <Box
+        {cars.map((car, index) => (
+          <MotionBox
             key={car.id}
-            bg="rgba(15, 19, 28, 0.8)" // Semi-transparent dark color
+            bg="rgba(15, 19, 28, 0.8)"
             p="6"
             borderRadius="md"
             boxShadow="lg"
-            border="1px solid rgba(0, 219, 0, 0.6)" // Greenish border with opacity
-            backdropFilter="blur(10px)" // Glass effect
+            border="1px solid rgba(0, 219, 0, 0.6)"
+            backdropFilter="blur(10px)"
             _hover={{ transform: "scale(1.05)", boxShadow: "2xl" }}
-            transition="all 0.3s ease"
             maxW="sm"
             mx="auto"
             w="100%"
+            initial={{ x: index % 2 === 0 ? "-100%" : "100%", opacity: 0 }}
+            animate={isInView ? { x: 0, opacity: 1 } : {}}
+            transition={{
+              x: { delay: index * 0.2, duration: 0.5, type: "spring", stiffness: 80 },
+              opacity: { delay: index * 0.2, duration: 0.5 },
+            }}
           >
+            {/* Card Content */}
             <Image src={car.image} alt={car.name} borderRadius="md" />
             <Flex mt="4" align="center" justify="space-between">
               <Text fontSize="xl" fontWeight="bold" color="white">
@@ -175,9 +187,7 @@ const BookCar = () => {
                 {[...Array(Math.floor(car.rating))].map((_, index) => (
                   <FaStar key={index} color="yellow.400" />
                 ))}
-                {car.rating % 1 !== 0 && (
-                  <FaStar key="half" color="yellow.400" />
-                )}
+                {car.rating % 1 !== 0 && <FaStar key="half" color="yellow.400" />}
                 <Text ml="2" fontSize="sm" color="gray.300">
                   {car.rating.toFixed(1)}
                 </Text>
@@ -197,26 +207,7 @@ const BookCar = () => {
                 ${car.originalPrice}
               </Text>
             </Text>
-            <Flex mt="4" justify="space-between" align="center">
-              <IconButton
-                icon={<FaShoppingCart />}
-                aria-label="Add to Cart"
-                variant="outline"
-                colorScheme="green"
-                size="sm"
-                _hover={{ bg: "green.100" }}
-              />
-              <Button
-                bg="#00db00"
-                color="white"
-                size="sm"
-                w="auto"
-                _hover={{ bg: "cyan.400" }}
-              >
-                Buy Now
-              </Button>
-            </Flex>
-          </Box>
+          </MotionBox>
         ))}
       </SimpleGrid>
     </Box>

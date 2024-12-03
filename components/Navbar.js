@@ -32,7 +32,9 @@ const Navbar = () => {
       p="1.5rem 2rem"
     >
       {/* Logo */}
-      <Image src="/hori.png" alt="Logo" h="40px" />
+      <Link href="/" _hover={{ textDecoration: "none" }}>
+        <Image src="/hori.png" alt="Logo" h="40px" cursor="pointer"/>
+      </Link>
 
       {/* Desktop Links */}
       <Flex display={{ base: "none", md: "flex" }} gap="2.5rem" align="center">
