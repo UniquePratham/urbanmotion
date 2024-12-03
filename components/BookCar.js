@@ -207,6 +207,37 @@ const BookCar = () => {
                 ${car.originalPrice}
               </Text>
             </Text>
+            <Flex mt="4" justify="space-between" align="center">
+              <IconButton
+                icon={<FaShoppingCart />}
+                aria-label="Add to Cart"
+                variant="outline"
+                colorScheme="green"
+                size="sm"
+                _hover={{ bg: "green.100" }}
+              />
+              <Button
+                bg="#000" // Button background
+                color="white" // Text color
+                border="2px solid transparent" // Initial border
+                borderRadius="md"
+                fontSize="lg"
+                px="5"
+                py="4"
+                position="relative"
+                _hover={{
+                  bg: "#000", // Keep background color on hover
+                  boxShadow: "0 0 15px #00db00, 0 0 30px #00db00", // Glowing effect
+                  border: "2px solid #00db00", // Highlight border
+                }}
+                sx={{
+                  boxShadow: "0 0 10px #00db00, 0 0 20px rgba(0, 219, 0, 0.5)", // Default glow
+                  transition: "0.3s ease", // Smooth transition
+                }}
+              >
+                Buy Now
+              </Button>
+            </Flex>
           </MotionBox>
         ))}
       </SimpleGrid>
