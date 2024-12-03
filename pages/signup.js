@@ -6,6 +6,7 @@ import {
   Input,
   Select,
   Text,
+  Link,
   useToast,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
@@ -42,18 +43,18 @@ const SignUp = () => {
   // Sign Up button handler
   const handleSignUp = async () => {
     const apiEndpoints = {
-      customer: "https://urban-motion-backend.vercel.app/api/customers/add-customer",
-      retailer: "https://urban-motion-backend.vercel.app/api/retailers/add-retailer",
+      customer:
+        "https://urban-motion-backend.vercel.app/api/customers/add-customer",
+      retailer:
+        "https://urban-motion-backend.vercel.app/api/retailers/add-retailer",
       admin: "https://urban-motion-backend.vercel.app/api/admins/add-admin",
     };
 
-    // Prepare the payload based on the account type
     const payload =
       formData.accountType === "customer"
         ? { ...formData, ...additionalData }
         : formData;
 
-    // Log the payload in JSON format to the terminal
     console.log("Payload being posted:", JSON.stringify(payload, null, 2));
 
     try {
@@ -91,24 +92,29 @@ const SignUp = () => {
     <Flex
       minH="100vh"
       bg="gray.900"
-      flexDirection="column"
+      flexDirection={{ base: "column", md: "row" }}
       alignItems="center"
       justifyContent="center"
     >
       <MotionBox
-        px={6}
+        px={{ base: 6, md: 8 }}
         py={8}
         borderRadius="lg"
         bg="gray.800"
+        boxShadow="lg"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         width="100%"
         maxWidth="400px"
+        textAlign="center"
       >
-        <Heading color="white" mb={6} textAlign="center">
+        <Heading color="white" mb={6}>
           Create an Account
         </Heading>
+        <Text color="gray.400" mb={4}>
+          Sign up to start your journey with us!
+        </Text>
         <Select
           name="accountType"
           bg="gray.700"
@@ -150,7 +156,6 @@ const SignUp = () => {
           onChange={handleInputChange}
         />
 
-        {/* Conditional fields for Customers */}
         {formData.accountType === "customer" && (
           <>
             <Input
@@ -185,9 +190,15 @@ const SignUp = () => {
           </>
         )}
 
-        <Button colorScheme="green" w="100%" onClick={handleSignUp}>
+        <Button colorScheme="green" w="100%" mb={4} onClick={handleSignUp}>
           Sign Up
         </Button>
+        <Text color="gray.400" fontSize="sm">
+          Already have an account?{" "}
+          <Link color="teal.300" href="/signin">
+            Log in
+          </Link>
+        </Text>
       </MotionBox>
     </Flex>
   );

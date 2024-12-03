@@ -7,44 +7,80 @@ import {
   Text,
   Link,
   useToast,
+  Select,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const MotionBox = motion(Box);
 
 const SignIn = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState("customer");
+  const [adminPassphrase, setAdminPassphrase] = useState("");
   const toast = useToast();
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const router = useRouter();
 
   const handleSignIn = async () => {
     try {
+      // Determine the endpoint based on userType
+      let endpoint = "";
+      if (userType === "customer") {
+        endpoint = "/api/customers/verify-customer";
+      } else if (userType === "retailer") {
+        endpoint = "/api/retailers/verify-retailer";
+      } else if (userType === "admin") {
+        // Check admin passphrase
+        if (adminPassphrase !== "urbancars") {
+          throw new Error("Invalid admin passphrase.");
+        }
+        endpoint = "/api/admins/verify-admin";
+      }
+
+      // Prepare form data (without userType)
+      const formData = { email, password };
+
+      // Log the JSON and the endpoint to the console
+      console.log(
+        "Posting to endpoint:",
+        `https://urban-motion-backend.vercel.app${endpoint}`
+      );
+      console.log("Posted JSON:", JSON.stringify(formData));
+
+      // Make POST request to the appropriate endpoint
       const response = await fetch(
-        "https://urban-motion-backend.vercel.app/api/verify-customer",
+        `https://urban-motion-backend.vercel.app${endpoint}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         }
       );
-      const result = await response.json();
 
-      if (response.ok) {
+      // Log response status and body
+      console.log("Response Status:", response.status);
+      const result = await response.json();
+      console.log("Response JSON:", result);
+
+      // Check if the response is successful and contains the sessionId
+      if (response.ok && result.verified && result.sessionId) {
+        // Show success toast
         toast({
           title: "Success",
-          description: result.message || "Logged in successfully.",
+          description: "Logged in successfully.",
           status: "success",
           duration: 5000,
           isClosable: true,
         });
+
+        // Optionally, you can store the sessionId in localStorage or cookies
+        // For example:
+        localStorage.setItem("sessionId", result.sessionId);
+
+        // Redirect to home page
+        router.push("/");
       } else {
         throw new Error(result.message || "Invalid login credentials.");
       }
@@ -79,25 +115,49 @@ const SignIn = () => {
         <Heading color="white" mb={6} textAlign="center">
           Sign In
         </Heading>
+        <Select
+          bg="gray.700"
+          color="white"
+          mb={4}
+          _hover={{ bg: "gray.600" }}
+          value={userType}
+          onChange={(e) => setUserType(e.target.value)}
+        >
+          <option value="customer">Customer</option>
+          <option value="retailer">Retailer</option>
+          <option value="admin">Admin</option>
+        </Select>
         <Input
-          name="email"
           placeholder="Email"
           bg="gray.700"
           color="white"
           mb={4}
           _hover={{ bg: "gray.600" }}
-          onChange={handleInputChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <Input
-          name="password"
           type="password"
           placeholder="Password"
           bg="gray.700"
           color="white"
-          mb={6}
+          mb={4}
           _hover={{ bg: "gray.600" }}
-          onChange={handleInputChange}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
+        {userType === "admin" && (
+          <Input
+            type="password"
+            placeholder="Admin Passphrase"
+            bg="gray.700"
+            color="white"
+            mb={4}
+            _hover={{ bg: "gray.600" }}
+            value={adminPassphrase}
+            onChange={(e) => setAdminPassphrase(e.target.value)}
+          />
+        )}
         <Button colorScheme="green" w="100%" onClick={handleSignIn}>
           Sign In
         </Button>
