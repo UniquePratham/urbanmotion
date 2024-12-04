@@ -10,10 +10,10 @@ const Custom404 = () => {
             display="flex"
             justifyContent="end"
             alignItems="center"
-            height="100vh"
+            height={{base:"80vh",md:"100vh"}}
             flexDirection="column"
             textAlign="center"
-            bgImage="/error_404.gif"
+            bgImage={{base:"/mob_error_404.gif",md:"/error_404.gif"}}
             bgSize="contain"
             bgRepeat="no-repeat"
             bgPosition="center"
