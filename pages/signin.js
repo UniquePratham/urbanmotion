@@ -32,7 +32,7 @@ const SignIn = () => {
       } else if (userType === "retailer") {
         endpoint = "/api/retailers/verify-retailer";
       } else if (userType === "admin") {
-        // Check admin passphrase
+        // Check admin passphrase (in case the backend requires one)
         if (adminPassphrase !== "urbancars") {
           throw new Error("Invalid admin passphrase.");
         }
@@ -76,7 +76,6 @@ const SignIn = () => {
         });
 
         // Optionally, you can store the sessionId in localStorage or cookies
-        // For example:
         localStorage.setItem("sessionId", result.sessionId);
 
         // Redirect to home page
