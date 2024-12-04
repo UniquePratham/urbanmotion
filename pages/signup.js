@@ -25,6 +25,8 @@ const SignUp = () => {
     drivingLicenseId: "",
     verificationType: "aadhar", // Default verification type
     verificationId: "",
+    position: "", // Only for admin
+    passcode: "", // Only for admin
   });
   const toast = useToast();
 
@@ -58,6 +60,7 @@ const SignUp = () => {
       verificationId: additionalData.verificationId,
     };
 
+    // Validate required fields
     if (!payload.verificationId) {
       toast({
         title: "Error",
@@ -67,6 +70,27 @@ const SignUp = () => {
         isClosable: true,
       });
       return;
+    }
+
+    // Admin validation
+    if (formData.accountType === "admin") {
+      if (!additionalData.position || !additionalData.passcode) {
+        toast({
+          title: "Error",
+          description: "Position and passcode are required for admin.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      payload.position = additionalData.position;
+      payload.passcode = additionalData.passcode;
+
+      // Remove any keys that are not needed for admin
+      delete payload.drivingLicenseId;
+      delete payload.verificationType;
     }
 
     console.log("Payload being posted:", JSON.stringify(payload, null, 2));
@@ -198,6 +222,32 @@ const SignUp = () => {
           _hover={{ bg: "gray.600" }}
           onChange={handleAdditionalChange}
         />
+
+        {/* Admin specific fields */}
+        {formData.accountType === "admin" && (
+          <>
+            <Input
+              name="position"
+              placeholder="Position"
+              bg="gray.700"
+              color="white"
+              mb={4}
+              _hover={{ bg: "gray.600" }}
+              onChange={handleAdditionalChange}
+            />
+            <Input
+              name="passcode"
+              placeholder="Passcode"
+              type="password"
+              bg="gray.700"
+              color="white"
+              mb={6}
+              _hover={{ bg: "gray.600" }}
+              onChange={handleAdditionalChange}
+            />
+          </>
+        )}
+
         <Button colorScheme="green" w="100%" mb={4} onClick={handleSignUp}>
           Sign Up
         </Button>
