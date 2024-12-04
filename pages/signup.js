@@ -23,7 +23,7 @@ const SignUp = () => {
   });
   const [additionalData, setAdditionalData] = useState({
     drivingLicenseId: "",
-    verificationType: "aadhar",
+    verificationType: "aadhar", // Default verification type
     verificationId: "",
   });
   const toast = useToast();
@@ -34,7 +34,7 @@ const SignUp = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Additional data input change handler for customers
+  // Additional data input change handler
   const handleAdditionalChange = (e) => {
     const { name, value } = e.target;
     setAdditionalData((prev) => ({ ...prev, [name]: value }));
@@ -50,10 +50,24 @@ const SignUp = () => {
       admin: "https://urban-motion-backend.vercel.app/api/admins/add-admin",
     };
 
-    const payload =
-      formData.accountType === "customer"
-        ? { ...formData, ...additionalData }
-        : formData;
+    const { accountType, ...filteredFormData } = formData; // Remove accountType
+    const payload = {
+      ...filteredFormData,
+      drivingLicenseId: additionalData.drivingLicenseId,
+      verificationType: additionalData.verificationType,
+      verificationId: additionalData.verificationId,
+    };
+
+    if (!payload.verificationId) {
+      toast({
+        title: "Error",
+        description: "Verification ID is required for all account types.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
 
     console.log("Payload being posted:", JSON.stringify(payload, null, 2));
 
@@ -155,41 +169,35 @@ const SignUp = () => {
           _hover={{ bg: "gray.600" }}
           onChange={handleInputChange}
         />
-
-        {formData.accountType === "customer" && (
-          <>
-            <Input
-              name="drivingLicenseId"
-              placeholder="Driving License ID"
-              bg="gray.700"
-              color="white"
-              mb={4}
-              _hover={{ bg: "gray.600" }}
-              onChange={handleAdditionalChange}
-            />
-            <Select
-              name="verificationType"
-              bg="gray.700"
-              color="white"
-              mb={4}
-              _hover={{ bg: "gray.600" }}
-              onChange={handleAdditionalChange}
-            >
-              <option value="aadhar">Aadhar</option>
-              <option value="pan">PAN</option>
-            </Select>
-            <Input
-              name="verificationId"
-              placeholder="Verification ID"
-              bg="gray.700"
-              color="white"
-              mb={4}
-              _hover={{ bg: "gray.600" }}
-              onChange={handleAdditionalChange}
-            />
-          </>
-        )}
-
+        <Input
+          name="drivingLicenseId"
+          placeholder="Driving License ID (optional)"
+          bg="gray.700"
+          color="white"
+          mb={4}
+          _hover={{ bg: "gray.600" }}
+          onChange={handleAdditionalChange}
+        />
+        <Select
+          name="verificationType"
+          bg="gray.700"
+          color="white"
+          mb={4}
+          _hover={{ bg: "gray.600" }}
+          onChange={handleAdditionalChange}
+        >
+          <option value="aadhar">Aadhar</option>
+          <option value="pan">PAN</option>
+        </Select>
+        <Input
+          name="verificationId"
+          placeholder="Verification ID"
+          bg="gray.700"
+          color="white"
+          mb={4}
+          _hover={{ bg: "gray.600" }}
+          onChange={handleAdditionalChange}
+        />
         <Button colorScheme="green" w="100%" mb={4} onClick={handleSignUp}>
           Sign Up
         </Button>
