@@ -65,8 +65,9 @@ const SignIn = () => {
       console.log("Response JSON:", result);
 
       // Check if the response is successful and contains the sessionId
-      if (response.ok && result.verified && result.sessionId) {
-        // Show success toast
+      // Inside handleSignIn function in SignIn component
+      // Inside handleSignIn function in SignIn component
+      if (response.ok && result.verified) {
         toast({
           title: "Success",
           description: "Logged in successfully.",
@@ -75,11 +76,11 @@ const SignIn = () => {
           isClosable: true,
         });
 
-        // Optionally, you can store the sessionId in localStorage or cookies
-        localStorage.setItem("sessionId", result.sessionId);
+        // Store user type in localStorage
+        localStorage.setItem("userType", userType);
 
-        // Redirect to home page
-        router.push("/");
+        // Redirect to the dashboard page after successful login
+        router.push("/dashboard");
       } else {
         throw new Error(result.message || "Invalid login credentials.");
       }
