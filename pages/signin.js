@@ -12,6 +12,8 @@ import {
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Footer from "@/components/Others/Footer";
+import Navbar from "@/components/Others/Navbar";
 
 const MotionBox = motion(Box);
 
@@ -96,6 +98,8 @@ const SignIn = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <Flex
       minH="100vh"
       bg="gray.900"
@@ -169,6 +173,8 @@ const SignIn = () => {
         </Text>
       </MotionBox>
     </Flex>
+    <Footer />
+    </>
   );
 };
 

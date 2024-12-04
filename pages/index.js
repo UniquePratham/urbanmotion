@@ -1,12 +1,12 @@
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
-import HeroSection from "../components/HeroSection";
-import TestimonialSection from "@/components/TestimonialSection";
-import BookCar from "@/components/BookCar";
-import DiscountBanner from "@/components/DiscountBanner";
-import FeatureHighlights from "@/components/FeatureHighlights";
-import FAQSection from "@/components/FAQSection";
-import Footer from "@/components/Footer";
+import Navbar from "../components/Others/Navbar";
+import Sidebar from "../components/HeroSection/Sidebar";
+import HeroSection from "../components/HeroSection/HeroSection";
+import TestimonialSection from "@/components/HeroSection/TestimonialSection";
+import BookCar from "@/components/HeroSection/BookCar";
+import DiscountBanner from "@/components/HeroSection/DiscountBanner";
+import FeatureHighlights from "@/components/HeroSection/FeatureHighlights";
+import FAQSection from "@/components/HeroSection/FAQSection";
+import Footer from "@/components/Others/Footer";
 
 const Home = () => {
   return (

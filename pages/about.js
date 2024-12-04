@@ -1,15 +1,15 @@
 import { Box } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import CompellingNarrative from "../components/CompellingNarrative";
-import MissionStatement from "../components/MissionStatement";
-const CoreValues = dynamic(() => import("../components/CoreValues"), {
+import Navbar from "../components/Others/Navbar";
+import Footer from "../components/Others/Footer";
+import CompellingNarrative from "../components/About/CompellingNarrative";
+import MissionStatement from "../components/About/MissionStatement";
+const CoreValues = dynamic(() => import("../components/About/CoreValues"), {
   ssr: false,
 });
-import MeetOurTeam from "../components/MeetOurTeam";
-import SocialProof from "../components/SocialProof";
-import CallToAction from "../components/ContactUs";
+import MeetOurTeam from "../components/About/MeetOurTeam";
+import SocialProof from "../components/About/SocialProof";
+import CallToAction from "../components/About/ContactUs";
 
 const AboutPage = () => {
   return (

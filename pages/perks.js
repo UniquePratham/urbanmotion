@@ -1,5 +1,5 @@
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
+import Footer from "@/components/Others/Footer";
+import Navbar from "@/components/Others/Navbar";
 import { Box, Heading, SimpleGrid, Flex, Text, Icon } from "@chakra-ui/react";
 import {
   FaCar,

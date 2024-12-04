@@ -11,6 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import Footer from "@/components/Others/Footer";
+import Navbar from "@/components/Others/Navbar";
 
 const MotionBox = motion(Box);
 
@@ -127,6 +129,8 @@ const SignUp = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <Flex
       minH="100vh"
       bg="gray.900"
@@ -259,6 +263,8 @@ const SignUp = () => {
         </Text>
       </MotionBox>
     </Flex>
+    <Footer />
+    </>
   );
 };
 
