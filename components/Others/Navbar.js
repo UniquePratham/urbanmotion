@@ -16,15 +16,23 @@ import { useRouter } from "next/router";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State for responsive menu
   const [sessionId, setSessionId] = useState(null); // Store sessionId in state
+  const [userData, setUserData] = useState(null); // Store user data
   const [showProfileMenu, setShowProfileMenu] = useState(false); // Show/hide profile menu
   const router = useRouter();
 
-  // Fetch sessionId from localStorage when the component mounts (client-side only)
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedSessionId = localStorage.getItem("sessionId");
       if (storedSessionId) {
         setSessionId(storedSessionId);
+
+        // Fetch user data based on sessionId
+        fetch(
+          `https://urban-motion-backend.vercel.app/api/sessions/${storedSessionId}`
+        )
+          .then((response) => response.json())
+          .then((data) => setUserData(data))
+          .catch((err) => console.error("Error fetching user data:", err));
       }
     }
   }, []);
@@ -34,10 +42,9 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    // Clear sessionId and perform any necessary cleanup
     localStorage.removeItem("sessionId");
-    setSessionId(null); // Clear sessionId from state
-    router.push("/signin"); // Redirect to sign-in page after logout
+    setSessionId(null);
+    router.push("/signin");
   };
 
   return (
@@ -80,7 +87,7 @@ const Navbar = () => {
         ))}
 
         {/* Profile Icon and Dropdown */}
-        {sessionId ? (
+        {sessionId && userData ? (
           <Flex align="center" position="relative">
             <Avatar
               size="sm"
@@ -97,19 +104,44 @@ const Navbar = () => {
                 p="1rem"
                 borderRadius="sm"
                 zIndex="1000"
+                boxShadow="0px 4px 6px rgba(0, 0, 0, 0.2)"
                 display="flex"
                 flexDirection="column"
                 alignItems="center"
-                boxShadow="0px 4px 6px rgba(0, 0, 0, 0.2)"
+                w="200px"
               >
-                <Text color="white" mb="1rem">
-                  Session ID: {sessionId}
+                <Text
+                  color="white"
+                  fontSize="14px"
+                  mb="1rem"
+                  textAlign="center"
+                  w="100%"
+                  wordBreak="break-word"
+                >
+                  {userData.email}
                 </Text>
+                <Link
+                  href="/dashboard"
+                  fontSize="14px"
+                  fontWeight="bold"
+                  color="white"
+                  w="100%"
+                  textAlign="center"
+                  py="8px"
+                  _hover={{
+                    background: "linear-gradient(90deg, #00db00, #009900)",
+                    color: "white",
+                  }}
+                >
+                  Dashboard
+                </Link>
                 <Button
                   aria-label="Logout"
                   colorScheme="red"
-                  onClick={handleLogout}
                   size="sm"
+                  w="100%"
+                  onClick={handleLogout}
+                  mt="1rem"
                 >
                   Logout
                 </Button>
@@ -188,65 +220,45 @@ const Navbar = () => {
               {item}
             </Link>
           ))}
-          {/* Profile Icon and Dropdown */}
-          {sessionId ? (
-            <Flex align="center" position="relative">
-              <Avatar
-                size="lg"
-                bg="green.500"
-                cursor="pointer"
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
-              />
-              {showProfileMenu && (
-                <Box
-                  position="absolute"
-                  top="50px"
-                  right="0"
-                  bg="rgba(0, 0, 0, 0.8)"
-                  p="1rem"
-                  borderRadius="sm"
-                  zIndex="1000"
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                  boxShadow="0px 4px 6px rgba(0, 0, 0, 0.2)"
-                >
-                  <Text color="white" mb="1rem">
-                    Session ID: {sessionId}
-                  </Text>
-                  <Button
-                    aria-label="Logout"
-                    colorScheme="red"
-                    onClick={handleLogout}
-                    size="sm"
-                  >
-                    Logout
-                  </Button>
-                </Box>
-              )}
+          {sessionId && userData ? (
+            <Flex align="center" direction="column">
+              <Text
+                color="white"
+                fontSize="14px"
+                textAlign="center"
+                mb="1rem"
+                w="100%"
+                wordBreak="break-word"
+              >
+                {userData.email}
+              </Text>
+              <Link
+                href="/dashboard"
+                fontSize="14px"
+                fontWeight="bold"
+                color="white"
+                w="100%"
+                textAlign="center"
+                py="8px"
+                _hover={{
+                  background: "linear-gradient(90deg, #00db00, #009900)",
+                  color: "white",
+                }}
+              >
+                Dashboard
+              </Link>
+              <Button
+                aria-label="Logout"
+                colorScheme="red"
+                size="sm"
+                w="100%"
+                onClick={handleLogout}
+                mt="1rem"
+              >
+                Logout
+              </Button>
             </Flex>
-          ) : (
-            <Link
-              href="/signin"
-              display="inline-flex"
-              alignItems="center"
-              fontSize="15px"
-              color="black"
-              bg="#00db00"
-              px="14px"
-              py="6px"
-              borderRadius="sm"
-              _hover={{
-                bg: "white",
-                color: "black",
-                transform: "scale(1.05)",
-                transition: "0.2s ease-in-out",
-              }}
-            >
-              <FaUserCircle style={{ marginRight: "8px" }} />
-              Login
-            </Link>
-          )}
+          ) : null}
         </VStack>
       )}
     </Flex>
