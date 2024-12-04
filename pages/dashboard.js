@@ -1,8 +1,8 @@
 import { Box, useToast, Text, Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import CustomerDashboard from "../components/CustomerDashboard";
-import RetailerDashboard from "../components/RetailerDashboard";
-import AdminDashboard from "../components/AdminDashboard";
+import CustomerDashboard from "../components/Dashboard/CustomerDashboard";
+import RetailerDashboard from "../components/Dashboard/RetailerDashboard";
+import AdminDashboard from "../components/Dashboard/AdminDashboard";
 import { useRouter } from "next/router";
 
 const Dashboard = () => {
