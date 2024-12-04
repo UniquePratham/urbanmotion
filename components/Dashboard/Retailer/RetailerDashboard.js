@@ -1,7 +1,31 @@
 import { Box, Heading, Text, Button, VStack } from "@chakra-ui/react";
+import {
+  FaCar,
+  FaPlus,
+  FaEdit,
+  FaCalendarCheck,
+  FaMoneyBillWave,
+  FaChartBar,
+  FaUser,
+  FaSignOutAlt,
+} from "react-icons/fa";
+import SideBar from "../CommonDashboardComponents/SideBar";
+
+const retailerDashboardData = [
+  { icon: FaCar, label: "My Cars" },
+  { icon: FaPlus, label: "Add Car" },
+  { icon: FaEdit, label: "Manage Cars" },
+  { icon: FaCalendarCheck, label: "Booking Requests" },
+  { icon: FaMoneyBillWave, label: "Earnings" },
+  { icon: FaChartBar, label: "Statistics" },
+  { icon: FaUser, label: "Profile" },
+  { icon: FaSignOutAlt, label: "Logout" },
+];
 
 const RetailerDashboard = () => {
   return (
+    <>
+    <SideBar text="Retailer Dashboard" datas={retailerDashboardData} />
     <Box p={6} bg="gray.800" borderRadius="lg">
       <Heading color="white" mb={4}>
         Retailer Dashboard
@@ -22,6 +46,7 @@ const RetailerDashboard = () => {
         </Button>
       </VStack>
     </Box>
+    </>
   );
 };
 
