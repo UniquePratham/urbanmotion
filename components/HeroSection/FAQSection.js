@@ -66,7 +66,7 @@ const FAQSection = () => {
   return (
     <Box
       bgGradient="linear(to-r, black, gray.800)"
-      p={8}
+      p={20}
       color="white"
       w="100%"
       mx="auto"
