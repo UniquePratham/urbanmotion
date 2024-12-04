@@ -1,7 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import Head from "next/head";
 import { Global } from "@emotion/react";
-import theme from "../theme"; // Path to your theme.js
+import theme from "@/theme"; // Path to your theme.js
 
 
 export default function App({ Component, pageProps }) {
