@@ -1,94 +1,57 @@
-import {
-  Box,
-  Flex,
-  Text,
-  VStack,
-  Icon,
-  Button,
-  Link,
-  Divider,
-} from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import { FaHome } from "react-icons/fa";
+import { Box, Flex, VStack, Icon, Text, Image } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
-// Motion Components
-const MotionBox = motion(Box);
+const Sidebar = ({ text, datas }) => {
+  const router = useRouter();
 
-// Sidebar Item Component
-const SidebarItem = ({ icon, label }) => (
-  <Flex
-    align="center"
-    gap={3}
-    p={2}
-    w="100%"
-    cursor="pointer"
-    borderRadius="md"
-    transition="all 0.2s ease"
-    _hover={{
-      color: "#00db00",
-      transform: "translateX(10px)",
-    }}
-  >
-    <Icon as={icon} w={6} h={6} />
-    <Text fontWeight="medium" fontSize="lg">
-      {label}
-    </Text>
-  </Flex>
-);
-
-// Sidebar Component
-export default function SideBar({ text, datas }) {
   return (
-    <MotionBox
-      as={Box}
+    <Box
       w={{ base: "100%", md: "20%" }}
-      h="100vh"
       bg="gray.900"
       p={4}
+      h="100vh"
       color="white"
-      initial={{ x: "-100%" }}
-      animate={{ x: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
       shadow="xl"
+      position="sticky"
+      top={0}
     >
-      {/* Logo and Brand Name */}
-      <Link href="/" style={{ textDecoration: "none" }}>
-        <Flex align="center" gap={3} mb={6} cursor="pointer">
-          <Icon as={FaHome} w={8} h={8} color="#00db00" />
-          <Text fontSize="2xl" fontWeight="bold" color="#00db00">
-            URBAN MOTION
-          </Text>
-        </Flex>
-      </Link>
-
-      {/* Sidebar Header */}
+      <Image
+        src="/hori.png" // Path to the logo in the `public` folder
+        alt="Urban Motion Logo"
+        mb={8}
+        boxSize="50px" // Adjust size as needed
+        objectFit="contain"
+      />
       <Text fontSize="xl" fontWeight="bold" color="#00db00" mb={6}>
         {text}
       </Text>
-
-      <Divider borderColor="gray.700" mb={6} />
-
-      {/* Sidebar Items */}
       <VStack align="start" spacing={4}>
         {datas.map((data, index) => (
-          <SidebarItem key={index} icon={data.icon} label={data.label} />
+          <Flex
+            key={index}
+            align="center"
+            gap={3}
+            p={3}
+            w="100%"
+            cursor="pointer"
+            borderRadius="md"
+            transition="all 0.2s ease"
+            _hover={{
+              bg: "#00db00",
+              color: "white",
+              transform: "translateX(5px)",
+            }}
+            onClick={() => router.push(data.path)}
+          >
+            <Icon as={data.icon} w={6} h={6} />
+            <Text fontWeight="medium" fontSize="lg">
+              {data.label}
+            </Text>
+          </Flex>
         ))}
       </VStack>
-
-      {/* Home Button */}
-      <Box mt="auto" pt={6}>
-        <Link href="/" style={{ textDecoration: "none" }}>
-          <Button
-            leftIcon={<FaHome />}
-            w="100%"
-            bg="#00db00"
-            color="black"
-            _hover={{ bg: "green.500", color: "white" }}
-          >
-            Home
-          </Button>
-        </Link>
-      </Box>
-    </MotionBox>
+    </Box>
   );
-}
+};
+
+export default Sidebar;

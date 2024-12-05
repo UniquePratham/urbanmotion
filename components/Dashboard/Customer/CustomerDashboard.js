@@ -1,100 +1,18 @@
-import { useEffect, useState } from "react";
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  VStack,
-  Icon,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import {
-  FaCar,
-  FaCalendarAlt,
-  FaBell,
-  FaUser,
-  FaMoneyBillWave,
-  FaFileAlt,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { Flex, Box } from "@chakra-ui/react";
+import Sidebar from "../CommonDashboardComponents/SideBar";
+import MainContent from "./MainContent";
+import BookCar from "./BookCar";
+import Bookings from "./Bookings";
+import Notifications from "./Notifications";
+import Payments from "./Payments";
+import RentalHistory from "./RentalHistory";
+import { useRouter } from "next/router";
 
-// Sidebar Component
-const Sidebar = ({ text, datas, onLogout }) => (
-  <Box
-    w={{ base: "100%", md: "20%" }}
-    bg="gray.900"
-    p={4}
-    h="100vh"
-    color="white"
-    shadow="xl"
-  >
-    {/* Brand Name */}
-    <Text fontSize="2xl" fontWeight="bold" color="#00db00" mb={8}>
-      URBAN MOTION
-    </Text>
-
-    {/* Sidebar Header */}
-    <Text fontSize="xl" fontWeight="bold" color="#00db00" mb={6}>
-      {text}
-    </Text>
-
-    {/* Sidebar Items */}
-    <VStack align="start" spacing={4}>
-      {datas.map((data, index) => (
-        <Flex
-          key={index}
-          align="center"
-          gap={3}
-          p={3}
-          w="100%"
-          cursor="pointer"
-          borderRadius="md"
-          transition="all 0.2s ease"
-          _hover={{
-            bg: "#00db00",
-            color: "white",
-            transform: "translateX(5px)",
-          }}
-          onClick={data.label === "Logout" ? onLogout : null}
-        >
-          <Icon as={data.icon} w={6} h={6} />
-          <Text fontWeight="medium" fontSize="lg">
-            {data.label}
-          </Text>
-        </Flex>
-      ))}
-    </VStack>
-  </Box>
-);
-
-// Main Content Component
-const MainContent = ({ customerData }) => {
-  const bgColor = useColorModeValue("gray.800", "gray.800");
-
-  return (
-    <Box flex="1" p={6} bg={bgColor} borderRadius="lg">
-      <Heading color="teal.400" mb={4}>
-        Welcome, {customerData?.name || "Guest"}!
-      </Heading>
-      <Text color="gray.400" mb={6}>
-        Here&apos;s your dashboard where you can manage bookings, account
-        settings, and more.
-      </Text>
-      {customerData ? (
-        <Box color="gray.100">
-          <Text>Name: {customerData.name}</Text>
-          <Text>Email: {customerData.email}</Text>
-        </Box>
-      ) : (
-        <Text>Loading customer details...</Text>
-      )}
-    </Box>
-  );
-};
-
-// Dashboard Container Component
 const CustomerDashboard = () => {
   const [customerData, setCustomerData] = useState(null);
+  const router = useRouter();
+  const { pathname } = router;
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -106,31 +24,51 @@ const CustomerDashboard = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    // Clear session data
-    localStorage.removeItem("sessionId");
-    localStorage.removeItem("userType");
+  const sidebarData = [
+    { icon: "FaCar", label: "Book a Car", path: "/dashboard/book-car" },
+    {
+      icon: "FaCalendarAlt",
+      label: "My Bookings",
+      path: "/dashboard/bookings",
+    },
+    {
+      icon: "FaBell",
+      label: "Notifications",
+      path: "/dashboard/notifications",
+    },
+    { icon: "FaMoneyBillWave", label: "Payments", path: "/dashboard/payments" },
+    {
+      icon: "FaFileAlt",
+      label: "Rental History",
+      path: "/dashboard/rental-history",
+    },
+  ];
 
-    // Redirect to the login page
-    window.location.href = "/signin";
+  const renderContent = () => {
+    switch (pathname) {
+      case "/dashboard":
+        return <MainContent customerData={customerData} />;
+      case "/dashboard/book-car":
+        return <BookCar />;
+      case "/dashboard/bookings":
+        return <Bookings />;
+      case "/dashboard/notifications":
+        return <Notifications />;
+      case "/dashboard/payments":
+        return <Payments />;
+      case "/dashboard/rental-history":
+        return <RentalHistory />;
+      default:
+        return <MainContent customerData={customerData} />;
+    }
   };
 
   return (
-    <Flex>
-      <Sidebar
-        text="Customer Dashboard"
-        datas={[
-          { icon: FaCar, label: "My Bookings" },
-          { icon: FaCalendarAlt, label: "Book a Car" },
-          { icon: FaBell, label: "Notifications" },
-          { icon: FaUser, label: "Profile" },
-          { icon: FaMoneyBillWave, label: "Payments" },
-          { icon: FaFileAlt, label: "Rental History" },
-          { icon: FaSignOutAlt, label: "Logout" },
-        ]}
-        onLogout={handleLogout}
-      />
-      <MainContent customerData={customerData} />
+    <Flex direction={{ base: "column", md: "row" }}>
+      <Sidebar text="Customer Dashboard" datas={sidebarData} />
+      <Box flex="1" p={4}>
+        {renderContent()}
+      </Box>
     </Flex>
   );
 };
