@@ -1,54 +1,96 @@
-import { Box, Heading, Text, Button, VStack } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Flex, Box } from "@chakra-ui/react";
+import Sidebar from "../CommonDashboardComponents/SideBar";
+import ManageUsers from "./ManageUsers";
+import ManageRetailers from "./ManageRetailers";
+import ManageCars from "./ManageCars";
+import Statistics from "./Statistics";
+import UserReports from "./UserReports";
+import SystemLogs from "./SystemLogs";
+import MainContent from "./MainContent"; // Import MainContent
+import { useRouter } from "next/router";
+
+// Import icons from react-icons
 import {
   FaUsers,
+  FaWarehouse,
   FaCar,
-  FaRegChartBar,
-  FaCog,
-  FaSignOutAlt,
-  FaUserShield,
-  FaWrench,
-  FaClipboardList,
+  FaUser,
+  FaChartBar,
+  FaFileAlt,
+  FaDatabase,
 } from "react-icons/fa";
-import SideBar from "../CommonDashboardComponents/SideBar";
-
-// Admin Dashboard data
-const adminDashboardData = [
-  { icon: FaUsers, label: "Manage Users" },  // Admin managing the platform's users
-  { icon: FaCar, label: "Manage Cars" },  // Admin managing cars rented on the platform
-  { icon: FaRegChartBar, label: "Statistics" },  // Admin viewing platform-wide stats
-  { icon: FaUserShield, label: "User Reports" },  // Admin can view user complaints or issues
-  { icon: FaWrench, label: "Settings" },  // Admin configuring platform settings
-  { icon: FaClipboardList, label: "Pending Approvals" },  // Admin viewing requests for new car rentals or user approvals
-  { icon: FaCog, label: "System Logs" },  // Admin can access logs for platform operations
-  { icon: FaSignOutAlt, label: "Logout" },  // Logging out from the admin panel
-];
-
 
 const AdminDashboard = () => {
+  const [adminData, setAdminData] = useState(null);
+  const [activeComponent, setActiveComponent] = useState("manage-users"); // Default active component
+  const router = useRouter();
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+    if (sessionId) {
+      fetch(`https://your-api-endpoint.com/api/sessions/${sessionId}`)
+        .then((res) => res.json())
+        .then((data) => setAdminData(data.data))
+        .catch((err) => console.error("Failed to fetch admin data:", err));
+    }
+  }, []);
+
+  const sidebarData = [
+    { icon: FaUsers, label: "Manage Users", path: "manage-users" },
+    { icon: FaWarehouse, label: "Manage Retailers", path: "manage-retailers" },
+    { icon: FaCar, label: "Manage Cars", path: "manage-cars" },
+    { icon: FaChartBar, label: "Statistics", path: "statistics" },
+    { icon: FaFileAlt, label: "User Reports", path: "user-reports" },
+    { icon: FaDatabase, label: "System Logs", path: "system-logs" },
+    { icon: FaUser, label: "Profile", path: "profile" }
+  ];
+
+  // Handle clicking sidebar buttons to change active component
+  const handleSidebarClick = (componentName) => {
+    setActiveComponent(componentName);
+  };
+
+  const renderContent = () => {
+    switch (activeComponent) {
+      case "manage-users":
+        return <ManageUsers />;
+      case "manage-retailers":
+        return <ManageRetailers />;
+      case "manage-cars":
+        return <ManageCars />;
+      case "statistics":
+        return <Statistics />;
+      case "user-reports":
+        return <UserReports />;
+      case "system-logs":
+        return <SystemLogs />;
+      case "profile":
+        return <MainContent />; // Display admin profile content
+      default:
+        return <ManageUsers />;
+    }
+  };
+
   return (
-    <>
-      <SideBar text="Admin Dashboard" datas={adminDashboardData} />
-      <Box p={6} bg="gray.800" borderRadius="lg">
-        <Heading color="white" mb={4}>
-          Admin Dashboard
-        </Heading>
-        <Text color="gray.400" mb={6}>
-          Welcome to the admin dashboard. Manage users, view analytics, and
-          perform other administrative tasks.
-        </Text>
-        <VStack spacing={4}>
-          <Button colorScheme="red" w="full">
-            Manage Users
-          </Button>
-          <Button colorScheme="red" w="full">
-            View Analytics
-          </Button>
-          <Button colorScheme="red" w="full">
-            Site Settings
-          </Button>
-        </VStack>
+    <Flex direction={{ base: "column", md: "row" }}>
+      <Sidebar
+        text="Admin Dashboard"
+        datas={sidebarData}
+        onSidebarClick={handleSidebarClick} // Pass the click handler
+      />
+      <Box
+        flex="1"
+        p={4}
+        color="white"
+        borderRadius="20px"
+        bg="gray.800" // Ensure the content area has a solid background
+        zIndex={10} // Ensure the content area is above the sidebar
+        position="relative" // Keep content positioned above the sidebar
+      >
+        {renderContent()} {/* Render the active component */}
       </Box>
-    </>
+    </Flex>
   );
 };
 
