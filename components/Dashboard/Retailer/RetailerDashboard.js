@@ -1,77 +1,93 @@
-import { Box, Heading, Text, Button, VStack, Flex } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Flex, Box } from "@chakra-ui/react";
+import Sidebar from "../CommonDashboardComponents/SideBar";
+import AddCar from "./AddCar";
+import RemoveCar from "./RemoveCar";
+import Notifications from "./Notifications";
+import CarsBooked from "./CarsBooked";
+import CarsReturned from "./CarsReturned";
+import MainContent from "./MainContent";
+import { useRouter } from "next/router";
+
+// Import icons from react-icons
 import {
   FaCar,
-  FaPlus,
-  FaEdit,
-  FaCalendarCheck,
-  FaMoneyBillWave,
-  FaChartBar,
+  FaTrash,
+  FaBell,
+  FaCalendarAlt,
+  FaExchangeAlt,
   FaUser,
-  FaSignOutAlt,
 } from "react-icons/fa";
-import SideBar from "../CommonDashboardComponents/SideBar";
 
-// Retailer dashboard data for the left sidebar
-const retailerDashboardData = [
-  { icon: FaCar, label: "My Cars" },
-  { icon: FaPlus, label: "Add Car" },
-  { icon: FaEdit, label: "Manage Cars" },
-  { icon: FaCalendarCheck, label: "Booking Requests" },
-  { icon: FaMoneyBillWave, label: "Earnings" },
-  { icon: FaChartBar, label: "Statistics" },
-  { icon: FaUser, label: "Profile" },
-  { icon: FaSignOutAlt, label: "Logout" },
-];
-
-// Retailer Dashboard Component
 const RetailerDashboard = () => {
+  const [retailerData, setRetailerData] = useState(null);
+  const [activeComponent, setActiveComponent] = useState("add-car"); // Default active component
+  const router = useRouter();
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+    if (sessionId) {
+      // Fetch retailer session data using the sessionId from localStorage
+      fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`)
+        .then((res) => res.json())
+        .then((data) => setRetailerData(data.data))
+        .catch((err) => console.error("Failed to fetch retailer data:", err));
+    } else {
+      // Redirect to login page if sessionId doesn't exist
+      router.push("/login");
+    }
+  }, []);
+
+  // Handle clicking sidebar buttons to change active component
+  const handleSidebarClick = (componentName) => {
+    setActiveComponent(componentName);
+  };
+
+  const renderContent = () => {
+    switch (activeComponent) {
+      case "add-car":
+        return <AddCar />;
+      case "remove-car":
+        return <RemoveCar />;
+      case "notifications":
+        return <Notifications />;
+      case "cars-booked":
+        return <CarsBooked />;
+      case "cars-returned":
+        return <CarsReturned />;
+      case "profile":
+        return <MainContent retailerData={retailerData} />; // Profile component with retailer data
+      default:
+        return <AddCar />;
+    }
+  };
+
+  const sidebarData = [
+    { icon: FaUser, label: "Profile", path: "profile" },
+    { icon: FaCar, label: "Add Car", path: "add-car" },
+    { icon: FaTrash, label: "Remove Car", path: "remove-car" },
+    { icon: FaCalendarAlt, label: "Cars Booked", path: "cars-booked" },
+    { icon: FaExchangeAlt, label: "Cars Returned", path: "cars-returned" },
+    { icon: FaBell, label: "Notifications", path: "notifications" },
+  ];
+
   return (
-    <Flex>
-      {/* Left Sidebar */}
-      <SideBar text="Retailer Dashboard" datas={retailerDashboardData} />
-
-      {/* Right Content */}
-      <Box flex="1" p={6} bg="gray.800" borderRadius="lg">
-        <Heading color="white" mb={4}>
-          Retailer Dashboard
-        </Heading>
-        <Text color="gray.400" mb={6}>
-          Welcome to your dashboard, manage your store, view orders, and update
-          your product catalog.
-        </Text>
-        <VStack spacing={4}>
-          <Button colorScheme="blue" w="full">
-            Manage Products
-          </Button>
-          <Button colorScheme="blue" w="full">
-            View Orders
-          </Button>
-          <Button colorScheme="blue" w="full">
-            Store Settings
-          </Button>
-        </VStack>
-      </Box>
-
-      {/* Right Sidebar for car management */}
+    <Flex direction={{ base: "column", md: "row" }}>
+      <Sidebar
+        text="Retailer Dashboard"
+        datas={sidebarData}
+        onSidebarClick={handleSidebarClick} // Pass the click handler
+      />
       <Box
-        w={{ base: "100%", md: "20%" }}
-        bg="gray.900"
+        flex="1"
         p={4}
-        h="100vh"
         color="white"
-        display={{ base: "none", md: "block" }} // Only display on medium and larger screens
+        borderRadius="20px"
+        bg="gray.800" // Ensure the content area has a solid background
+        zIndex={10} // Ensure the content area is above the sidebar
+        position="relative" // Keep content positioned above the sidebar
       >
-        <Heading color="white" size="md" mb={6}>
-          Car Management
-        </Heading>
-        <VStack spacing={4} align="start">
-          <Button colorScheme="green" w="full">
-            Add Car
-          </Button>
-          <Button colorScheme="red" w="full">
-            Remove Car
-          </Button>
-        </VStack>
+        {renderContent()} {/* Render the active component */}
       </Box>
     </Flex>
   );
