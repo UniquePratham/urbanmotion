@@ -3,7 +3,6 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, OrbitControls } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion"; // For popup animation
-import { useRouter } from "next/router";
 import { keyframes } from "@emotion/react";
 
 const fadeIn = keyframes`
@@ -59,8 +58,6 @@ const LamborghiniModel = () => {
 };
 
 const HeroSection = () => {
-  const router = useRouter();
-
   // Popup animation on component mount
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -106,14 +103,14 @@ const HeroSection = () => {
           width={{ base: "100%", md: "30%" }}
           position={{ base: "absolute", md: "none" }}
           top={{ base: "150px", md: "100px" }}
-          mt={{md:"70px"}}
+          mt={{ md: "70px" }}
           zIndex={2}
         >
           <Heading
             fontSize={{ base: "6xl", md: "7xl" }}
             textTransform="uppercase"
-            textShadow={{base:"0px 0px 50px white",md:"unset"}}
-            mb={{base:"15",md:"4"}}
+            textShadow={{ base: "0px 0px 50px white", md: "unset" }}
+            mb={{ base: "15", md: "4" }}
             cursor="crosshair"
           >
             <Text as="span" color="white">
@@ -126,7 +123,7 @@ const HeroSection = () => {
           <Text
             fontSize={{ base: "xl", md: "2xl" }}
             textTransform="uppercase"
-            color={{base:"lightgreen",md:"#00db00"}}
+            color={{ base: "lightgreen", md: "#00db00" }}
             textShadow="0px 0px 20px black"
             mb="4"
           >
@@ -151,9 +148,9 @@ const HeroSection = () => {
             }}
             size="lg"
             textTransform="uppercase"
-            onClick={() => router.push("/BookCar")} // Redirect to BookCar
             cursor="pointer"
             zIndex="2"
+            as="a" href="#BookCar"
           >
             Book Now
           </Button>

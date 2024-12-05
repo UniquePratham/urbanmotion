@@ -89,6 +89,7 @@ const BookCar = () => {
       backgroundSize="cover"
       backgroundPosition="center"
       backgroundRepeat="no-repeat"
+      id="BookCar"
     >
       {/* Heading and Search Section */}
       <Box textAlign="center" mb="8">

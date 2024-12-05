@@ -9,6 +9,7 @@ import {
   Input,
   Button,
   Image,
+  useToast
 } from "@chakra-ui/react";
 import {
   FaFacebook,
@@ -18,8 +19,14 @@ import {
   FaYoutube,
   FaGithub,
 } from "react-icons/fa";
+import emailjs from "emailjs-com"; // Import EmailJS
+import React, { useState } from "react";
+
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const toast = useToast();
   const socialLinks = [
     { icon: FaTwitter, link: "https://x.com/TheUrbanMotion" },
     { icon: FaLinkedin, link: "https://www.linkedin.com/in/urbanmotion-urban-motion-89832433b/" },
@@ -35,6 +42,56 @@ const Footer = () => {
     { label: "Careers", href: "/careers" },
     { label: "Contact Us", href: "/contact" },
   ];
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+
+    if (email) {
+      emailjs
+        .send(
+          "urbanmotion", // Service ID
+          "urbanmotion_template", // Template ID from EmailJS
+          {
+            user_email: email,
+            user_name: username,
+            message: "Thank you for subscribing to UrbanMotion.",
+          }, // Data being sent (email)
+          "7wARxgqnQG0HcsgzD" // Public key from EmailJS
+        )
+        .then(
+          (response) => {
+            toast({
+              title: "Subscription Successful.",
+              description:
+                "You have successfully subscribed to our newsletter.",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
+            setEmail(""); // Reset the email field after submission
+          },
+          (error) => {
+            toast({
+              title: "Subscription Failed.",
+              description:
+                "There was an issue with your subscription. Please try again.",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        );
+    } else {
+      toast({
+        title: "Invalid Email.",
+        description: "Please enter a valid email address.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
 
   return (
     <Box
@@ -88,24 +145,48 @@ const Footer = () => {
             our newsletter now!
           </Text>
           <HStack w="100%">
-            <Input
-              placeholder="Enter your email"
-              bg="gray.800"
-              border="none"
-              _placeholder={{ color: "gray.500" }}
-              color="white"
-              borderRadius="md"
-              w="100%"
-            />
-            <Button
-              bg="#00db00"
-              color="white"
-              _hover={{ bg: "black",color:"#00db00", border:"2px solid #00db00" }}
-              px={6}
-              borderRadius="md"
-            >
-              Subscribe
-            </Button>
+            <form onSubmit={handleSubscribe}>
+              <Flex direction="column" alignItems="center">
+                <Flex w={{ base: "100%", md: "auto" }} mb={4} direction="column" alignItems="center">
+                  <Input
+                    placeholder="Enter your username"
+                    bg="gray.700"
+                    size="lg"
+                    color="white"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    _placeholder={{ color: "gray.400" }}
+                    m={2}
+
+                  />
+                  <Input
+                    placeholder="Enter your email"
+                    bg="gray.700"
+                    size="lg"
+                    color="white"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    _placeholder={{ color: "gray.400" }}
+                    m={2}
+                  />
+                  <Button
+                    type="submit"
+                    size="lg"
+                    bg="#00db00"
+                    color="black"
+                    _hover={{
+                      bg: "#00b300",
+                      color: "white",
+                      boxShadow: "0 0 8px #00db00, 0 0 15px #00db00", // Glowing effect
+                      border: "2px solid #00db00",
+                    }}
+                    m={2}
+                  >
+                    Subscribe
+                  </Button>
+                </Flex>
+              </Flex>
+            </form>
           </HStack>
         </VStack>
 
