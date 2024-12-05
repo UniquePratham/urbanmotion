@@ -35,12 +35,12 @@ const CustomerDashboard = () => {
   }, []);
 
   const sidebarData = [
+    { icon: FaUser, label: "Profile", path: "profile" },
     { icon: FaCar, label: "Book a Car", path: "book-car" },
     { icon: FaCalendarAlt, label: "My Bookings", path: "bookings" },
     { icon: FaBell, label: "Notifications", path: "notifications" },
     { icon: FaMoneyBillWave, label: "Payments", path: "payments" },
     { icon: FaFileAlt, label: "Rental History", path: "rental-history" },
-    { icon: FaUser, label: "Profile", path: "profile" },
   ];
 
   // Handle clicking sidebar buttons to change active component
@@ -50,6 +50,8 @@ const CustomerDashboard = () => {
 
   const renderContent = () => {
     switch (activeComponent) {
+      case "profile":
+        return <MainContent customerData={customerData} />; // Render MainContent for Profile
       case "book-car":
         return <BookCar />;
       case "bookings":
@@ -60,8 +62,6 @@ const CustomerDashboard = () => {
         return <Payments />;
       case "rental-history":
         return <RentalHistory />;
-      case "profile":
-        return <MainContent customerData={customerData} />; // Render MainContent for Profile
       default:
         return <MainContent customerData={customerData} />;
     }

@@ -8,7 +8,7 @@ const Sidebar = ({ text, datas, onSidebarClick }) => {
   const handleLogout = () => {
     // Logic to handle logout, like clearing user data or redirecting
     localStorage.removeItem("sessionId");
-    router.push("/login"); // Redirect to login page after logout
+    router.push("/signin"); // Redirect to login page after logout
   };
 
   return (
