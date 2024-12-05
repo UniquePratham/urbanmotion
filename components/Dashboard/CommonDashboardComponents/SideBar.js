@@ -1,8 +1,15 @@
-import { Box, Flex, VStack, Icon, Text, Image } from "@chakra-ui/react";
+import { Box, Text, VStack, Flex, Icon, Image, Spacer } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { FaUser, FaSignOutAlt } from "react-icons/fa"; // Icons for Profile and Logout
 
-const Sidebar = ({ text, datas }) => {
+const Sidebar = ({ text, datas, onSidebarClick }) => {
   const router = useRouter();
+
+  const handleLogout = () => {
+    // Logic to handle logout, like clearing user data or redirecting
+    localStorage.removeItem("sessionId");
+    router.push("/login"); // Redirect to login page after logout
+  };
 
   return (
     <Box
@@ -14,15 +21,16 @@ const Sidebar = ({ text, datas }) => {
       shadow="xl"
       position="sticky"
       top={0}
+      borderRight="2px solid #2d3748" // A subtle border to add a bit of structure
     >
       <Image
         src="/hori.png" // Path to the logo in the `public` folder
         alt="Urban Motion Logo"
-        mb={8}
-        boxSize="50px" // Adjust size as needed
+        boxSize="180px" // Adjust size as needed
         objectFit="contain"
+        mt={{ md: "-50px" }}
       />
-      <Text fontSize="xl" fontWeight="bold" color="#00db00" mb={6}>
+      <Text fontSize="xl" mt={-6} fontWeight="light" color="#00db00" mb={6}>
         {text}
       </Text>
       <VStack align="start" spacing={4}>
@@ -35,13 +43,13 @@ const Sidebar = ({ text, datas }) => {
             w="100%"
             cursor="pointer"
             borderRadius="md"
-            transition="all 0.2s ease"
+            transition="all 0.3s ease"
             _hover={{
               bg: "#00db00",
               color: "white",
               transform: "translateX(5px)",
             }}
-            onClick={() => router.push(data.path)}
+            onClick={() => onSidebarClick(data.path)} // Update the active component
           >
             <Icon as={data.icon} w={6} h={6} />
             <Text fontWeight="medium" fontSize="lg">
@@ -50,6 +58,31 @@ const Sidebar = ({ text, datas }) => {
           </Flex>
         ))}
       </VStack>
+      <Spacer />{" "}
+      {/* This creates space to push the Profile and Logout buttons to the bottom */}
+      {/* Profile Section */}
+      {/* Logout Section */}
+      <Flex
+        align="center"
+        mt={8}
+        gap={3}
+        p={3}
+        w="100%"
+        cursor="pointer"
+        borderRadius="md"
+        transition="all 0.3s ease"
+        _hover={{
+          bg: "red.600", // Red background on hover for logout
+          color: "white",
+          transform: "translateX(5px)",
+        }}
+        onClick={handleLogout} // Handle logout logic
+      >
+        <Icon as={FaSignOutAlt} w={6} h={6} />
+        <Text fontWeight="medium" fontSize="lg">
+          Logout
+        </Text>
+      </Flex>
     </Box>
   );
 };

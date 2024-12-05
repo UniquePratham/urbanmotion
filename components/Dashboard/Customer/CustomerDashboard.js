@@ -9,10 +9,20 @@ import Payments from "./Payments";
 import RentalHistory from "./RentalHistory";
 import { useRouter } from "next/router";
 
+// Import icons from react-icons
+import {
+  FaCar,
+  FaCalendarAlt,
+  FaBell,
+  FaMoneyBillWave,
+  FaFileAlt,
+  FaUser,
+} from "react-icons/fa";
+
 const CustomerDashboard = () => {
   const [customerData, setCustomerData] = useState(null);
+  const [activeComponent, setActiveComponent] = useState("book-car"); // Default active component
   const router = useRouter();
-  const { pathname } = router;
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -25,39 +35,33 @@ const CustomerDashboard = () => {
   }, []);
 
   const sidebarData = [
-    { icon: "FaCar", label: "Book a Car", path: "/dashboard/book-car" },
-    {
-      icon: "FaCalendarAlt",
-      label: "My Bookings",
-      path: "/dashboard/bookings",
-    },
-    {
-      icon: "FaBell",
-      label: "Notifications",
-      path: "/dashboard/notifications",
-    },
-    { icon: "FaMoneyBillWave", label: "Payments", path: "/dashboard/payments" },
-    {
-      icon: "FaFileAlt",
-      label: "Rental History",
-      path: "/dashboard/rental-history",
-    },
+    { icon: FaCar, label: "Book a Car", path: "book-car" },
+    { icon: FaCalendarAlt, label: "My Bookings", path: "bookings" },
+    { icon: FaBell, label: "Notifications", path: "notifications" },
+    { icon: FaMoneyBillWave, label: "Payments", path: "payments" },
+    { icon: FaFileAlt, label: "Rental History", path: "rental-history" },
+    { icon: FaUser, label: "Profile", path: "profile" },
   ];
 
+  // Handle clicking sidebar buttons to change active component
+  const handleSidebarClick = (componentName) => {
+    setActiveComponent(componentName);
+  };
+
   const renderContent = () => {
-    switch (pathname) {
-      case "/dashboard":
-        return <MainContent customerData={customerData} />;
-      case "/dashboard/book-car":
+    switch (activeComponent) {
+      case "book-car":
         return <BookCar />;
-      case "/dashboard/bookings":
+      case "bookings":
         return <Bookings />;
-      case "/dashboard/notifications":
+      case "notifications":
         return <Notifications />;
-      case "/dashboard/payments":
+      case "payments":
         return <Payments />;
-      case "/dashboard/rental-history":
+      case "rental-history":
         return <RentalHistory />;
+      case "profile":
+        return <MainContent customerData={customerData} />; // Render MainContent for Profile
       default:
         return <MainContent customerData={customerData} />;
     }
@@ -65,9 +69,21 @@ const CustomerDashboard = () => {
 
   return (
     <Flex direction={{ base: "column", md: "row" }}>
-      <Sidebar text="Customer Dashboard" datas={sidebarData} />
-      <Box flex="1" p={4}>
-        {renderContent()}
+      <Sidebar
+        text="Customer Dashboard"
+        datas={sidebarData}
+        onSidebarClick={handleSidebarClick} // Pass the click handler
+      />
+      <Box
+        flex="1"
+        p={4}
+        color="white"
+        borderRadius="20px"
+        bg="gray.800" // Ensure the content area has a solid background
+        zIndex={10} // Ensure the content area is above the sidebar
+        position="relative" // Keep content positioned above the sidebar
+      >
+        {renderContent()} {/* Render the active component */}
       </Box>
     </Flex>
   );
