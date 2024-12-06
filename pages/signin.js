@@ -104,7 +104,7 @@ const SignIn = () => {
     <>
       <Navbar />
       <Flex
-        minH="100vh"
+        minH={{base:"100vh",md:"100vh"}}
         bg="black"
         flexDirection={{ base: "column", md: "row" }}
         alignItems="center"
@@ -122,7 +122,7 @@ const SignIn = () => {
           color="lightgreen"
           textAlign="center"
           w={{ base: "100%", md: "70%" }}
-          minH="100vh"
+          minH={{base:"90vh",md:"100vh"}}
           borderRadius={{ base: "none", md: "lg" }}
           display="flex"
           justifyContent="center"
@@ -214,13 +214,13 @@ const SignIn = () => {
           >
             SIGN IN
           </Button>
-          <Image src="/side_car_left.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} left={10}/>
+          <Image src="/side_car_left.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} left={10} display={{base:"none",md:"unset"}}/>
         </MotionBox>
 
         {/* Right Panel - Sign Up Redirect */}
         <MotionBox
           px={{ base: 6, md: 8 }}
-          py={8}
+          py={{ base: 10, md: 8 }}
           bg="gray.900"
           color="lightgreen"
           boxShadow="2xl"
@@ -229,14 +229,14 @@ const SignIn = () => {
           textAlign="center"
           display="flex"
           flexDirection="column"
-          justifyContent="center"
+          justifyContent={{base:"unset",md:"center"}}
           alignItems="center"
-          minH="100vh"
+          minH={{base:"60vh",md:"100vh"}}
           initial={{ x: 200, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 1 }}
         >
-          <Heading fontSize="4xl" mb={4}>
+          <Heading fontSize={{base:"2xl",md:"4xl"}} mb={4}>
             New Here?
           </Heading>
           <Text fontSize="md" mb={6}>
@@ -264,6 +264,7 @@ const SignIn = () => {
           >
             SIGN UP
           </Button>
+          <Image src="/side_car_left.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} display={{base:"flex",md:"none"}} justifyContent="center" alignItems="center"/>
         </MotionBox>
       </Flex>
     </>
