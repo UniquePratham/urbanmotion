@@ -5,14 +5,13 @@ import {
   Heading,
   Input,
   Text,
-  Link,
   useToast,
   Select,
+  Image
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import Footer from "@/components/Others/Footer";
 import Navbar from "@/components/Others/Navbar";
 
 const MotionBox = motion(Box);
@@ -106,78 +105,167 @@ const SignIn = () => {
       <Navbar />
       <Flex
         minH="100vh"
-        bg="gray.900"
-        flexDirection="column"
+        bg="black"
+        flexDirection={{ base: "column", md: "row" }}
         alignItems="center"
         justifyContent="center"
+        width="100vw"
       >
+        {/* Left Panel - Sign In Form */}
         <MotionBox
-          px={6}
-          py={8}
-          borderRadius="lg"
-          bg="gray.800"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
+          px={8}
+          py={12}
+          backgroundImage="url('/signup_bg.jpg')"
+          backgroundSize="cover"
+          backgroundPosition="center"
+          backgroundRepeat="no-repeat"
+          color="lightgreen"
+          textAlign="center"
+          w={{ base: "100%", md: "70%" }}
+          minH="100vh"
+          borderRadius={{ base: "none", md: "lg" }}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+          initial={{ x: -200, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
         >
-          <Heading color="white" mb={6} textAlign="center">
+          <Heading fontSize="3xl" mb={4}>
             Sign In
           </Heading>
+          <Text fontSize="sm" mb={6} color="gray.400">
+            Enter your credentials to access your account.
+          </Text>
           <Select
-            bg="gray.700"
-            color="white"
+            name="accountType"
+            bg="gray.100"
+            color="black"
             mb={4}
-            _hover={{ bg: "gray.600" }}
+            width={{ base: "300px", md: "350px" }}
+            _hover={{ bg: "gray.200" }}
+            defaultValue=""
             value={userType}
             onChange={(e) => setUserType(e.target.value)}
           >
-            <option value="customer">Customer</option>
-            <option value="retailer">Retailer</option>
-            <option value="admin">Admin</option>
+            <option value="" disabled>
+              Select Account Type
+            </option>
+            <option value="customer">👤 Customer</option>
+            <option value="retailer">🏪 Retailer</option>
+            <option value="admin">👑 Admin</option>
           </Select>
           <Input
+            name="email"
             placeholder="Email"
-            bg="gray.700"
-            color="white"
+            bg="gray.100"
+            color="black"
             mb={4}
-            _hover={{ bg: "gray.600" }}
+            width={{ base: "300px", md: "350px" }}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            _hover={{ bg: "gray.200" }}
           />
           <Input
+            name="password"
             type="password"
+            color="black"
             placeholder="Password"
-            bg="gray.700"
-            color="white"
+            bg="gray.100"
             mb={4}
-            _hover={{ bg: "gray.600" }}
+            width={{ base: "300px", md: "350px" }}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            _hover={{ bg: "gray.200" }}
           />
           {userType === "admin" && (
             <Input
               type="password"
               placeholder="Admin Passphrase"
-              bg="gray.700"
-              color="white"
+              width={{ base: "300px", md: "350px" }}
+              bg="gray.100"
+              color="black"
               mb={4}
               _hover={{ bg: "gray.600" }}
               value={adminPassphrase}
               onChange={(e) => setAdminPassphrase(e.target.value)}
             />
           )}
-          <Button colorScheme="green" w="100%" onClick={handleSignIn}>
-            Sign In
+          <Button
+            bg="white"
+            color="black"
+            border="2px solid transparent"
+            borderRadius="md"
+            fontSize="lg"
+            px="5"
+            py="4"
+            _hover={{
+              bg: "#00db00",
+              boxShadow: "0 0 15px #00db00, 0 0 30px #00db00",
+              border: "2px solid #00db00",
+              color: "white",
+            }}
+            sx={{
+              boxShadow: "0 0 10px #00db00, 0 0 20px rgba(0, 219, 0, 0.5)",
+              transition: "0.3s ease",
+            }}
+            onClick={handleSignIn}
+          >
+            SIGN IN
           </Button>
-          <Text color="gray.400" mt={4} textAlign="center">
-            Don&apos;t have an account?{" "}
-            <Link color="green.400" href="/signup">
-              Sign Up Here
-            </Link>
+          <Image src="/side_car_left.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} left={10}/>
+        </MotionBox>
+
+        {/* Right Panel - Sign Up Redirect */}
+        <MotionBox
+          px={{ base: 6, md: 8 }}
+          py={8}
+          bg="gray.900"
+          color="lightgreen"
+          boxShadow="2xl"
+          borderRadius="lg"
+          w={{ base: "100%", md: "30%" }}
+          textAlign="center"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          minH="100vh"
+          initial={{ x: 200, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          <Heading fontSize="4xl" mb={4}>
+            New Here?
+          </Heading>
+          <Text fontSize="md" mb={6}>
+            Sign up and discover a great amount of new opportunities!
           </Text>
+          <Button
+            bg="black"
+            color="lightgreen"
+            border="2px solid transparent"
+            borderRadius="md"
+            fontSize="lg"
+            px="5"
+            py="4"
+            _hover={{
+              bg: "#00db00",
+              boxShadow: "0 0 15px #00db00, 0 0 30px #00db00",
+              border: "2px solid #00db00",
+              color: "white",
+            }}
+            sx={{
+              boxShadow: "0 0 10px #00db00, 0 0 20px rgba(0, 219, 0, 0.5)",
+              transition: "0.3s ease",
+            }}
+            onClick={() => router.push("/signup")}
+          >
+            SIGN UP
+          </Button>
         </MotionBox>
       </Flex>
-      <Footer />
     </>
   );
 };

@@ -6,17 +6,20 @@ import {
   Input,
   Select,
   Text,
-  Link,
   useToast,
+  Image
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+import { color, motion } from "framer-motion";
 import { useState } from "react";
-import Footer from "@/components/Others/Footer";
 import Navbar from "@/components/Others/Navbar";
+import { FaUser, FaStore, FaCrown } from "react-icons/fa";
+import { useRouter } from "next/router";
+
 
 const MotionBox = motion(Box);
 
 const SignUp = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -127,143 +130,223 @@ const SignUp = () => {
       });
     }
   };
-
   return (
     <>
-    <Navbar />
-    <Flex
-      minH="100vh"
-      bg="gray.900"
-      flexDirection={{ base: "column", md: "row" }}
-      alignItems="center"
-      justifyContent="center"
-    >
-      <MotionBox
-        px={{ base: 6, md: 8 }}
-        py={8}
-        borderRadius="lg"
-        bg="gray.800"
-        boxShadow="lg"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        width="100%"
-        maxWidth="400px"
-        textAlign="center"
+      <Navbar />
+      <Flex
+        minH="100vh"
+        bg="black"
+        flexDirection={{ base: "column", md: "row" }}
+        alignItems="center"
+        justifyContent="center"
+        width="100vw"
       >
-        <Heading color="white" mb={6}>
-          Create an Account
-        </Heading>
-        <Text color="gray.400" mb={4}>
-          Sign up to start your journey with us!
-        </Text>
-        <Select
-          name="accountType"
-          bg="gray.700"
-          color="white"
-          mb={4}
-          _hover={{ bg: "gray.600" }}
-          onChange={handleInputChange}
+        {/* Left Panel */}
+        <MotionBox
+          initial={{ x: -200, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+          bg="gray.900"
+          color="lightgreen"
+          px={8}
+          py={12}
+          w={{ base: "100%", md: "30%" }}
+          textAlign="center"
+          minH="100vh"
+          borderRadius={{ base: "none", md: "lg" }}
+          display={{ base: "none", md: "flex" }}
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
         >
-          <option value="customer">Customer</option>
-          <option value="retailer">Retailer</option>
-          <option value="admin">Admin</option>
-        </Select>
-        <Input
-          name="name"
-          placeholder="Full Name"
-          bg="gray.700"
-          color="white"
-          mb={4}
-          _hover={{ bg: "gray.600" }}
-          onChange={handleInputChange}
-        />
-        <Input
-          name="email"
-          placeholder="Email"
-          bg="gray.700"
-          color="white"
-          mb={4}
-          _hover={{ bg: "gray.600" }}
-          onChange={handleInputChange}
-        />
-        <Input
-          name="password"
-          placeholder="Password"
-          type="password"
-          bg="gray.700"
-          color="white"
-          mb={6}
-          _hover={{ bg: "gray.600" }}
-          onChange={handleInputChange}
-        />
-        <Input
-          name="drivingLicenseId"
-          placeholder="Driving License ID (optional)"
-          bg="gray.700"
-          color="white"
-          mb={4}
-          _hover={{ bg: "gray.600" }}
-          onChange={handleAdditionalChange}
-        />
-        <Select
-          name="verificationType"
-          bg="gray.700"
-          color="white"
-          mb={4}
-          _hover={{ bg: "gray.600" }}
-          onChange={handleAdditionalChange}
+          <Heading fontSize="4xl" mb={4} zIndex={2}>
+            Welcome Back!
+          </Heading>
+          <Text fontSize="md" mb={8} zIndex={2}>
+            To keep connected with us please log in with your personal info
+          </Text>
+          <Button
+            bg="black" // Button background
+            color="lightgreen" // Text color
+            border="2px solid transparent" // Initial border
+            borderRadius="md"
+            fontSize="lg"
+            px="5"
+            py="4"
+            position="relative"
+            zIndex={2}
+            _hover={{
+              bg: "#00db00", // Keep background color on hover
+              boxShadow: "0 0 15px #00db00, 0 0 30px #00db00", // Glowing effect
+              border: "2px solid #00db00", // Highlight border
+              color: "white"
+            }}
+            sx={{
+              boxShadow: "0 0 10px #00db00, 0 0 20px rgba(0, 219, 0, 0.5)", // Default glow
+              transition: "0.3s ease", // Smooth transition
+            }}
+            onClick={() => router.push("/signin")}
+          >
+            SIGN IN
+          </Button>
+        </MotionBox>
+
+        {/* Right Panel */}
+        <MotionBox
+          px={{ base: 6, md: 8 }}
+          py={8}
+          backgroundImage="url('/signup_bg.jpg')"
+          backgroundSize="cover"
+          backgroundPosition="center"
+          backgroundRepeat="no-repeat"
+          boxShadow="2xl"
+          borderRadius="lg"
+          initial={{ x: 200, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+          w={{ base: "100%", md: "70%" }}
+          textAlign="center"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          minH="100vh"
+          paddingTop="92px"
         >
-          <option value="aadhar">Aadhar</option>
-          <option value="pan">PAN</option>
-        </Select>
-        <Input
-          name="verificationId"
-          placeholder="Verification ID"
-          bg="gray.700"
-          color="white"
-          mb={4}
-          _hover={{ bg: "gray.600" }}
-          onChange={handleAdditionalChange}
-        />
-
-        {/* Admin specific fields */}
-        {formData.accountType === "admin" && (
-          <>
-            <Input
-              name="position"
-              placeholder="Position"
-              bg="gray.700"
-              color="white"
-              mb={4}
-              _hover={{ bg: "gray.600" }}
-              onChange={handleAdditionalChange}
-            />
-            <Input
-              name="passcode"
-              placeholder="Passcode"
-              type="password"
-              bg="gray.700"
-              color="white"
-              mb={6}
-              _hover={{ bg: "gray.600" }}
-              onChange={handleAdditionalChange}
-            />
-          </>
-        )}
-
-        <Button colorScheme="green" w="100%" mb={4} onClick={handleSignUp}>
-          Sign Up
-        </Button>
-        <Text color="gray.400" fontSize="sm">
-          Already have an account?{" "}
-          <Link color="teal.300" href="/signin">
-            Log in
-          </Link>
-        </Text>
-      </MotionBox>
-    </Flex>
-    <Footer />
+          <Heading fontSize="3xl" color="white" mb={4}>
+            Create an Account
+          </Heading>
+          <Text fontSize="sm" color="whitesmoke" mb={6}>
+            Fill in the details below for registration:
+          </Text>
+          <Select
+            name="accountType"
+            bg="gray.100"
+            mb={2}
+            width={{ base: "300px", md: "300px" }}
+            onChange={handleInputChange}
+            _hover={{ bg: "gray.200" }}
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Select Account Type
+            </option>
+            <option value="customer">👤 Customer</option>
+            <option value="retailer">🏪 Retailer</option>
+            <option value="admin">👑 Admin</option>
+          </Select>
+          <Input
+            name="name"
+            placeholder="Full Name"
+            bg="gray.100"
+            mb={2}
+            width={{ base: "300px", md: "300px" }}
+            onChange={handleInputChange}
+            _hover={{ bg: "gray.200" }}
+          />
+          <Input
+            name="email"
+            placeholder="Email"
+            bg="gray.100"
+            mb={2}
+            width={{ base: "300px", md: "300px" }}
+            onChange={handleInputChange}
+            _hover={{ bg: "gray.200" }}
+          />
+          <Input
+            name="password"
+            type="password"
+            placeholder="Password"
+            bg="gray.100"
+            mb={2}
+            width={{ base: "300px", md: "300px" }}
+            onChange={handleInputChange}
+            _hover={{ bg: "gray.200" }}
+          />
+          <Input
+            name="drivingLicenseId"
+            placeholder="Driving License ID (optional)"
+            bg="gray.100"
+            mb={2}
+            width={{ base: "300px", md: "300px" }}
+            onChange={handleAdditionalChange}
+            _hover={{ bg: "gray.200" }}
+          />
+          <Select
+            name="verificationType"
+            bg="gray.100"
+            mb={2}
+            width={{ base: "300px", md: "300px" }}
+            onChange={handleAdditionalChange}
+            _hover={{ bg: "gray.200" }}
+            defaultValue=""
+            >
+              <option value="" disabled>
+                Select Verification ID Type
+              </option>
+            <option value="aadhar">Aadhar</option>
+            <option value="pan">PAN</option>
+          </Select>
+          <Input
+            name="verificationId"
+            placeholder="Verification ID"
+            bg="gray.100"
+            mb={2}
+            width={{ base: "300px", md: "300px" }}
+            onChange={handleAdditionalChange}
+            _hover={{ bg: "gray.200" }}
+          />
+          {formData.accountType === "admin" && (
+            <>
+              <Input
+                name="position"
+                placeholder="Position"
+                bg="gray.100"
+                mb={2}
+                width={{ base: "300px", md: "300px" }}
+                onChange={handleAdditionalChange}
+                _hover={{ bg: "gray.200" }}
+              />
+              <Input
+                name="passcode"
+                placeholder="Passcode"
+                type="password"
+                bg="gray.100"
+                mb={2}
+                width={{ base: "300px", md: "300px" }}
+                onChange={handleAdditionalChange}
+                _hover={{ bg: "gray.200" }}
+              />
+            </>
+          )}
+          <Button
+            mb={2}
+            width={{ base: "300px", md: "110px" }}
+            onClick={handleSignUp}
+            bg="white" // Button background
+            color="black" // Text color
+            border="2px solid transparent" // Initial border
+            borderRadius="md"
+            fontSize="lg"
+            px="5"
+            py="4"
+            position="relative"
+            _hover={{
+              bg: "#00db00", // Keep background color on hover
+              boxShadow: "0 0 15px #00db00, 0 0 30px #00db00", // Glowing effect
+              border: "2px solid #00db00", // Highlight border
+              color: "white"
+            }}
+            sx={{
+              boxShadow: "0 0 10px #00db00, 0 0 20px rgba(0, 219, 0, 0.5)", // Default glow
+              transition: "0.3s ease", // Smooth transition
+            }}
+          >
+            SIGN UP
+          </Button>
+          <Image src="/side_car_right.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} right={10}/>
+        </MotionBox>
+      </Flex>
     </>
   );
 };
