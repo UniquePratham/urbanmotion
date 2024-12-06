@@ -10,7 +10,9 @@ import {
   Stack,
   Icon,
   Spinner,
+  useToast, // Import useToast hook for displaying toasts
 } from "@chakra-ui/react";
+import { motion } from "framer-motion"; // Import framer-motion for animations
 import { useState, useEffect } from "react";
 import {
   FaStar,
@@ -19,6 +21,7 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 import axios from "axios";
+import { useRouter } from "next/router"; // Import useRouter for redirection
 
 const BookCar = () => {
   const [cars, setCars] = useState([]);
@@ -28,6 +31,8 @@ const BookCar = () => {
   const [priceFilter, setPriceFilter] = useState("");
   const [fuelTypeFilter, setFuelTypeFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false); // State to track loading
+  const toast = useToast(); // To display toast messages
+  const router = useRouter(); // Hook for redirection
 
   useEffect(() => {
     // Fetching available cars data
@@ -47,7 +52,7 @@ const BookCar = () => {
       }
     };
     fetchCars();
-  }, []);
+  }, [router]); // Re-run if router changes
 
   const handleFilterChange = () => {
     setIsLoading(true); // Show spinner when filters are applied
@@ -95,6 +100,105 @@ const BookCar = () => {
     return stars;
   };
 
+  const handleBooking = async (car, toast, onClose) => {
+    toast({
+      title: "Confirm Booking",
+      description: `Do you want to book ${car.model}?`,
+      status: "info",
+      duration: 5000,
+      isClosable: true,
+      position: "top",
+      render: ({ onClose }) => (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Box
+            color="white"
+            p={6}
+            bg="teal.500"
+            borderRadius="md"
+            fontSize="lg"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            boxShadow="xl"
+            width="auto"
+          >
+            <Text mb={4} fontSize="xl" fontWeight="bold">
+              Do you want to book {car.model}?
+            </Text>
+            <HStack spacing={6}>
+              <Button
+                colorScheme="green"
+                size="lg"
+                onClick={async () => {
+                  try {
+                    // Send request to book the car
+                    const response = await axios.post(
+                      "https://urban-motion-backend.vercel.app/api/cars/book-car",
+                      { registrationNumber: car.registrationNumber }
+                    );
+
+                    if (response.status === 200) {
+                      // Store the registration number in local storage
+                      localStorage.setItem(
+                        "carRegistrationNumber",
+                        car.registrationNumber
+                      );
+
+                      // Optionally store full booking details in local storage
+                      localStorage.setItem(
+                        "bookingDetails",
+                        JSON.stringify(response.data)
+                      );
+
+                      // Show success toast after booking the car
+                      toast({
+                        title: "Booking Confirmed",
+                        description: `You have successfully booked the ${car.model}. You can view the status in the Bookings tab of your dashboard.`,
+                        status: "success",
+                        duration: 5000,
+                        isClosable: true,
+                        position: "top",
+                        render: () => (
+                          <Box
+                            color="white"
+                            p={6}
+                            bg="green.500"
+                            borderRadius="md"
+                            fontSize="lg"
+                            boxShadow="xl"
+                          >
+                            <Text>
+                              You have successfully booked the {car.model}. You
+                              can view the status in the Bookings tab of your
+                              dashboard.
+                            </Text>
+                          </Box>
+                        ),
+                      });
+                    }
+                  } catch (error) {
+                    console.error("Error booking car:", error);
+                  }
+                  onClose();
+                }}
+              >
+                Yes
+              </Button>
+              <Button colorScheme="red" size="lg" onClick={onClose}>
+                No
+              </Button>
+            </HStack>
+          </Box>
+        </motion.div>
+      ),
+    });
+  };
+
   return (
     <Box p={6} bg="gray.900" borderRadius="lg" boxShadow="lg">
       <Heading as="h1" size="lg" mb={6} color="teal.400" textAlign="center">
@@ -106,6 +210,7 @@ const BookCar = () => {
         <Select
           placeholder="Select Car Type"
           onChange={(e) => setCarTypeFilter(e.target.value)}
+          color="white" // Ensure input text is white
         >
           <option value="Electric">Electric</option>
           <option value="Sedan">Sedan</option>
@@ -115,6 +220,7 @@ const BookCar = () => {
         <Select
           placeholder="Select Rating"
           onChange={(e) => setRatingFilter(e.target.value)}
+          color="white" // Ensure input text is white
         >
           <option value="1">1 Star</option>
           <option value="2">2 Stars</option>
@@ -126,6 +232,7 @@ const BookCar = () => {
         <Select
           placeholder="Select Fuel Type"
           onChange={(e) => setFuelTypeFilter(e.target.value)}
+          color="white" // Ensure input text is white
         >
           <option value="Diesel">Diesel</option>
           <option value="Petrol">Petrol</option>
@@ -135,6 +242,7 @@ const BookCar = () => {
         <Select
           placeholder="Max Monthly Price"
           onChange={(e) => setPriceFilter(e.target.value)}
+          color="white" // Ensure input text is white
         >
           <option value="20000">₹20000</option>
           <option value="30000">₹30000</option>
@@ -201,6 +309,7 @@ const BookCar = () => {
                           ₹{car.carPricing.weekly}
                         </Text>
                       </Box>
+
                       <Box>
                         <Text color="gray.300" fontSize="sm">
                           Monthly Price
@@ -209,54 +318,16 @@ const BookCar = () => {
                           ₹{car.carPricing.monthly}
                         </Text>
                       </Box>
-                      <Box>
-                        <Text color="gray.300" fontSize="sm">
-                          Quarterly Price
-                        </Text>
-                        <Text color="teal.400" fontWeight="bold">
-                          ₹{car.carPricing.quarterly}
-                        </Text>
-                      </Box>
                     </Stack>
-                  </Box>
 
-                  {/* Action Buttons */}
-                  <Box>
-                    {/* Buy Now Button */}
+                    {/* Book Now Button */}
                     <Button
-                      colorScheme="teal"
-                      size="lg"
-                      mb={3}
-                      variant="outline"
-                      border="2px solid"
-                      borderColor="teal.400"
-                      _hover={{
-                        bg: "teal.400",
-                        color: "white",
-                        transform: "scale(1.1)",
-                        transition: "all 0.3s",
-                      }}
-                      leftIcon={<FaCheckCircle />}
-                    >
-                      Buy Now
-                    </Button>
-
-                    {/* Add to Cart Button */}
-                    <Button
-                      colorScheme="blue"
-                      size="lg"
-                      variant="outline"
-                      border="2px solid"
-                      borderColor="blue.400"
-                      _hover={{
-                        bg: "blue.400",
-                        color: "white",
-                        transform: "scale(1.1)",
-                        transition: "all 0.3s",
-                      }}
                       leftIcon={<FaShoppingCart />}
+                      colorScheme="teal"
+                      variant="outline"
+                      onClick={() => handleBooking(car, toast)} // Call booking handler
                     >
-                      Add to Cart
+                      Book Now
                     </Button>
                   </Box>
                 </HStack>

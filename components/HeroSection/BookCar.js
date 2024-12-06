@@ -1,247 +1,270 @@
 import {
   Box,
-  Button,
-  Flex,
   Heading,
   Image,
-  Select,
-  SimpleGrid,
   Text,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  IconButton,
+  Button,
+  VStack,
+  HStack,
+  Select,
+  Stack,
+  Icon,
+  Spinner,
 } from "@chakra-ui/react";
-import { FaShoppingCart, FaStar, FaSearch } from "react-icons/fa";
-import { motion,useInView } from "framer-motion";
-import { useRef } from "react";
-
-const cars = [
-  {
-    id: 1,
-    image: "/car1.png",
-    name: "Hyundai Solaris",
-    description: "4-seater car for you",
-    price: 229,
-    originalPrice: 300,
-    rating: 4.5,
-  },
-  {
-    id: 2,
-    image: "/car2.png",
-    name: "Hyundai Solaris",
-    description: "Compact and stylish",
-    price: 249,
-    originalPrice: 320,
-    rating: 4.2,
-  },
-  {
-    id: 3,
-    image: "/car3.png",
-    name: "Hyundai Tucson",
-    description: "Luxury SUV for adventure",
-    price: 299,
-    originalPrice: 400,
-    rating: 4.7,
-  },
-  {
-    id: 4,
-    image: "/car2.png",
-    name: "Hyundai Tucson",
-    description: "Reliable sedan for city life",
-    price: 189,
-    originalPrice: 250,
-    rating: 4.1,
-  },
-  {
-    id: 5,
-    image: "/car3.png",
-    name: "Toyota Corolla",
-    description: "Reliable sedan for city life",
-    price: 189,
-    originalPrice: 250,
-    rating: 4.7,
-  },
-  {
-    id: 6,
-    image: "/car1.png",
-    name: "Hyundai Solaris",
-    description: "Reliable sedan for city life",
-    price: 189,
-    originalPrice: 250,
-    rating: 4.4,
-  },
-];
-
-const MotionBox = motion(Box);
+import { useState, useEffect } from "react";
+import {
+  FaStar,
+  FaRegStar,
+  FaShoppingCart,
+  FaCheckCircle,
+} from "react-icons/fa";
+import axios from "axios";
 
 const BookCar = () => {
-  const ref = useRef(null); // Ref for the container
-  const isInView = useInView(ref, { once: true, threshold: 0.2 }); // Detect when visible
+  const [cars, setCars] = useState([]);
+  const [filteredCars, setFilteredCars] = useState([]);
+  const [carTypeFilter, setCarTypeFilter] = useState("");
+  const [ratingFilter, setRatingFilter] = useState("");
+  const [priceFilter, setPriceFilter] = useState("");
+  const [fuelTypeFilter, setFuelTypeFilter] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // State to track loading
+
+  useEffect(() => {
+    // Fetching available cars data
+    const fetchCars = async () => {
+      setIsLoading(true); // Set loading to true before fetching
+      try {
+        const response = await axios.get(
+          "https://urban-motion-backend.vercel.app/api/cars/get-available-cars"
+        );
+        const availableCars = response.data.cars.filter((car) => !car.isHanded);
+        setCars(availableCars);
+        setFilteredCars(availableCars);
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+      } finally {
+        setIsLoading(false); // Set loading to false after data is fetched
+      }
+    };
+    fetchCars();
+  }, []);
+
+  const handleFilterChange = () => {
+    setIsLoading(true); // Show spinner when filters are applied
+    let filtered = cars;
+
+    // Filter by car type
+    if (carTypeFilter) {
+      filtered = filtered.filter((car) => car.carType === carTypeFilter);
+    }
+
+    // Filter by rating
+    if (ratingFilter) {
+      filtered = filtered.filter((car) => car.rating >= ratingFilter);
+    }
+
+    // Filter by price
+    if (priceFilter) {
+      filtered = filtered.filter(
+        (car) => car.carPricing.monthly <= priceFilter
+      );
+    }
+
+    // Filter by fuel type
+    if (fuelTypeFilter) {
+      filtered = filtered.filter((car) => car.fuelType === fuelTypeFilter);
+    }
+
+    setFilteredCars(filtered);
+    setIsLoading(false); // Hide spinner after filter is applied
+  };
+
+  const calculateStars = (rating) => {
+    const totalStars = 5;
+    const filledStars = Math.round(rating);
+    const stars = [];
+
+    for (let i = 0; i < totalStars; i++) {
+      if (i < filledStars) {
+        stars.push(<Icon as={FaStar} key={i} color="yellow.400" />);
+      } else {
+        stars.push(<Icon as={FaRegStar} key={i} color="yellow.400" />);
+      }
+    }
+
+    return stars;
+  };
 
   return (
-    <Box
-      bgColor="#0f131c"
-      color="#10141e"
-      py="12"
-      px={{ base: "4", lg: "12" }}
-      backgroundImage="url('/green_bg.png')"
-      backgroundSize="cover"
-      backgroundPosition="center"
-      backgroundRepeat="no-repeat"
-      id="BookCar"
-    >
-      {/* Heading and Search Section */}
-      <Box textAlign="center" mb="8">
-        <Heading
-          as="h1"
-          color="white"
-          fontSize={{ base: "3xl", md: "4xl" }}
-          fontWeight="bold"
-          mb="6"
-        >
-          Book Your{" "}
-          <Text as="span" color="#00db00">
-            Car Today!
-          </Text>
-        </Heading>
-        <Flex justify="center" align="center" mb="8">
-          <InputGroup maxW="700px" w="100%">
-            <InputLeftElement pointerEvents="none">
-              <FaSearch color="gray.500" />
-            </InputLeftElement>
-            <Input
-              placeholder="Search for cars..."
-              bg="white"
-              color="gray.800"
-              px="4"
-              py="2"
-              borderRadius="md"
-              _focus={{ borderColor: "#00db00" }}
-            />
-          </InputGroup>
-        </Flex>
-      </Box>
+    <Box p={6} bg="gray.900" borderRadius="lg" boxShadow="lg">
+      <Heading as="h1" size="lg" mb={6} color="teal.400" textAlign="center">
+        Book a Car
+      </Heading>
 
-      {/* Filters Section */}
-      <Flex justify="center" gap="4" wrap="wrap" mb="8" mx="auto" maxW="1000px">
+      {/* Filters */}
+      <HStack spacing={4} mb={6} justify="center">
         <Select
-          placeholder="Select Brand"
-          bg="white"
-          color="gray.800"
-          w={{ base: "100%", md: "200px" }}
-          _hover={{ borderColor: "#00db00" }}
-        />
+          placeholder="Select Car Type"
+          onChange={(e) => setCarTypeFilter(e.target.value)}
+        >
+          <option value="Electric">Electric</option>
+          <option value="Sedan">Sedan</option>
+          <option value="SUV">SUV</option>
+        </Select>
+
         <Select
-          placeholder="Select Size"
-          bg="white"
-          color="gray.800"
-          w={{ base: "100%", md: "200px" }}
-          _hover={{ borderColor: "#00db00" }}
-        />
+          placeholder="Select Rating"
+          onChange={(e) => setRatingFilter(e.target.value)}
+        >
+          <option value="1">1 Star</option>
+          <option value="2">2 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="5">5 Stars</option>
+        </Select>
+
         <Select
-          placeholder="Price Range"
-          bg="white"
-          color="gray.800"
-          w={{ base: "100%", md: "200px" }}
-          _hover={{ borderColor: "#00db00" }}
-        />
-        <Button bg="#00db00" color="white" _hover={{ bg: "cyan.400" }}>
-          Search
+          placeholder="Select Fuel Type"
+          onChange={(e) => setFuelTypeFilter(e.target.value)}
+        >
+          <option value="Diesel">Diesel</option>
+          <option value="Petrol">Petrol</option>
+          <option value="Electric">Electric</option>
+        </Select>
+
+        <Select
+          placeholder="Max Monthly Price"
+          onChange={(e) => setPriceFilter(e.target.value)}
+        >
+          <option value="20000">₹20000</option>
+          <option value="30000">₹30000</option>
+          <option value="50000">₹50000</option>
+        </Select>
+
+        {/* Go Button */}
+        <Button colorScheme="teal" size="md" onClick={handleFilterChange}>
+          Go
         </Button>
-      </Flex>
-      {/* Cars Grid Section */}
-      <SimpleGrid
-        ref={ref} // Attach the ref here
-        columns={{ base: 1, sm: 2, lg: 3 }}
-        spacing="6"
-        mx="auto"
-        maxWidth={{ base: "100%", lg: "80%" }}
-      >
-        {cars.map((car, index) => (
-          <MotionBox
-            key={car.id}
-            bg="rgba(15, 19, 28, 0.8)"
-            p="6"
-            borderRadius="md"
-            boxShadow="lg"
-            border="1px solid rgba(0, 219, 0, 0.6)"
-            backdropFilter="blur(10px)"
-            _hover={{ transform: "scale(1.05)", boxShadow: "2xl" }}
-            maxW="sm"
-            mx="auto"
-            w="100%"
-            initial={{ x: index % 2 === 0 ? "-100%" : "100%", opacity: 0 }}
-            animate={isInView ? { x: 0, opacity: 1 } : {}}
-            transition={{
-              x: { delay: index * 0.2, duration: 0.5, type: "spring", stiffness: 80 },
-              opacity: { delay: index * 0.2, duration: 0.5 },
-            }}
-          >
-            {/* Card Content */}
-            <Image src={car.image} alt={car.name} borderRadius="md" />
-            <Flex mt="4" align="center" justify="space-between">
-              <Text fontSize="xl" fontWeight="bold" color="white">
-                {car.name}
-              </Text>
-              <Flex gap="1">
-                {[...Array(Math.floor(car.rating))].map((_, index) => (
-                  <FaStar key={index} color="yellow.400" />
-                ))}
-                {car.rating % 1 !== 0 && <FaStar key="half" color="yellow.400" />}
-                <Text ml="2" fontSize="sm" color="gray.300">
-                  {car.rating.toFixed(1)}
-                </Text>
-              </Flex>
-            </Flex>
-            <Text mt="2" color="gray.400">
-              {car.description}
-            </Text>
-            <Text mt="2" fontSize="lg" fontWeight="bold" color="#00db00">
-              ${car.price}{" "}
-              <Text
-                as="span"
-                fontSize="sm"
-                color="gray.500"
-                textDecoration="line-through"
+      </HStack>
+
+      {/* Spinner while cars are loading */}
+      {isLoading ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="200px"
+        >
+          <Spinner size="xl" color="teal.400" />
+        </Box>
+      ) : (
+        // Car Listings
+        <Box overflowY="scroll" maxH="600px" pb={4}>
+          <VStack spacing={6}>
+            {filteredCars.map((car) => (
+              <Box
+                key={car._id}
+                p={4}
+                bg="gray.800"
+                borderRadius="lg"
+                boxShadow="md"
+                width="100%"
               >
-                ${car.originalPrice}
-              </Text>
-            </Text>
-            <Flex mt="4" justify="space-between" align="center">
-              <IconButton
-                icon={<FaShoppingCart />}
-                aria-label="Add to Cart"
-                variant="outline"
-                colorScheme="green"
-                size="sm"
-                _hover={{ bg: "green.100" }}
-              />
-              <Button
-                bg="#000" // Button background
-                color="white" // Text color
-                border="2px solid transparent" // Initial border
-                borderRadius="md"
-                fontSize="lg"
-                px="5"
-                py="4"
-                position="relative"
-                _hover={{
-                  bg: "#000", // Keep background color on hover
-                  boxShadow: "0 0 15px #00db00, 0 0 30px #00db00", // Glowing effect
-                  border: "2px solid #00db00", // Highlight border
-                }}
-                sx={{
-                  boxShadow: "0 0 10px #00db00, 0 0 20px rgba(0, 219, 0, 0.5)", // Default glow
-                  transition: "0.3s ease", // Smooth transition
-                }}
-              >
-                Buy Now
-              </Button>
-            </Flex>
-          </MotionBox>
-        ))}
-      </SimpleGrid>
+                <HStack spacing={6} align="center" justify="space-between">
+                  {/* Car Image */}
+                  <Image
+                    src="/car3.png" // Placeholder image (can be dynamic later)
+                    alt={car.model}
+                    boxSize="200px"
+                    objectFit="cover"
+                    borderRadius="md"
+                  />
+
+                  {/* Car Details */}
+                  <Box flex="1">
+                    <Heading as="h3" size="md" color="teal.400" mb={2}>
+                      {car.model}
+                    </Heading>
+                    <Text color="gray.400" mb={2}>
+                      {car.carType} - {car.registrationNumber}
+                    </Text>
+                    <HStack spacing={1} mb={4}>
+                      {calculateStars(car.rating)}
+                    </HStack>
+
+                    <Stack direction="row" spacing={4} mb={4}>
+                      <Box>
+                        <Text color="gray.300" fontSize="sm">
+                          Weekly Price
+                        </Text>
+                        <Text color="teal.400" fontWeight="bold">
+                          ₹{car.carPricing.weekly}
+                        </Text>
+                      </Box>
+                      <Box>
+                        <Text color="gray.300" fontSize="sm">
+                          Monthly Price
+                        </Text>
+                        <Text color="teal.400" fontWeight="bold">
+                          ₹{car.carPricing.monthly}
+                        </Text>
+                      </Box>
+                      <Box>
+                        <Text color="gray.300" fontSize="sm">
+                          Quarterly Price
+                        </Text>
+                        <Text color="teal.400" fontWeight="bold">
+                          ₹{car.carPricing.quarterly}
+                        </Text>
+                      </Box>
+                    </Stack>
+                  </Box>
+
+                  {/* Action Buttons */}
+                  <Box>
+                    {/* Buy Now Button */}
+                    <Button
+                      colorScheme="teal"
+                      size="lg"
+                      mb={3}
+                      variant="outline"
+                      border="2px solid"
+                      borderColor="teal.400"
+                      _hover={{
+                        bg: "teal.400",
+                        color: "white",
+                        transform: "scale(1.1)",
+                        transition: "all 0.3s",
+                      }}
+                      leftIcon={<FaCheckCircle />}
+                    >
+                      Buy Now
+                    </Button>
+
+                    {/* Add to Cart Button */}
+                    <Button
+                      colorScheme="blue"
+                      size="lg"
+                      variant="outline"
+                      border="2px solid"
+                      borderColor="blue.400"
+                      _hover={{
+                        bg: "blue.400",
+                        color: "white",
+                        transform: "scale(1.1)",
+                        transition: "all 0.3s",
+                      }}
+                      leftIcon={<FaShoppingCart />}
+                    >
+                      Add to Cart
+                    </Button>
+                  </Box>
+                </HStack>
+              </Box>
+            ))}
+          </VStack>
+        </Box>
+      )}
     </Box>
   );
 };
