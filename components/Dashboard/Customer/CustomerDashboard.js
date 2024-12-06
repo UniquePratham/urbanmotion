@@ -21,7 +21,7 @@ import {
 
 const CustomerDashboard = () => {
   const [customerData, setCustomerData] = useState(null);
-  const [activeComponent, setActiveComponent] = useState("book-car"); // Default active component
+  const [activeComponent, setActiveComponent] = useState("profile"); // Default active component
   const router = useRouter();
 
   useEffect(() => {
