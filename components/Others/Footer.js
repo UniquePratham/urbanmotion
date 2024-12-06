@@ -37,9 +37,8 @@ const Footer = () => {
   const navbarLinks = [
     { label: "Home", href: "/" },
     { label: "About Us", href: "/about" },
-    { label: "Services", href: "/services" },
-    { label: "Projects", href: "/projects" },
-    { label: "Careers", href: "/careers" },
+    { label: "Perks", href: "/perks" },
+    { label: "Gallery", href: "/gallery" },
     { label: "Contact Us", href: "/contact" },
   ];
 
