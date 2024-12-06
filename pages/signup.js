@@ -140,6 +140,7 @@ const SignUp = () => {
         alignItems="center"
         justifyContent="center"
         width="100vw"
+        flexDir={{base:"column-reverse",md:"unset"}}
       >
         {/* Left Panel */}
         <MotionBox
@@ -152,14 +153,14 @@ const SignUp = () => {
           py={12}
           w={{ base: "100%", md: "30%" }}
           textAlign="center"
-          minH="100vh"
+          minH={{base:"60vh",md:"100vh"}}
           borderRadius={{ base: "none", md: "lg" }}
-          display={{ base: "none", md: "flex" }}
-          justifyContent="center"
+          display="flex"
+          justifyContent={{base:"unset",md:"center"}}
           alignItems="center"
           flexDirection="column"
         >
-          <Heading fontSize="4xl" mb={4} zIndex={2}>
+          <Heading fontSize={{base:"2xl",md:"4xl"}} mb={4} zIndex={2}>
             Welcome Back!
           </Heading>
           <Text fontSize="md" mb={8} zIndex={2}>
@@ -189,6 +190,7 @@ const SignUp = () => {
           >
             SIGN IN
           </Button>
+          <Image src="/side_car_right.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} display={{base:"flex",md:"none"}} justifyContent="center" alignItems="center"/>
         </MotionBox>
 
         {/* Right Panel */}
@@ -344,7 +346,7 @@ const SignUp = () => {
           >
             SIGN UP
           </Button>
-          <Image src="/side_car_right.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} right={10}/>
+          <Image src="/side_car_right.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} right={10} display={{base:"none",md:"unset"}}/>
         </MotionBox>
       </Flex>
     </>

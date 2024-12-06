@@ -1,4 +1,4 @@
-import { Box, Heading, Text, Button, Flex, Image } from "@chakra-ui/react";
+import { Box, Heading, Text, Flex, Image, Button } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
 const MotionBox = motion(Box);
@@ -51,6 +51,7 @@ const ContactUs = () => (
           color="white"
           _hover={{ bg: "white", color: "#00db00" }}
           size={{ base: "md", md: "lg" }} // Responsive button size
+          onClick={() => window.open("https://wa.me/919433211591", "_blank")}
         >
           Message Us
         </Button>

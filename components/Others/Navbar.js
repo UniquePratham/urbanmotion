@@ -202,7 +202,7 @@ const Navbar = () => {
           align="center"
           display={{ base: "flex", md: "none" }}
         >
-          {["About", "Perks", "Gallery", "Team"].map((item) => (
+          {["About", "Perks", "Gallery"].map((item) => (
             <Link
               key={item}
               href={`/${item.toLowerCase().replace(" ", "-")}`}
@@ -258,7 +258,28 @@ const Navbar = () => {
                 Logout
               </Button>
             </Flex>
-          ) : null}
+          ) : (
+            <Link
+              href="/signin"
+              display="inline-flex"
+              alignItems="center"
+              fontSize="15px"
+              color="black"
+              bg="#00db00"
+              px="14px"
+              py="6px"
+              borderRadius="sm"
+              _hover={{
+                bg: "white",
+                color: "black",
+                transform: "scale(1.05)",
+                transition: "0.2s ease-in-out",
+              }}
+            >
+              <FaUserCircle style={{ marginRight: "8px" }} />
+              Login
+            </Link>
+          )}
         </VStack>
       )}
     </Flex>
