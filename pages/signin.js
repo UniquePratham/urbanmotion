@@ -222,7 +222,7 @@ const SignIn = () => {
           px={{ base: 6, md: 8 }}
           py={{ base: 10, md: 8 }}
           bg="gray.900"
-          color="lightgreen"
+          color="#00db00"
           boxShadow="2xl"
           borderRadius="lg"
           w={{ base: "100%", md: "30%" }}

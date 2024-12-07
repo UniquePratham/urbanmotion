@@ -148,7 +148,7 @@ const SignUp = () => {
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 1 }}
           bg="gray.900"
-          color="lightgreen"
+          color="#00db00"
           px={8}
           py={12}
           w={{ base: "100%", md: "30%" }}

@@ -7,7 +7,6 @@ import {
   Text,
   VStack,
   Button,
-  Avatar,
 } from "@chakra-ui/react";
 import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
 import { useState, useEffect } from "react";
@@ -31,7 +30,9 @@ const Navbar = () => {
           `https://urban-motion-backend.vercel.app/api/sessions/${storedSessionId}`
         )
           .then((response) => response.json())
-          .then((data) => setUserData(data))
+          .then((data) => {
+            setUserData(data); // Ensure a new reference
+          })
           .catch((err) => console.error("Error fetching user data:", err));
       }
     }
@@ -89,63 +90,114 @@ const Navbar = () => {
         {/* Profile Icon and Dropdown */}
         {sessionId && userData ? (
           <Flex align="center" position="relative">
-            <Avatar
-              size="sm"
-              bg="green.500"
+            <Image
               cursor="pointer"
               onClick={() => setShowProfileMenu(!showProfileMenu)}
+              src="/Resources/DefaultMale.png" 
+              alt="" 
+              h="50px"
+              w="50px"
             />
             {showProfileMenu && (
-              <Box
-                position="absolute"
-                top="50px"
-                right="0"
-                bg="rgba(0, 0, 0, 0.8)"
-                p="1rem"
-                borderRadius="sm"
-                zIndex="1000"
-                boxShadow="0px 4px 6px rgba(0, 0, 0, 0.2)"
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                w="200px"
-              >
-                <Text
-                  color="white"
-                  fontSize="14px"
-                  mb="1rem"
-                  textAlign="center"
-                  w="100%"
-                  wordBreak="break-word"
-                >
-                  {userData.email}
-                </Text>
-                <Link
-                  href="/dashboard"
-                  fontSize="14px"
-                  fontWeight="bold"
-                  color="white"
-                  w="100%"
-                  textAlign="center"
-                  py="8px"
-                  _hover={{
-                    background: "linear-gradient(90deg, #00db00, #009900)",
-                    color: "white",
-                  }}
-                >
-                  Dashboard
-                </Link>
-                <Button
-                  aria-label="Logout"
-                  colorScheme="red"
-                  size="sm"
-                  w="100%"
-                  onClick={handleLogout}
-                  mt="1rem"
-                >
-                  Logout
-                </Button>
-              </Box>
+             <Box
+             position="absolute"
+             top="50px"
+             right="0"
+             bg="gray.900"
+             p="1rem"
+             borderRadius="md"
+             zIndex="1000"
+             boxShadow="0px 4px 6px rgba(0, 0, 0, 0.2)"
+             display="flex"
+             flexDirection="column"
+             alignItems="center"
+             w="300px"
+           >
+             {userData ? (
+               <Text
+                 color="white"
+                 fontSize="14px"
+                 mb="1rem"
+                 textAlign="center"
+                 w="100%"
+                 wordBreak="break-word"
+               >
+                 Hi, {userData.data.name}
+               </Text>
+             ) : (
+               <Text
+                 color="white"
+                 fontSize="14px"
+                 mb="1rem"
+                 textAlign="center"
+                 w="100%"
+                 wordBreak="break-word"
+               >
+                 Hi, User
+               </Text>
+             )}
+           
+             <Link
+               href="/dashboard"
+               fontSize="16px"
+               fontWeight="bold"
+               bg="green.500"
+               color="white"
+               w="90%"
+               textAlign="center"
+               borderRadius="md"
+               py="12px"
+               _hover={{
+                 background: "linear-gradient(90deg, #00db00, #009900)",
+                 color: "white",
+               }}
+               display="flex"
+               justifyContent="center"
+               alignItems="center"
+               gap="10px"
+               mb="1rem"
+               transition="all 0.3s"
+             >
+               <Image
+                 src="/Resources/Dashboard.png"
+                 alt="Dashboard Icon"
+                 h="24px"
+                 bg="white"
+                 borderRadius="3"
+                 padding="4px"
+               />
+               Dashboard
+             </Link>
+           
+             <Button
+               aria-label="Logout"
+               colorScheme="red"
+               fontSize="16px"
+               fontWeight="bold"
+               py="23px"
+               w="90%"
+               onClick={handleLogout}
+               _hover={{
+                 background: "linear-gradient(90deg, red, maroon)",
+                 color: "white",
+               }}
+               display="flex"
+               justifyContent="center"
+               alignItems="center"
+               gap="10px"
+               transition="all 0.3s"
+             >
+               <Image
+                 src="/Resources/Logout_Blue.png"
+                 alt="Logout Icon"
+                 h="24px"
+                 bg="white"
+                 borderRadius="3"
+                 padding="4px"
+               />
+               Logout
+             </Button>
+           </Box>           
             )}
           </Flex>
         ) : (
@@ -221,43 +273,78 @@ const Navbar = () => {
             </Link>
           ))}
           {sessionId && userData ? (
-            <Flex align="center" direction="column">
+            <>
               <Text
                 color="white"
-                fontSize="14px"
+                fontSize="22px"
+                mb="0.2rem"
                 textAlign="center"
-                mb="1rem"
                 w="100%"
                 wordBreak="break-word"
               >
-                {userData.email}
+                Hi, {userData.data.name}
               </Text>
-              <Link
-                href="/dashboard"
-                fontSize="14px"
-                fontWeight="bold"
-                color="white"
-                w="100%"
-                textAlign="center"
-                py="8px"
-                _hover={{
-                  background: "linear-gradient(90deg, #00db00, #009900)",
-                  color: "white",
-                }}
-              >
-                Dashboard
-              </Link>
-              <Button
-                aria-label="Logout"
-                colorScheme="red"
-                size="sm"
-                w="100%"
-                onClick={handleLogout}
-                mt="1rem"
-              >
-                Logout
-              </Button>
-            </Flex>
+            <Link
+              href="/dashboard"
+              fontSize="16px"
+              fontWeight="bold"
+              bg="green.500"
+              color="white"
+              w="50%"
+              textAlign="center"
+              borderRadius="md"
+              py="12px"
+              _hover={{
+                background: "linear-gradient(90deg, #00db00, #009900)",
+                color: "white",
+              }}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              gap="10px"
+              mb="0.2rem"
+              transition="all 0.3s"
+            >
+              <Image
+                src="/Resources/Dashboard.png"
+                alt="Dashboard Icon"
+                h="24px"
+                bg="white"
+                borderRadius="3"
+                padding="4px"
+              />
+              Dashboard
+            </Link>
+          
+            <Button
+              aria-label="Logout"
+              colorScheme="red"
+              fontSize="16px"
+              fontWeight="bold"
+              py="23px"
+              w="50%"
+              onClick={handleLogout}
+              _hover={{
+                background: "linear-gradient(90deg, red, maroon)",
+                color: "white",
+              }}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              gap="10px"
+              transition="all 0.3s"
+            >
+              <Image
+                src="/Resources/Logout_Blue.png"
+                alt="Logout Icon"
+                h="24px"
+                bg="white"
+                borderRadius="3"
+                padding="4px"
+              />
+              Logout
+            </Button>
+            </>
           ) : (
             <Link
               href="/signin"
