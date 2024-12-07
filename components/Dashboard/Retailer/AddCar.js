@@ -9,6 +9,8 @@ import {
   Button,
   useToast,
   VStack,
+  HStack,
+  Image
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -98,95 +100,161 @@ const AddCar = () => {
     <Box
       w="full"
       p={6}
-      bg="gray.900"
+      bg="gray.800"
       borderRadius="lg"
       boxShadow="lg"
       maxW="800px"
       mx="auto"
     >
-      <Heading as="h1" size="lg" mb={4} color="teal.400" textAlign="center">
-        Add Car
-      </Heading>
-      <Text mb={6} color="gray.400" textAlign="center">
-        Fill in the details below to add a new car to your inventory.
-      </Text>
+      <Box textAlign="center" mb={6}>
+        <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+          <Image src="/Resources/add-car40.png" alt="" h="50px" />
+          <Heading as="h1" size="lg" color="#00db00" ml={2} mt={4}>
+            Add Car
+          </Heading>
+        </Box>
+        <Text color="gray.400">
+          Fill in the details below to add a new car to your inventory.
+        </Text>
+      </Box>
+
       <form onSubmit={handleSubmit}>
-        <VStack spacing={4}>
-          <FormControl isRequired>
-            <FormLabel>Registration Number</FormLabel>
-            <Input
-              placeholder="Enter registration number"
-              name="registrationNumber"
-              value={carDetails.registrationNumber}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Model</FormLabel>
-            <Input
-              placeholder="Enter car model"
-              name="model"
-              value={carDetails.model}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Car Type</FormLabel>
-            <Select
-              placeholder="Select car type"
-              name="carType"
-              value={carDetails.carType}
-              onChange={handleInputChange}
-            >
-              <option value="Sedan">Sedan</option>
-              <option value="SUV">SUV</option>
-              <option value="Electric">Electric</option>
-              <option value="Hatchback">Hatchback</option>
-            </Select>
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Pricing (Quarterly)</FormLabel>
-            <Input
-              type="number"
-              placeholder="Enter quarterly pricing"
-              name="quarterly"
-              value={carDetails.quarterly}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Pricing (Monthly)</FormLabel>
-            <Input
-              type="number"
-              placeholder="Enter monthly pricing"
-              name="monthly"
-              value={carDetails.monthly}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Pricing (Weekly)</FormLabel>
-            <Input
-              type="number"
-              placeholder="Enter weekly pricing"
-              name="weekly"
-              value={carDetails.weekly}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Car Image</FormLabel>
-            <Input type="file" disabled />
-            <Text fontSize="sm" color="gray.500">
-              Image upload functionality will be added later.
-            </Text>
-          </FormControl>
-          <Button colorScheme="teal" size="lg" width="full" type="submit">
-            Submit
-          </Button>
-        </VStack>
+        <HStack spacing={{base:4,md:16}} width="100%" justifyContent="center" alignItems="center" flexDirection={{base:"column",md:"unset"}}>
+          <VStack spacing={{base:2,md:8}} width={{base:"100%",md:"40%"}}>
+            <FormControl isRequired>
+              <FormLabel>Registration Number</FormLabel>
+              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+                <Image src="/Resources/id.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                <Input
+                  placeholder="Enter registration number"
+                  name="registrationNumber"
+                  value={carDetails.registrationNumber}
+                  onChange={handleInputChange}
+                  bg="gray.100"
+                  color="black"
+                />
+              </Box>
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Model</FormLabel>
+              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+                <Image src="/Resources/model.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                <Input
+                  placeholder="Enter car model"
+                  name="model"
+                  value={carDetails.model}
+                  onChange={handleInputChange}
+                  bg="gray.100"
+                  color="black"
+                />
+              </Box>
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Car Type</FormLabel>
+              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+                <Image src="/Resources/VehiclesBlue-100.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                <Select
+                  name="carType"
+                  defaultValue=""
+                  value={carDetails.carType}
+                  onChange={handleInputChange}
+                  bg="gray.100"
+                  color="black"
+                >
+                  <option value="" disabled>
+                    Select Car Type
+                  </option>
+                  <option value="Sedan">Sedan</option>
+                  <option value="SUV">SUV</option>
+                  <option value="Electric">Electric</option>
+                  <option value="Hatchback">Hatchback</option>
+                </Select>
+              </Box>
+            </FormControl>
+          </VStack>
+          <VStack  spacing={{base:2,md:8}} width={{base:"100%",md:"40%"}}>
+            <FormControl isRequired>
+              <FormLabel>Pricing (Quarterly)</FormLabel>
+              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+                <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                <Input
+                  type="number"
+                  placeholder="Enter quarterly pricing"
+                  name="quarterly"
+                  value={carDetails.quarterly}
+                  onChange={handleInputChange}
+                  bg="gray.100"
+                  color="black"
+                />
+              </Box>
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Pricing (Monthly)</FormLabel>
+              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+                <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                <Input
+                  type="number"
+                  placeholder="Enter monthly pricing"
+                  name="monthly"
+                  value={carDetails.monthly}
+                  onChange={handleInputChange}
+                  bg="gray.100"
+                  color="black"
+                />
+              </Box>
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Pricing (Weekly)</FormLabel>
+              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+                <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                <Input
+                  type="number"
+                  placeholder="Enter weekly pricing"
+                  name="weekly"
+                  value={carDetails.weekly}
+                  onChange={handleInputChange}
+                  bg="gray.100"
+                  color="black"
+                />
+              </Box>
+            </FormControl>
+          </VStack>
+        </HStack>
+        <HStack spacing={{base:4,md:16}}  width="100%" justifyContent="center" alignItems="center" mt={4}>
+          <VStack  spacing={{base:2,md:8}} width={{base:"100%",md:"40%"}}>
+            <FormControl>
+              <FormLabel>Car Image</FormLabel>
+              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+                <Image src="/Resources/BookingWhite.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                <Input type="file" disabled />
+              </Box>
+              <Text fontSize="sm" color="gray.500">
+                Image upload functionality will be added later.
+              </Text>
+            </FormControl>
+            <Button bg="#00db00"
+              color="white"
+              border="2px solid transparent"
+              borderRadius="md"
+              fontSize="lg"
+              px="5"
+              py="4"
+              _hover={{
+                bg: "white",
+                boxShadow: "0 0 15px #00db00, 0 0 30px #00db00",
+                border: "2px solid #00db00",
+                color: "#00db00",
+              }}
+              sx={{
+                boxShadow: "0 0 10px #00db00, 0 0 20px rgba(0, 219, 0, 0.5)",
+                transition: "0.3s ease",
+              }} size="lg" width="half" type="submit">
+              Submit
+            </Button>
+          </VStack>
+        </HStack>
       </form>
-    </Box>
+    </Box >
   );
 };
 
