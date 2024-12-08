@@ -11,6 +11,8 @@ import {
   Icon,
   Spinner,
   useToast, // Import useToast hook for displaying toasts
+  Wrap,
+  WrapItem
 } from "@chakra-ui/react";
 import { motion } from "framer-motion"; // Import framer-motion for animations
 import { useState, useEffect } from "react";
@@ -115,10 +117,10 @@ const BookCar = () => {
           transition={{ duration: 0.5 }}
         >
           <Box
-            color="white"
+            color="#00db00"
             p={6}
-            bg="teal.500"
-            borderRadius="md"
+            bg="black"
+            borderRadius="xl"
             fontSize="lg"
             display="flex"
             flexDirection="column"
@@ -126,6 +128,7 @@ const BookCar = () => {
             alignItems="center"
             boxShadow="xl"
             width="auto"
+            marginTop="48"
           >
             <Text mb={4} fontSize="xl" fontWeight="bold">
               Do you want to book {car.model}?
@@ -200,60 +203,131 @@ const BookCar = () => {
   };
 
   return (
-    <Box p={6} bg="gray.900" borderRadius="lg" boxShadow="lg">
-      <Heading as="h1" size="lg" mb={6} color="teal.400" textAlign="center">
-        Book a Car
-      </Heading>
+    <Box p={{ base: 2, md: 6 }} bg="gray.800" borderRadius={"lg"} boxShadow="lg">
+      <Box textAlign="center" mb={6}>
+        <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+          <Image src="/Resources/add-booking48.png" alt="" h="50px" />
+          <Heading as="h1" size="lg" color="#00db00" ml={2} mt={4}>
+            Book a Car
+          </Heading>
+        </Box>
+        <Text color="gray.400">
+          You can search and book a car, with or without filters.
+        </Text>
+      </Box>
+      <VStack flexDir={{ base: "row", md: "column" }}>
+        <HStack spacing={{ base: 4, md: 44 }} mb={6} mt={{ base: 0, md: 2 }} justifyContent={{ base: "space-between", md: "space-around" }} alignItems={{ base: "unset", md: "center" }} flexDirection={{ base: "column", md: "unset" }}>
+          <Box display="flex" alignItems="center">
+            <Image src="/Resources/available-car32.png" alt="Select Car Type" boxSize="40px" />
+          </Box>
+          <Box display="flex" alignItems="center">
+            <Image src="/Resources/rating_cars.png" alt="Select Rating" boxSize="40px" />
+          </Box>
+          <Box display="flex" alignItems="center">
+            <Image src="/Resources/car-fuel-type32.png" alt="Select Fuel Type" boxSize="40px" />
+          </Box>
+          <Box display="flex" alignItems="center">
+            <Image src="/Resources/money 321.png" alt="Select Max Monthly Price" boxSize="40px" />
+          </Box>
+        </HStack>
 
-      {/* Filters */}
-      <HStack spacing={4} mb={6} justify="center">
-        <Select
-          placeholder="Select Car Type"
-          onChange={(e) => setCarTypeFilter(e.target.value)}
-          color="white" // Ensure input text is white
-        >
-          <option value="Electric">Electric</option>
-          <option value="Sedan">Sedan</option>
-          <option value="SUV">SUV</option>
-        </Select>
+        {/* Filters */}
+        <HStack spacing={4} mb={6} justify="center" flexDirection={{ base: "column", md: "unset" }}>
+          <Select
+            onChange={(e) => setCarTypeFilter(e.target.value)}
+            defaultValue=""
+            value={carTypeFilter}
+            bg="gray.100"
+            color="black"
+          >
+            <option value="" disabled>
+              Select Car Type
+            </option>
+            <option value="Electric">Electric</option>
+            <option value="Sedan">Sedan</option>
+            <option value="SUV">SUV</option>
+          </Select>
 
-        <Select
-          placeholder="Select Rating"
-          onChange={(e) => setRatingFilter(e.target.value)}
-          color="white" // Ensure input text is white
-        >
-          <option value="1">1 Star</option>
-          <option value="2">2 Stars</option>
-          <option value="3">3 Stars</option>
-          <option value="4">4 Stars</option>
-          <option value="5">5 Stars</option>
-        </Select>
+          <Select
+            onChange={(e) => setRatingFilter(e.target.value)}
+            defaultValue=""
+            value={ratingFilter}
+            bg="gray.100"
+            color="black"
+          >
+            <option value="" disabled>
+              Select Rating
+            </option>
+            <option value="1">1 Star ⭐</option>
+            <option value="2">2 Stars ⭐⭐</option>
+            <option value="3">3 Stars ⭐⭐⭐</option>
+            <option value="4">4 Stars ⭐⭐⭐⭐</option>
+            <option value="5">5 Stars ⭐⭐⭐⭐⭐</option>
+          </Select>
 
-        <Select
-          placeholder="Select Fuel Type"
-          onChange={(e) => setFuelTypeFilter(e.target.value)}
-          color="white" // Ensure input text is white
-        >
-          <option value="Diesel">Diesel</option>
-          <option value="Petrol">Petrol</option>
-          <option value="Electric">Electric</option>
-        </Select>
+          <Select
+            onChange={(e) => setFuelTypeFilter(e.target.value)}
+            bg="gray.100"
+            color="black"
+            defaultValue=""
+            value={fuelTypeFilter}
+          >
+            <option value="" disabled>
+              Select Fuel Type
+            </option>
+            <option value="Diesel">Diesel</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Electric">Electric</option>
+          </Select>
 
-        <Select
-          placeholder="Max Monthly Price"
-          onChange={(e) => setPriceFilter(e.target.value)}
-          color="white" // Ensure input text is white
-        >
-          <option value="20000">₹20000</option>
-          <option value="30000">₹30000</option>
-          <option value="50000">₹50000</option>
-        </Select>
+          <Select
+            onChange={(e) => setPriceFilter(e.target.value)}
+            defaultValue=""
+            value={priceFilter}
+            bg="gray.100"
+            color="black"
+          >
+            <option value="" disabled>
+              Select Max Monthly Price
+            </option>
+            <option value="20000">₹20000</option>
+            <option value="30000">₹30000</option>
+            <option value="50000">₹50000</option>
+          </Select>
 
-        {/* Go Button */}
-        <Button colorScheme="teal" size="md" onClick={handleFilterChange}>
-          Go
-        </Button>
-      </HStack>
+
+        </HStack>
+      </VStack>
+      {/* Go Button */}
+      <HStack justifyContent="center" alignItems="center" mb={4}><Button
+        display={{ base: "flex", md: "unset" }}
+        alignItems="center"
+        fontSize="20px"
+        color="black"
+        px="4px"
+        pt="4px"
+        w={{ base: "20%", md: "5%" }}
+        borderRadius="md"
+        bg="white"
+        zIndex={3}
+        _hover={{
+          bg: "gray.500",
+          color: "#00db00",
+          transform: "scale(1.05)",
+          transition: "0.2s ease-in-out",
+        }}
+        flexDirection="column-reverse"
+        size="md" onClick={handleFilterChange}>
+        <Image
+          src="/Resources/search-car48.png"
+          alt=""
+          borderRadius="3"
+          p="4px"
+          pt="2"
+          mt={{ base: "-4", md: "-4" }}
+          zIndex={2}
+        />
+      </Button></HStack>
 
       {/* Spinner while cars are loading */}
       {isLoading ? (
@@ -268,44 +342,58 @@ const BookCar = () => {
       ) : (
         // Car Listings
         <Box overflowY="scroll" maxH="600px" pb={4}>
-          <VStack spacing={6}>
+          <Wrap spacing={6} justify="center">
             {filteredCars.map((car) => (
-              <Box
+              <WrapItem
+                mt={2}
                 key={car._id}
-                p={4}
-                bg="gray.800"
+                p={{ base: 2, md: 4 }}
+                bg="gray.700"
                 borderRadius="lg"
                 boxShadow="md"
-                width="100%"
+                width={{ base: "90%", md: "45%" }}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                border="3px solid gray.300"
+                _hover={{
+                  transform: "scale(1.005)",
+                  transition: "0.1s ease-in-out",
+                }}
               >
-                <HStack spacing={6} align="center" justify="space-between">
+                <HStack spacing={{ base: 2, md: 6 }} align="center" justify="space-between" flexDir={{ base: "column", md: "unset" }}>
                   {/* Car Image */}
                   <Image
                     src="/car3.png" // Placeholder image (can be dynamic later)
                     alt={car.model}
                     boxSize="200px"
-                    objectFit="cover"
+                    objectFit="contain"
                     borderRadius="md"
+                    _hover={{
+                      transform: "scale(1.01) scaleX(-1)",
+                      transition: "0.03s ease-in transform",
+                    }}
+                    cursor="pointer"
                   />
 
                   {/* Car Details */}
-                  <Box flex="1">
-                    <Heading as="h3" size="md" color="teal.400" mb={2}>
+                  <Box flex="1" >
+                    <Heading as="h3" size="md" color="rgba(0,300,0,1)" mb={2} fontFamily="mono">
                       {car.model}
                     </Heading>
-                    <Text color="gray.400" mb={2}>
+                    <Text color="greenyellow" mb={2}>
                       {car.carType} - {car.registrationNumber}
                     </Text>
                     <HStack spacing={1} mb={4}>
                       {calculateStars(car.rating)}
                     </HStack>
 
-                    <Stack direction="row" spacing={4} mb={4}>
+                    <HStack flexDir={{ base: "column", md: "unset" }} spacing={4} mb={4}>
                       <Box>
                         <Text color="gray.300" fontSize="sm">
                           Weekly Price
                         </Text>
-                        <Text color="teal.400" fontWeight="bold">
+                        <Text color="green.400" fontWeight="bold">
                           ₹{car.carPricing.weekly}
                         </Text>
                       </Box>
@@ -314,26 +402,28 @@ const BookCar = () => {
                         <Text color="gray.300" fontSize="sm">
                           Monthly Price
                         </Text>
-                        <Text color="teal.400" fontWeight="bold">
+                        <Text color="green.400" fontWeight="bold">
                           ₹{car.carPricing.monthly}
                         </Text>
                       </Box>
-                    </Stack>
+                    </HStack>
 
                     {/* Book Now Button */}
                     <Button
                       leftIcon={<FaShoppingCart />}
-                      colorScheme="teal"
+                      colorScheme="green"
                       variant="outline"
+                      bg="gray.200"
+                      _hover={{ color: "white", bg: "#00db00" }}
                       onClick={() => handleBooking(car, toast)} // Call booking handler
                     >
                       Book Now
                     </Button>
                   </Box>
                 </HStack>
-              </Box>
+              </WrapItem>
             ))}
-          </VStack>
+          </Wrap>
         </Box>
       )}
     </Box>

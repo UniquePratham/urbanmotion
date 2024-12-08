@@ -13,6 +13,10 @@ import {
   ModalFooter,
   Select,
   useToast,
+  Image,
+  HStack,
+  VStack,
+  Heading
 } from "@chakra-ui/react";
 
 const Bookings = () => {
@@ -140,21 +144,113 @@ const Bookings = () => {
   return (
     <div>
       {bookingDetails ? (
-        <Box p={5} boxShadow="md" borderRadius="lg" bg="gray.700">
-          <Text fontSize="xl" fontWeight="bold">
-            Your Car Booking Details
-          </Text>
-          <Text>Car: {bookingDetails.car.model}</Text>
-          <Text>
-            Registration Number: {bookingDetails.car.registrationNumber}
-          </Text>
-          <Text>
-            Pick-up Time: {new Date(bookingDetails.pickupTime).toLocaleString()}
-          </Text>
-          <Button mt={4} colorScheme="teal" onClick={handleReturnClick}>
-            <span>Return Car</span>
-          </Button>
-        </Box>
+        <HStack flexDirection={{base:"column",md:"unset"}}>
+          <VStack
+            p={5}
+            boxShadow="md"
+            borderRadius="lg"
+            bg="gray.800"
+            height="100vh"
+            alignItems="center"
+            flexDirection={{base:"column",md:"column"}}
+            width={{base:"100%",md:"50%"}}
+            spacing={10}
+          >
+            <Box textAlign="center" mb={6}>
+              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+                <Image src="/Resources/booking.png" alt="" h="50px" mr={2} />
+                <Heading as="h1" size="lg" color="white" ml={2} mt={{base:6,md:4}}>
+                  Your <span style={{ color: "#00db00" }}> Car Booking</span> Details
+                </Heading>
+              </Box>
+              <Text color="gray.400">
+                You can view the currently booked car here.
+              </Text>
+            </Box>
+            {/* Use a wrapper box to align all text items */}
+            <VStack width="100%" spacing={{base:2,md:8}}>
+              <Text display="flex" justifyContent="space-between" width="100%">
+                <Text display="flex" justifyContent="left" width="40%">
+                  <Image src="/Resources/model.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                  <span>Car Model:</span> </Text><span>{bookingDetails.car.model}</span>
+              </Text>
+              <Text display="flex" justifyContent="space-between" width="100%">
+                <Text display="flex" justifyContent="left" width="40%">
+                  <Image src="/Resources/car-fuel-type32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                  <span>Car Fuel Type:</span> </Text> <span>{bookingDetails.car.carType}</span>
+              </Text>
+              <Text display="flex" justifyContent="space-between" width="100%">
+                <Text display="flex" justifyContent="left" width="40%">
+                  <Image src="/Resources/id.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                  <span>Registration Number:</span> </Text>
+                <span>{bookingDetails.car.registrationNumber}</span>
+              </Text>
+              <Text display="flex" justifyContent="space-between" width="100%">
+                <Text display="flex" justifyContent="left" width="40%">
+                  <Image src="/Resources/year32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                  <span>Pick-up Time:</span>{" "} </Text>
+                <span>{new Date(bookingDetails.car.handedOn).toLocaleString()}</span>
+              </Text>
+              <Text display="flex" justifyContent="space-between" width="100%">
+                <Text display="flex" justifyContent="left" width="40%">
+                  <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                  <span>Weekly Pricing:</span></Text> <span>{bookingDetails.car.carPricing.weekly}</span>
+              </Text>
+              <Text display="flex" justifyContent="space-between" width="100%">
+                <Text display="flex" justifyContent="left" width="40%">
+                  <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                  <span>Monthly Pricing:</span> </Text> <span>{bookingDetails.car.carPricing.monthly}</span>
+              </Text>
+              <Text display="flex" justifyContent="space-between" width="100%">
+                <Text display="flex" justifyContent="left" width="40%">
+                  <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                  <span>Quarterly Pricing:</span>{" "}</Text>
+                <span>{bookingDetails.car.carPricing.quarterly}</span>
+              </Text>
+            </VStack>
+            <Button
+              mt={4}
+              colorScheme="green"
+              bg="gray.600"
+              color="#00db00"
+              _hover={{ color: "white", bg: "rgba(0,200,0,0.6)" }}
+              onClick={handleReturnClick}
+              p={{base:8,md:6}}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              mb={2}
+            >
+              <Image
+                src="/Resources/Return.png"
+                alt=""
+                h="50px"
+                borderRadius="3"
+                p="4px"
+                zIndex={2}
+              />
+              <span>Return Car</span>
+            </Button>
+          </VStack>
+
+          <Box p={5} boxShadow="md" borderRadius="lg" bg="gray.800" height={{base:"35vh",md:"100vh"}} display={{base:"flex",md:"flex"}} justifyContent="center" alignItems="center" flexDirection="column" width={{base:"100%",md:"50%"}}>
+            <Image
+              src="/car3.png" // Placeholder image (can be dynamic later)
+              alt=""
+              boxSize="500px"
+              objectFit="contain"
+              borderRadius="md"
+              _hover={{
+                transform: "scale(1.01) scaleX(-1)",
+                transition: "0.03s ease-in transform",
+              }}
+              cursor="pointer"
+            />
+            <Text display="flex" justifyContent="center" width="100%" fontSize="3xl" color="#00db00">
+              {bookingDetails.car.model}
+            </Text>
+          </Box>
+        </HStack>
       ) : (
         <Box
           display="flex"
@@ -186,7 +282,7 @@ const Bookings = () => {
 
           <ModalFooter>
             <Button
-              colorScheme="blue"
+              colorScheme="green"
               isLoading={loading}
               onClick={handleSubmitReturn}
               disabled={rating === 0}
