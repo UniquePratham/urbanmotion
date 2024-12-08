@@ -78,8 +78,8 @@ const CustomerDashboard = () => {
         flex="1"
         p={4}
         color="white"
-        borderRadius="20px"
-        bg="gray.800" // Ensure the content area has a solid background
+        borderRadius={{base:0,md:"20px"}}
+        bg="gray.900" // Ensure the content area has a solid background
         zIndex={10} // Ensure the content area is above the sidebar
         position="relative" // Keep content positioned above the sidebar
       >

@@ -7,7 +7,8 @@ import {
   Select,
   Text,
   useToast,
-  Image
+  Image,
+  Spinner,
 } from "@chakra-ui/react";
 import { color, motion } from "framer-motion";
 import { useState } from "react";
@@ -20,6 +21,7 @@ const MotionBox = motion(Box);
 
 const SignUp = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false); // State to track loading
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -49,6 +51,7 @@ const SignUp = () => {
 
   // Sign Up button handler
   const handleSignUp = async () => {
+    setIsLoading(true); // Set loading to true before fetching
     const apiEndpoints = {
       customer:
         "https://urban-motion-backend.vercel.app/api/customers/add-customer",
@@ -117,7 +120,9 @@ const SignUp = () => {
           duration: 5000,
           isClosable: true,
         });
+        setIsLoading(false); // Set loading to false after data is fetched
       } else {
+        setIsLoading(false); // Set loading to false after data is fetched
         throw new Error(result.message || "Error during signup.");
       }
     } catch (error) {
@@ -128,6 +133,7 @@ const SignUp = () => {
         duration: 5000,
         isClosable: true,
       });
+      setIsLoading(false); // Set loading to false after data is fetched
     }
   };
   return (
@@ -346,6 +352,16 @@ const SignUp = () => {
           >
             SIGN UP
           </Button>
+          {isLoading ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="200px"
+          >
+            <Spinner size="md" color="black" />
+          </Box>
+        ) : null}
           <Image src="/side_car_right.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} right={10} display={{base:"none",md:"unset"}}/>
         </MotionBox>
       </Flex>

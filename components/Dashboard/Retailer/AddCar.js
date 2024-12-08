@@ -99,7 +99,7 @@ const AddCar = () => {
   return (
     <Box
       w="full"
-      p={6}
+      p={{base:2,md:6}}
       bg="gray.800"
       borderRadius="lg"
       boxShadow="lg"
@@ -108,7 +108,7 @@ const AddCar = () => {
     >
       <Box textAlign="center" mb={6}>
         <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
-          <Image src="/Resources/add-car40.png" alt="" h="50px" />
+          <Image src="/Resources/add-car40.png" alt="" h="50px" mr={2} />
           <Heading as="h1" size="lg" color="#00db00" ml={2} mt={4}>
             Add Car
           </Heading>
