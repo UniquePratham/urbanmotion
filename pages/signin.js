@@ -7,7 +7,8 @@ import {
   Text,
   useToast,
   Select,
-  Image
+  Image,
+  Spinner,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -21,12 +22,14 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("customer");
   const [adminPassphrase, setAdminPassphrase] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // State to track loading
   const toast = useToast();
   const router = useRouter();
 
   const handleSignIn = async () => {
     try {
       // Determine the endpoint based on userType
+      setIsLoading(true); // Set loading to true before fetching
       let endpoint = "";
       if (userType === "customer") {
         endpoint = "/api/customers/verify-customer";
@@ -83,10 +86,11 @@ const SignIn = () => {
           localStorage.setItem("sessionId", result.sessionId);
           console.log("Session ID stored in localStorage:", result.sessionId);
         }
-
+        setIsLoading(false); // Set loading to false after data is fetched
         // Redirect to the dashboard page after successful login
         router.push("/dashboard");
       } else {
+        setIsLoading(false); // Set loading to false after data is fetched
         throw new Error(result.message || "Invalid login credentials.");
       }
     } catch (error) {
@@ -104,7 +108,7 @@ const SignIn = () => {
     <>
       <Navbar />
       <Flex
-        minH={{base:"100vh",md:"100vh"}}
+        minH={{ base: "100vh", md: "100vh" }}
         bg="black"
         flexDirection={{ base: "column", md: "row" }}
         alignItems="center"
@@ -122,7 +126,7 @@ const SignIn = () => {
           color="lightgreen"
           textAlign="center"
           w={{ base: "100%", md: "70%" }}
-          minH={{base:"90vh",md:"100vh"}}
+          minH={{ base: "90vh", md: "100vh" }}
           borderRadius={{ base: "none", md: "lg" }}
           display="flex"
           justifyContent="center"
@@ -214,7 +218,17 @@ const SignIn = () => {
           >
             SIGN IN
           </Button>
-          <Image src="/side_car_left.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} left={10} display={{base:"none",md:"unset"}}/>
+          {isLoading ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="200px"
+          >
+            <Spinner size="md" color="black" />
+          </Box>
+        ) : null}
+          <Image src="/side_car_left.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} left={10} display={{ base: "none", md: "unset" }} />
         </MotionBox>
 
         {/* Right Panel - Sign Up Redirect */}
@@ -229,14 +243,14 @@ const SignIn = () => {
           textAlign="center"
           display="flex"
           flexDirection="column"
-          justifyContent={{base:"unset",md:"center"}}
+          justifyContent={{ base: "unset", md: "center" }}
           alignItems="center"
-          minH={{base:"60vh",md:"100vh"}}
+          minH={{ base: "60vh", md: "100vh" }}
           initial={{ x: 200, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 1 }}
         >
-          <Heading fontSize={{base:"2xl",md:"4xl"}} mb={4}>
+          <Heading fontSize={{ base: "2xl", md: "4xl" }} mb={4}>
             New Here?
           </Heading>
           <Text fontSize="md" mb={6}>
@@ -264,7 +278,7 @@ const SignIn = () => {
           >
             SIGN UP
           </Button>
-          <Image src="/side_car_left.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} display={{base:"flex",md:"none"}} justifyContent="center" alignItems="center"/>
+          <Image src="/side_car_left.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} display={{ base: "flex", md: "none" }} justifyContent="center" alignItems="center" />
         </MotionBox>
       </Flex>
     </>
