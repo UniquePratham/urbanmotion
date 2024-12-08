@@ -47,7 +47,11 @@ const Dashboard = () => {
   }
 
   return (
-    <Box p={{base:0,md:1}} bg="rgba(0,100,0,0.9)" minH={{base:"100vh",md:"100vh"}}>
+    <Box
+      p={{ base: 0, md: 1 }}
+      bgGradient="linear( rgba(0, 50, 0, 0.9), rgba(38, 226, 91, 1) 50%, rgba(30, 200, 50, 0.9))"
+      minH={{ base: "100vh", md: "100vh" }}
+    >
       {userType === "customer" && <CustomerDashboard />}
       {userType === "retailer" && <RetailerDashboard />}
       {userType === "admin" && <AdminDashboard />}
