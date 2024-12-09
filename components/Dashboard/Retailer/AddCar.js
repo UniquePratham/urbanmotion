@@ -30,7 +30,10 @@ const AddCar = () => {
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
     if (sessionId) {
-      setOwnerId(sessionId);
+      fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`)
+        .then((res) => res.json())
+        .then((data) => setOwnerId(data.data._id))
+        .catch((err) => console.error("Failed to fetch customer data:", err));
     } else {
       toast({
         title: "Error",
@@ -41,7 +44,7 @@ const AddCar = () => {
       });
     }
   }, [toast]);
-
+  console.log("Owner : ",ownerId);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCarDetails({ ...carDetails, [name]: value });
@@ -55,6 +58,7 @@ const AddCar = () => {
       owner: ownerId,
       model: carDetails.model,
       carType: carDetails.carType,
+      isHanded:false,
       carPricing: {
         quarterly: Number(carDetails.quarterly),
         monthly: Number(carDetails.monthly),

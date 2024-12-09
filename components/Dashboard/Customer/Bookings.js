@@ -18,26 +18,69 @@ import {
   VStack,
   Heading
 } from "@chakra-ui/react";
+import axios from "axios";
 
 const Bookings = () => {
-  const [bookingDetails, setBookingDetails] = useState(null);
+  const [customerData, setCustomerData] = useState(null);
+  const [carBooked, setCarBooked] = useState(null);
+  const [carId, setCarId] = useState("");
   const [rating, setRating] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
-  // Load booking details from localStorage on initial render
   useEffect(() => {
-    const storedBookingDetails = JSON.parse(
-      localStorage.getItem("bookingDetails")
-    );
-    if (storedBookingDetails) {
-      setBookingDetails(storedBookingDetails);
-    }
+    const sessionId = localStorage.getItem("sessionId");
+
+    const fetchCustomerData = async () => {
+      if (sessionId) {
+        try {
+          const response = await fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`);
+          const data = await response.json();
+          return data.data; // Return the customer data
+        } catch (error) {
+          console.error("Failed to fetch customer data:", error);
+          return null;
+        }
+      }
+      return null;
+    };
+
+    const fetchCarDetails = async (carId) => {
+      try {
+        const response = await axios.get(
+          `https://urban-motion-backend.vercel.app/api/cars/car?registrationNumber=${carId}`
+        );
+        if (response && response.data) {
+          setCarBooked(response.data.data);
+        } else {
+          console.error('Response data is undefined.');
+        }
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      const customerData = await fetchCustomerData();
+      if (customerData && customerData.carCurrentlyBookedId) {
+        setCustomerData(customerData); // Update state
+        setCarId(customerData.carCurrentlyBookedId);
+        fetchCarDetails(customerData.carCurrentlyBookedId); // Fetch car details
+      } else {
+        setIsLoading(false); // Stop isLoading if no car is booked
+      }
+    };
+
+    fetchData();
   }, []);
 
+
   const handleReturnClick = () => {
-    if (!bookingDetails) {
+    if (!carBooked) {
       return; // No car booked
     }
     setShowModal(true); // Show the modal for rating
@@ -63,11 +106,11 @@ const Bookings = () => {
       return;
     }
 
-    setLoading(true); // Show loading spinner while submitting the request
+    setIsLoading(true); // Show isLoading spinner while submitting the request
 
     // Prepare the request payload
     const requestBody = {
-      registrationNumber: bookingDetails.car.registrationNumber,
+      registrationNumber: carBooked.registrationNumber,
       rating: rating,
     };
 
@@ -92,10 +135,7 @@ const Bookings = () => {
       const result = await response.json();
 
       if (response.ok) {
-        // Remove the car booking from localStorage after successful return
-        localStorage.removeItem("bookingDetails");
-        setBookingDetails(null); // Clear the booking details
-
+        setCarBooked(null);
         toast({
           title: "Car Returned",
           description:
@@ -136,15 +176,24 @@ const Bookings = () => {
         color: "white",
       });
     } finally {
-      setLoading(false); // Hide loading spinner after request is completed
+      setIsLoading(false); // Hide isLoading spinner after request is completed
       setShowModal(false); // Close the modal
     }
   };
 
   return (
     <div>
-      {bookingDetails ? (
-        <HStack flexDirection={{base:"column",md:"unset"}}>
+      {isLoading ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh"
+        >
+          <Spinner size="xl" color="green" />
+        </Box>
+      ) : carBooked ? (
+        <HStack flexDirection={{ base: "column", md: "unset" }}>
           <VStack
             p={5}
             boxShadow="md"
@@ -152,14 +201,14 @@ const Bookings = () => {
             bg="gray.800"
             height="100vh"
             alignItems="center"
-            flexDirection={{base:"column",md:"column"}}
-            width={{base:"100%",md:"50%"}}
+            flexDirection={{ base: "column", md: "column" }}
+            width={{ base: "100%", md: "50%" }}
             spacing={10}
           >
             <Box textAlign="center" mb={6}>
               <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
                 <Image src="/Resources/booking.png" alt="" h="50px" mr={2} />
-                <Heading as="h1" size="lg" color="white" ml={2} mt={{base:6,md:4}}>
+                <Heading as="h1" size="lg" color="white" ml={2} mt={{ base: 6, md: 4 }}>
                   Your <span style={{ color: "#00db00" }}> Car Booking</span> Details
                 </Heading>
               </Box>
@@ -168,44 +217,44 @@ const Bookings = () => {
               </Text>
             </Box>
             {/* Use a wrapper box to align all text items */}
-            <VStack width="100%" spacing={{base:2,md:8}}>
+            <VStack width="100%" spacing={{ base: 2, md: 8 }}>
               <Text display="flex" justifyContent="space-between" width="100%">
                 <Text display="flex" justifyContent="left" width="40%">
                   <Image src="/Resources/model.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
-                  <span>Car Model:</span> </Text><span>{bookingDetails.car.model}</span>
+                  <span>Car Model:</span> </Text><span>{carBooked.model}</span>
               </Text>
               <Text display="flex" justifyContent="space-between" width="100%">
                 <Text display="flex" justifyContent="left" width="40%">
                   <Image src="/Resources/car-fuel-type32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
-                  <span>Car Fuel Type:</span> </Text> <span>{bookingDetails.car.carType}</span>
+                  <span>Car Fuel Type:</span> </Text> <span>{carBooked.carType}</span>
               </Text>
               <Text display="flex" justifyContent="space-between" width="100%">
                 <Text display="flex" justifyContent="left" width="40%">
                   <Image src="/Resources/id.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Registration Number:</span> </Text>
-                <span>{bookingDetails.car.registrationNumber}</span>
+                <span>{carBooked.registrationNumber}</span>
               </Text>
               <Text display="flex" justifyContent="space-between" width="100%">
                 <Text display="flex" justifyContent="left" width="40%">
                   <Image src="/Resources/year32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Pick-up Time:</span>{" "} </Text>
-                <span>{new Date(bookingDetails.car.handedOn).toLocaleString()}</span>
+                <span>{new Date(carBooked.handedOn).toLocaleString()}</span>
               </Text>
               <Text display="flex" justifyContent="space-between" width="100%">
                 <Text display="flex" justifyContent="left" width="40%">
                   <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
-                  <span>Weekly Pricing:</span></Text> <span>{bookingDetails.car.carPricing.weekly}</span>
+                  <span>Weekly Pricing:</span></Text> <span>{carBooked.carPricing.weekly}</span>
               </Text>
               <Text display="flex" justifyContent="space-between" width="100%">
                 <Text display="flex" justifyContent="left" width="40%">
                   <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
-                  <span>Monthly Pricing:</span> </Text> <span>{bookingDetails.car.carPricing.monthly}</span>
+                  <span>Monthly Pricing:</span> </Text> <span>{carBooked.carPricing.monthly}</span>
               </Text>
               <Text display="flex" justifyContent="space-between" width="100%">
                 <Text display="flex" justifyContent="left" width="40%">
                   <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Quarterly Pricing:</span>{" "}</Text>
-                <span>{bookingDetails.car.carPricing.quarterly}</span>
+                <span>{carBooked.carPricing.quarterly}</span>
               </Text>
             </VStack>
             <Button
@@ -215,7 +264,7 @@ const Bookings = () => {
               color="#00db00"
               _hover={{ color: "white", bg: "rgba(0,200,0,0.6)" }}
               onClick={handleReturnClick}
-              p={{base:8,md:6}}
+              p={{ base: 8, md: 6 }}
               display="flex"
               justifyContent="center"
               alignItems="center"
@@ -233,7 +282,7 @@ const Bookings = () => {
             </Button>
           </VStack>
 
-          <Box p={5} boxShadow="md" borderRadius="lg" bg="gray.800" height={{base:"35vh",md:"100vh"}} display={{base:"flex",md:"flex"}} justifyContent="center" alignItems="center" flexDirection="column" width={{base:"100%",md:"50%"}}>
+          <Box p={5} boxShadow="md" borderRadius="lg" bg="gray.800" height={{ base: "35vh", md: "100vh" }} display={{ base: "flex", md: "flex" }} justifyContent="center" alignItems="center" flexDirection="column" width={{ base: "100%", md: "50%" }}>
             <Image
               src="/car3.png" // Placeholder image (can be dynamic later)
               alt=""
@@ -247,7 +296,7 @@ const Bookings = () => {
               cursor="pointer"
             />
             <Text display="flex" justifyContent="center" width="100%" fontSize="3xl" color="#00db00">
-              {bookingDetails.car.model}
+              {carBooked.model}
             </Text>
           </Box>
         </HStack>
@@ -283,7 +332,7 @@ const Bookings = () => {
           <ModalFooter>
             <Button
               colorScheme="green"
-              isLoading={loading}
+              isLoading={isLoading}
               onClick={handleSubmitReturn}
               disabled={rating === 0}
             >
