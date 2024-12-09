@@ -12,7 +12,8 @@ import {
   Spinner,
   useToast, // Import useToast hook for displaying toasts
   Wrap,
-  WrapItem
+  WrapItem,
+  Input
 } from "@chakra-ui/react";
 import { motion } from "framer-motion"; // Import framer-motion for animations
 import { useState, useEffect } from "react";
@@ -26,7 +27,9 @@ import axios from "axios";
 import { useRouter } from "next/router"; // Import useRouter for redirection
 
 const BookCar = () => {
+  const [customerData, setCustomerData] = useState(null);
   const [cars, setCars] = useState([]);
+  let [carBooked, setCarBooked] = useState(null);
   const [filteredCars, setFilteredCars] = useState([]);
   const [carTypeFilter, setCarTypeFilter] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
@@ -38,6 +41,13 @@ const BookCar = () => {
 
   useEffect(() => {
     // Fetching available cars data
+    const sessionId = localStorage.getItem("sessionId");
+    if (sessionId) {
+      fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`)
+        .then((res) => res.json())
+        .then((data) => setCustomerData(data.data))
+        .catch((err) => console.error("Failed to fetch customer data:", err));
+    }
     const fetchCars = async () => {
       setIsLoading(true); // Set loading to true before fetching
       try {
@@ -102,10 +112,17 @@ const BookCar = () => {
     return stars;
   };
 
-  const handleBooking = async (car, toast, onClose) => {
+  const handleBooking = async (car, toast) => {
+    carBooked=car;
+    setCarBooked(car);
+    const handleInputChange = (e) => {
+      car.durationGivenFor = `${e.target.value} days`;
+      setCarBooked(car);
+    };
+    if(carBooked){
     toast({
       title: "Confirm Booking",
-      description: `Do you want to book ${car.model}?`,
+      description: `Do you want to book ${carBooked.model}?`,
       status: "info",
       duration: 5000,
       isClosable: true,
@@ -127,12 +144,19 @@ const BookCar = () => {
             justifyContent="center"
             alignItems="center"
             boxShadow="xl"
-            width="auto"
+            width="500px"
             marginTop="48"
           >
             <Text mb={4} fontSize="xl" fontWeight="bold">
-              Do you want to book {car.model}?
+              Do you want to book {carBooked.model}?
             </Text>
+            <Input
+              placeholder="For many days, you want to book this car for?"
+              onChange={handleInputChange}
+              bg="gray.100"
+              color="black"
+              mb={2}
+            />
             <HStack spacing={6}>
               <Button
                 colorScheme="green"
@@ -140,28 +164,18 @@ const BookCar = () => {
                 onClick={async () => {
                   try {
                     // Send request to book the car
+                    console.log( `registrationNumber: ${carBooked.registrationNumber}, customerId: ${customerData._id}, durationGivenFor: ${carBooked.durationGivenFor}`);
                     const response = await axios.post(
                       "https://urban-motion-backend.vercel.app/api/cars/book-car",
-                      { registrationNumber: car.registrationNumber }
+                      { registrationNumber: carBooked.registrationNumber, customerId: customerData._id, durationGivenFor: carBooked.durationGivenFor}
                     );
 
                     if (response.status === 200) {
-                      // Store the registration number in local storage
-                      localStorage.setItem(
-                        "carRegistrationNumber",
-                        car.registrationNumber
-                      );
-
-                      // Optionally store full booking details in local storage
-                      localStorage.setItem(
-                        "bookingDetails",
-                        JSON.stringify(response.data)
-                      );
 
                       // Show success toast after booking the car
                       toast({
                         title: "Booking Confirmed",
-                        description: `You have successfully booked the ${car.model}. You can view the status in the Bookings tab of your dashboard.`,
+                        description: `You have successfully booked the ${carBooked.model}. You can view the status in the Bookings tab of your dashboard.`,
                         status: "success",
                         duration: 5000,
                         isClosable: true,
@@ -176,7 +190,7 @@ const BookCar = () => {
                             boxShadow="xl"
                           >
                             <Text>
-                              You have successfully booked the {car.model}. You
+                              You have successfully booked the {carBooked.model}. You
                               can view the status in the Bookings tab of your
                               dashboard.
                             </Text>
@@ -200,6 +214,7 @@ const BookCar = () => {
         </motion.div>
       ),
     });
+  };
   };
 
   return (
@@ -337,7 +352,7 @@ const BookCar = () => {
           alignItems="center"
           minHeight="200px"
         >
-          <Spinner size="xl" color="teal.400" />
+          <Spinner size="xl" color="green" />
         </Box>
       ) : (
         // Car Listings

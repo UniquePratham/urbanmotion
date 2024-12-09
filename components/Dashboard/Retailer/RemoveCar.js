@@ -20,24 +20,30 @@ const RemoveCar = () => {
 
   useEffect(() => {
     // Fetching cars data
-    const fetchCars = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-          "https://urban-motion-backend.vercel.app/api/cars/get-available-cars"
-        );
-        const fetchedCars = response.data.cars;
-        setCars(fetchedCars);
+    const sessionId = localStorage.getItem("sessionId");
+    const fetchRetailerData = async () => {
+      if (sessionId) {
+        try {
+          const response = await fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`);
+          const data = await response.json();
+          return data.data; // Return the customer data
+        } catch (error) {
+          console.error("Failed to fetch retailer data:", error);
+          return null;
+        }
+      }
+      return null;
+    };
 
-        // Store all car registration numbers in local storage
-        const registrationNumbers = fetchedCars.map(
-          (car) => car.registrationNumber
-        );
-        localStorage.setItem(
-          "carRegistrationNumbers",
-          JSON.stringify(registrationNumbers)
-        );
-      } catch (error) {
+    const fetchCars = async () => {
+      try {
+        setIsLoading(true);
+        const customerData = await fetchRetailerData();
+        if (retailerData && retailerData.carsSubmittedIdArray) {
+          setCars(retailerData.carsSubmittedIdArray); // Update state
+        }
+      }
+      catch (error) {
         console.error("Error fetching cars:", error);
         toast({
           title: "Error",
@@ -50,6 +56,7 @@ const RemoveCar = () => {
         setIsLoading(false);
       }
     };
+
     fetchCars();
   }, []);
 
@@ -64,16 +71,6 @@ const RemoveCar = () => {
 
       // Remove the car from the UI
       setCars((prevCars) => prevCars.filter((_, i) => i !== index));
-
-      // Update local storage
-      const registrationNumbers = JSON.parse(
-        localStorage.getItem("carRegistrationNumbers")
-      );
-      registrationNumbers.splice(index, 1);
-      localStorage.setItem(
-        "carRegistrationNumbers",
-        JSON.stringify(registrationNumbers)
-      );
 
       toast({
         title: "Deleted",
@@ -96,9 +93,17 @@ const RemoveCar = () => {
 
   return (
     <Box p={6} bg="gray.900" borderRadius="lg" boxShadow="lg">
-      <Heading as="h1" size="lg" mb={6} color="teal.400" textAlign="center">
-        Remove Cars
-      </Heading>
+      <Box textAlign="center" mb={6}>
+        <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+          <Image src="/Resources/car_return48.png" alt="" h="50px" mr={2} />
+          <Heading as="h1" size="lg" color="#00db00" ml={2} mt={4}>
+            Remove Car
+          </Heading>
+        </Box>
+        <Text color="gray.400">
+          Check your inventory below and remove unwanted cars from your inventory.
+        </Text>
+      </Box>
 
       {isLoading ? (
         <Spinner color="teal.400" size="xl" />

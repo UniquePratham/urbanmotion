@@ -22,20 +22,20 @@ const MainContent = ({ customerData }) => {
       settings, and more.
     </Text>
     <Heading color="#00db00" p={{base:2,md:0}} mb={4} width={{base:"100vw"}} fontSize="4xl">
-      Welcome,<Box as="br" /> {customerData?.name || "Retailer"}!
+      Welcome,<Box as="br" /> {customerData?.name || "Customer"}!
     </Heading>
     <Text color="gray.400" mb={6} display={{base:"none",md:"unset"}}>
       Here&apos;s your dashboard where you can manage cars, bookings, account
       settings, and more.
     </Text>
 
-    {/* Retailer Details */}
+    {/* Customer Details */}
     {customerData ? (
       <Box color="gray.100" mb={2} mt={2}>
         <Text>Email: {customerData.email}</Text>
       </Box>
     ) : (
-      <Text>Loading retailer details...</Text>
+      <Text>Loading customer details...</Text>
     )}
 
     {/* Gender Section Positioned in Top-Right */}
