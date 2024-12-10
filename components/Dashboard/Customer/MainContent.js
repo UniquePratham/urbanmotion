@@ -77,9 +77,9 @@ const MainContent = ({ customerData }) => {
       <Flex
         direction="column"
         align="center"
-        position={{ base: "unset", md: "relative" }}
-        top="48"
-        right=""
+        position={{ base: "unset", md: "absolute" }}
+        top={60}
+        right={6}
         p={4}
         bg="gray.700"
         borderRadius="lg"
