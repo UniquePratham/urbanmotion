@@ -113,108 +113,108 @@ const BookCar = () => {
   };
 
   const handleBooking = async (car, toast) => {
-    carBooked=car;
+    carBooked = car;
     setCarBooked(car);
     const handleInputChange = (e) => {
       car.durationGivenFor = `${e.target.value} days`;
       setCarBooked(car);
     };
-    if(carBooked){
-    toast({
-      title: "Confirm Booking",
-      description: `Do you want to book ${carBooked.model}?`,
-      status: "info",
-      duration: 5000,
-      isClosable: true,
-      position: "top",
-      render: ({ onClose }) => (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Box
-            color="#00db00"
-            p={6}
-            bg="black"
-            borderRadius="xl"
-            fontSize="lg"
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            boxShadow="xl"
-            width="500px"
-            marginTop="48"
+    if (carBooked) {
+      toast({
+        title: "Confirm Booking",
+        description: `Do you want to book ${carBooked.model}?`,
+        status: "info",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+        render: ({ onClose }) => (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <Text mb={4} fontSize="xl" fontWeight="bold">
-              Do you want to book {carBooked.model}?
-            </Text>
-            <Input
-              placeholder="For many days, you want to book this car for?"
-              onChange={handleInputChange}
-              bg="gray.100"
-              color="black"
-              mb={2}
-            />
-            <HStack spacing={6}>
-              <Button
-                colorScheme="green"
-                size="lg"
-                onClick={async () => {
-                  try {
-                    // Send request to book the car
-                    console.log( `registrationNumber: ${carBooked.registrationNumber}, customerId: ${customerData._id}, durationGivenFor: ${carBooked.durationGivenFor}`);
-                    const response = await axios.post(
-                      "https://urban-motion-backend.vercel.app/api/cars/book-car",
-                      { registrationNumber: carBooked.registrationNumber, customerId: customerData._id, durationGivenFor: carBooked.durationGivenFor}
-                    );
+            <Box
+              color="#00db00"
+              p={6}
+              bg="black"
+              borderRadius="xl"
+              fontSize="lg"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              boxShadow="xl"
+              width="500px"
+              marginTop="48"
+            >
+              <Text mb={4} fontSize="xl" fontWeight="bold">
+                Do you want to book {carBooked.model}?
+              </Text>
+              <Input
+                placeholder="For many days, you want to book this car for?"
+                onChange={handleInputChange}
+                bg="gray.100"
+                color="black"
+                mb={2}
+              />
+              <HStack spacing={6}>
+                <Button
+                  colorScheme="green"
+                  size="lg"
+                  onClick={async () => {
+                    try {
+                      // Send request to book the car
+                      console.log(`registrationNumber: ${carBooked.registrationNumber}, customerId: ${customerData._id}, durationGivenFor: ${carBooked.durationGivenFor}`);
+                      const response = await axios.post(
+                        "https://urban-motion-backend.vercel.app/api/cars/book-car",
+                        { registrationNumber: carBooked.registrationNumber, customerId: customerData._id, durationGivenFor: carBooked.durationGivenFor }
+                      );
 
-                    if (response.status === 200) {
+                      if (response.status === 200) {
 
-                      // Show success toast after booking the car
-                      toast({
-                        title: "Booking Confirmed",
-                        description: `You have successfully booked the ${carBooked.model}. You can view the status in the Bookings tab of your dashboard.`,
-                        status: "success",
-                        duration: 5000,
-                        isClosable: true,
-                        position: "top",
-                        render: () => (
-                          <Box
-                            color="white"
-                            p={6}
-                            bg="green.500"
-                            borderRadius="md"
-                            fontSize="lg"
-                            boxShadow="xl"
-                          >
-                            <Text>
-                              You have successfully booked the {carBooked.model}. You
-                              can view the status in the Bookings tab of your
-                              dashboard.
-                            </Text>
-                          </Box>
-                        ),
-                      });
+                        // Show success toast after booking the car
+                        toast({
+                          title: "Booking Confirmed",
+                          description: `You have successfully booked the ${carBooked.model}. You can view the status in the Bookings tab of your dashboard.`,
+                          status: "success",
+                          duration: 5000,
+                          isClosable: true,
+                          position: "top",
+                          render: () => (
+                            <Box
+                              color="white"
+                              p={6}
+                              bg="green.500"
+                              borderRadius="md"
+                              fontSize="lg"
+                              boxShadow="xl"
+                            >
+                              <Text>
+                                You have successfully booked the {carBooked.model}. You
+                                can view the status in the Bookings tab of your
+                                dashboard.
+                              </Text>
+                            </Box>
+                          ),
+                        });
+                      }
+                    } catch (error) {
+                      console.error("Error booking car:", error);
                     }
-                  } catch (error) {
-                    console.error("Error booking car:", error);
-                  }
-                  onClose();
-                }}
-              >
-                Yes
-              </Button>
-              <Button colorScheme="red" size="lg" onClick={onClose}>
-                No
-              </Button>
-            </HStack>
-          </Box>
-        </motion.div>
-      ),
-    });
-  };
+                    onClose();
+                  }}
+                >
+                  Yes
+                </Button>
+                <Button colorScheme="red" size="lg" onClick={onClose}>
+                  No
+                </Button>
+              </HStack>
+            </Box>
+          </motion.div>
+        ),
+      });
+    };
   };
 
   return (
@@ -351,7 +351,9 @@ const BookCar = () => {
           justifyContent="center"
           alignItems="center"
           minHeight="200px"
+          flexDirection="column"
         >
+          <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
           <Spinner size="xl" color="green" />
         </Box>
       ) : (

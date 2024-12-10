@@ -6,9 +6,11 @@ import {
   useColorModeValue,
   Image,
   VStack,
-  Flex
+  Flex,
+  Spinner
 } from "@chakra-ui/react";
 import { useState } from "react";
+import Card from "../CommonDashboardComponents/Card";
 
 const MainContent = ({ retailerData }) => {
   const bgColor = useColorModeValue("gray.800", "gray.800");
@@ -82,6 +84,29 @@ const MainContent = ({ retailerData }) => {
           Switch to {gender === "male" ? "Female" : "Male"}
         </Button>
       </Flex>
+      <Flex
+        direction="column"
+        align="center"
+        position={{ base: "unset", md: "absolute" }}
+        top={60}
+        right={6}
+        p={4}
+        bg="gray.700"
+        borderRadius="lg"
+        shadow="lg"
+        w="240px"
+      >
+        <Button
+          bg="#00db00"
+          color="white"
+          _hover={{ bg: "white", color: "#00db00" }}
+          size="sm"
+          onClick={toggleGender}
+        >
+          Change Password
+        </Button>
+      </Flex>
+    {retailerData ? (<Card userType="Retailer" userData={retailerData} />): (<Card userType="loading" userData={null} />)}
     </Box>
   );
 };
