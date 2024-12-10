@@ -82,6 +82,7 @@ const CustomerDashboard = () => {
         bg="gray.900" // Ensure the content area has a solid background
         zIndex={10} // Ensure the content area is above the sidebar
         position="relative" // Keep content positioned above the sidebar
+        minH="100vh"
       >
         {renderContent()} {/* Render the active component */}
       </Box>

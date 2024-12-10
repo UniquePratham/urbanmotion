@@ -5,7 +5,7 @@ import AddCar from "./AddCar";
 import RemoveCar from "./RemoveCar";
 import Notifications from "./Notifications";
 import CarsBooked from "./CarsBooked";
-import CarsReturned from "./CarsReturned";
+import Cars from "./Cars";
 import MainContent from "./MainContent";
 import { useRouter } from "next/router";
 
@@ -51,10 +51,10 @@ const RetailerDashboard = () => {
         return <RemoveCar />;
       case "notifications":
         return <Notifications />;
+      case "mycars":
+        return <Cars />;
       case "cars-booked":
         return <CarsBooked />;
-      case "cars-returned":
-        return <CarsReturned />;
       case "profile":
         return <MainContent retailerData={retailerData} />; // Profile component with retailer data
       default:
@@ -65,9 +65,9 @@ const RetailerDashboard = () => {
   const sidebarData = [
     { icon: FaUser, label: "Profile", path: "profile" },
     { icon: FaCar, label: "Add Car", path: "add-car" },
+    { icon: FaCalendarAlt, label: "My Cars", path: "mycars" },
     { icon: FaTrash, label: "Remove Car", path: "remove-car" },
     { icon: FaCalendarAlt, label: "Cars Booked", path: "cars-booked" },
-    { icon: FaExchangeAlt, label: "Cars Returned", path: "cars-returned" },
     { icon: FaBell, label: "Notifications", path: "notifications" },
   ];
 

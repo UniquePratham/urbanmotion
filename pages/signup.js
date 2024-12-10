@@ -233,8 +233,17 @@ const SignUp = () => {
             mb={2}
             width={{ base: "300px", md: "300px" }}
             onChange={handleInputChange}
-            _hover={{ bg: "gray.200" }}
             defaultValue=""
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.5)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
           >
             <option value="" disabled>
               Select Account Type
@@ -250,7 +259,16 @@ const SignUp = () => {
             mb={2}
             width={{ base: "300px", md: "300px" }}
             onChange={handleInputChange}
-            _hover={{ bg: "gray.200" }}
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.5)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
           />
           <Input
             name="email"
@@ -259,7 +277,16 @@ const SignUp = () => {
             mb={2}
             width={{ base: "300px", md: "300px" }}
             onChange={handleInputChange}
-            _hover={{ bg: "gray.200" }}
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.5)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
           />
           <Input
             name="password"
@@ -269,7 +296,16 @@ const SignUp = () => {
             mb={2}
             width={{ base: "300px", md: "300px" }}
             onChange={handleInputChange}
-            _hover={{ bg: "gray.200" }}
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.5)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
           />
           <Input
             name="drivingLicenseId"
@@ -278,7 +314,16 @@ const SignUp = () => {
             mb={2}
             width={{ base: "300px", md: "300px" }}
             onChange={handleAdditionalChange}
-            _hover={{ bg: "gray.200" }}
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.5)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
           />
           <Select
             name="verificationType"
@@ -286,8 +331,17 @@ const SignUp = () => {
             mb={2}
             width={{ base: "300px", md: "300px" }}
             onChange={handleAdditionalChange}
-            _hover={{ bg: "gray.200" }}
             defaultValue=""
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.5)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
             >
               <option value="" disabled>
                 Select Verification ID Type
@@ -302,7 +356,16 @@ const SignUp = () => {
             mb={2}
             width={{ base: "300px", md: "300px" }}
             onChange={handleAdditionalChange}
-            _hover={{ bg: "gray.200" }}
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.5)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
           />
           {formData.accountType === "admin" && (
             <>
@@ -313,7 +376,16 @@ const SignUp = () => {
                 mb={2}
                 width={{ base: "300px", md: "300px" }}
                 onChange={handleAdditionalChange}
-                _hover={{ bg: "gray.200" }}
+                _hover={{
+                  bg: "rgba(255, 255, 255, 0.7)",
+                  borderColor: "rgba(255, 255, 255, 0.5)",
+                }}
+                _focus={{
+                  outline: "none",
+                  bg: "rgba(255, 255, 255, 0.5)",
+                  borderColor: "rgba(0, 255, 0, 0.8)",
+                  boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+                }}
               />
               <Input
                 name="passcode"
@@ -323,7 +395,16 @@ const SignUp = () => {
                 mb={2}
                 width={{ base: "300px", md: "300px" }}
                 onChange={handleAdditionalChange}
-                _hover={{ bg: "gray.200" }}
+                _hover={{
+                  bg: "rgba(255, 255, 255, 0.7)",
+                  borderColor: "rgba(255, 255, 255, 0.5)",
+                }}
+                _focus={{
+                  outline: "none",
+                  bg: "rgba(255, 255, 255, 0.5)",
+                  borderColor: "rgba(0, 255, 0, 0.8)",
+                  boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+                }}
               />
             </>
           )}
