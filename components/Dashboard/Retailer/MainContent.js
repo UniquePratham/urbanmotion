@@ -95,6 +95,7 @@ const MainContent = ({ retailerData }) => {
         borderRadius="lg"
         shadow="lg"
         w="240px"
+        mb={{base:4,md:0}}
       >
         <Button
           bg="#00db00"
