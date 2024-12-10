@@ -101,7 +101,7 @@ const RemoveCar = () => {
           </Heading>
         </Box>
         <Text color="gray.400">
-          Check your inventory below and remove unwanted cars from your inventory.
+          Enter the registration number of the car you want to delete and confirm the deletion.
         </Text>
       </Box>
 

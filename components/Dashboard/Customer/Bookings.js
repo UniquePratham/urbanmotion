@@ -40,6 +40,13 @@ const Bookings = () => {
           const data = await response.json();
           return data.data; // Return the customer data
         } catch (error) {
+          toast({
+            title: "Error Fetching Data",
+            description: "Unable to fetch customer data.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
           console.error("Failed to fetch customer data:", error);
           return null;
         }
@@ -58,6 +65,13 @@ const Bookings = () => {
           console.error('Response data is undefined.');
         }
       } catch (error) {
+        toast({
+          title: "Error Fetching Data",
+          description: "Unable to fetch car details.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         console.error("Error fetching cars:", error);
       } finally {
         setIsLoading(false);
@@ -75,15 +89,20 @@ const Bookings = () => {
         setIsLoading(false); // Stop isLoading if no car is booked
       }
     };
-    if (carBooked) {
-      calculateReturnDate();
-    }
 
     fetchData();
-  }, []);
+  }, [toast]);
+
+  useEffect(() => {
+    if (carBooked) {
+      calculateReturnDate(); // Calculate return date when carBooked is updated
+    }
+  }, [carBooked]);
 
 
   const calculateReturnDate = () => {
+    if (!carBooked) return;
+
     const duration = parseInt(carBooked.durationGivenFor); // Extract number from string
     const handedOnDate = new Date(carBooked.handedOn);
 
