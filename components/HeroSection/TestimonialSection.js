@@ -115,7 +115,7 @@ const TestimonialSection = () => {
             />
           ))}
         </Flex>
-        <Avatar src="/profile_2.png" name="Eleanor Smith" />
+        <Avatar src="/profile.png" name="Eleanor Smith" />
       </MotionBox>
 
       {/* Right Content */}

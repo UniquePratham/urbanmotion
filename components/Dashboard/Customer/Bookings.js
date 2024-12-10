@@ -188,8 +188,10 @@ const Bookings = () => {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100vh"
+          minHeight="200px"
+          flexDirection="column"
         >
+          <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
           <Spinner size="xl" color="green" />
         </Box>
       ) : carBooked ? (

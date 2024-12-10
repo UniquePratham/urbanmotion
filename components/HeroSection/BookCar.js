@@ -11,7 +11,9 @@ import {
   Icon,
   Spinner,
   Wrap,
-  WrapItem
+  WrapItem,
+  Input,
+  useToast
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import {
@@ -21,9 +23,16 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 import axios from "axios";
+import { motion } from "framer-motion"; // Import framer-motion for animations
+import { useRouter } from "next/router";
+
 
 const BookCar = () => {
+  const router = useRouter();
+  const toast = useToast(); // To display toast messages
   const [cars, setCars] = useState([]);
+  const [customerData, setCustomerData] = useState(null);
+  let [carBooked, setCarBooked] = useState(null);
   const [filteredCars, setFilteredCars] = useState([]);
   const [carTypeFilter, setCarTypeFilter] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
@@ -31,24 +40,48 @@ const BookCar = () => {
   const [fuelTypeFilter, setFuelTypeFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false); // State to track loading
 
+  
+
+  const fetchCars = async () => {
+    setIsLoading(true); // Set loading to true before fetching
+    try {
+      const response = await axios.get(
+        "https://urban-motion-backend.vercel.app/api/cars/get-available-cars"
+      );
+      const availableCars = response.data.cars.filter((car) => !car.isHanded);
+      setCars(availableCars);
+      setFilteredCars(availableCars);
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+    } finally {
+      setIsLoading(false); // Set loading to false after data is fetched
+    }
+  };
+
   useEffect(() => {
     // Fetching available cars data
-    const fetchCars = async () => {
-      setIsLoading(true); // Set loading to true before fetching
-      try {
-        const response = await axios.get(
-          "https://urban-motion-backend.vercel.app/api/cars/get-available-cars"
-        );
-        const availableCars = response.data.cars.filter((car) => !car.isHanded);
-        setCars(availableCars);
-        setFilteredCars(availableCars);
-      } catch (error) {
-        console.error("Error fetching cars:", error);
-      } finally {
-        setIsLoading(false); // Set loading to false after data is fetched
+    const fetchCustomerData = async () => {
+      const sessionId = localStorage.getItem("sessionId");
+      if (sessionId) {
+        try {
+          const response = await fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`);
+          const data = await response.json();
+          return data.data; // Return the customer data
+        } catch (error) {
+          console.error("Failed to fetch customer data:", error);
+          return null;
+        }
+      }
+      return null;
+    };
+    const fetchDataBeforeBooking = async () => {
+      const customerData = await fetchCustomerData();
+      if (customerData && customerData._id) {
+        setCustomerData(customerData); // Update state
       }
     };
     fetchCars();
+    fetchDataBeforeBooking();
   }, []);
 
   const handleFilterChange = () => {
@@ -97,10 +130,132 @@ const BookCar = () => {
     return stars;
   };
 
+  const handleBooking = async (car, toast) => {
+    if (customerData) {
+      carBooked = car;
+      setCarBooked(car);
+      const handleInputChange = (e) => {
+        car.durationGivenFor = `${e.target.value} days`;
+        setCarBooked(car);
+      };
+      if (carBooked) {
+        toast({
+          title: "Confirm Booking",
+          description: `Do you want to book ${carBooked.model}?`,
+          status: "info",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+          render: ({ onClose }) => (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Box
+                color="#00db00"
+                p={6}
+                bg="black"
+                borderRadius="xl"
+                fontSize="lg"
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                boxShadow="xl"
+                width="500px"
+                marginTop="48"
+              >
+                <Text mb={4} fontSize="xl" fontWeight="bold">
+                  Do you want to book {carBooked.model}?
+                </Text>
+                <Input
+                  placeholder="For many days, you want to book this car for?"
+                  onChange={handleInputChange}
+                  bg="gray.100"
+                  color="black"
+                  mb={2}
+                />
+                <HStack spacing={6}>
+                  <Button
+                    colorScheme="green"
+                    size="lg"
+                    onClick={async () => {
+                      try {
+                        // Send request to book the car
+                        console.log(`registrationNumber: ${carBooked.registrationNumber}, customerId: ${customerData._id}, durationGivenFor: ${carBooked.durationGivenFor}`);
+                        const response = await axios.post(
+                          "https://urban-motion-backend.vercel.app/api/cars/book-car",
+                          { registrationNumber: carBooked.registrationNumber, customerId: customerData._id, durationGivenFor: carBooked.durationGivenFor }
+                        );
+
+                        if (response.status === 200) {
+                          setIsLoading(true);
+                          // Show success toast after booking the car
+                          toast({
+                            title: "Booking Confirmed",
+                            description: `You have successfully booked the ${carBooked.model}. You can view the status in the Bookings tab of your dashboard.`,
+                            status: "success",
+                            duration: 5000,
+                            isClosable: true,
+                            position: "top",
+                            render: () => (
+                              <Box
+                                color="white"
+                                p={6}
+                                bg="green.500"
+                                borderRadius="md"
+                                fontSize="lg"
+                                boxShadow="xl"
+                              >
+                                <Text>
+                                  You have successfully booked the {carBooked.model}. You
+                                  can view the status in the Bookings tab of your
+                                  dashboard.
+                                </Text>
+                              </Box>
+                            ),
+                          });
+                        }
+                        setTimeout(() => {
+                          setIsLoading(false);
+                          fetchCars();
+                        }, 5000);
+                      } catch (error) {
+                        console.error("Error booking car:", error);
+                      }
+                      onClose();
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button colorScheme="red" size="lg" onClick={onClose}>
+                    No
+                  </Button>
+                </HStack>
+              </Box>
+            </motion.div>
+          ),
+        });
+      }
+    } else {
+      toast({
+        title: "Warning",
+        description: "Please log in to our website first to proceed with booking a car.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        router.push("/signin");
+      }, 500);
+    }
+  };
+
   return (
-    <Box p={{base:4,md:12}} ml={{base:0,md:8}} bg="gray.900" borderRadius="lg" boxShadow="lg">
+    <Box p={{ base: 4, md: 12 }} ml={{ base: 0, md: 8 }} bg="gray.900" borderRadius="lg" boxShadow="lg">
       <Heading as="h1" size="lg" mb={6} color="white" textAlign="center">
-        Book <span  style={{ color: "#00db00" }}>Your Favourite Cars</span> Today!
+        Book <span style={{ color: "#00db00" }}>Your Favourite Cars</span> Today!
       </Heading>
 
       <VStack flexDir={{ base: "row", md: "column" }}>
@@ -217,15 +372,16 @@ const BookCar = () => {
         />
       </Button></HStack>
 
-        {/* Spinner while cars are loading */}
-        {isLoading ? (
+      {/* Spinner while cars are loading */}
+      {isLoading ? (
         <Box
           display="flex"
           justifyContent="center"
           alignItems="center"
-          minHeight="200px"
+          flexDirection="column"
         >
-          <Spinner size="xl" color="teal.400" />
+          <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
+          <Spinner size="xl" color="green" />
         </Box>
       ) : (
         // Car Listings
