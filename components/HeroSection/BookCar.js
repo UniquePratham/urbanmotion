@@ -13,14 +13,18 @@ import {
   Wrap,
   WrapItem,
   Input,
-  useToast
+  useToast,
+  IconButton,
+  Checkbox
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import {
   FaStar,
   FaRegStar,
   FaShoppingCart,
-  FaCheckCircle,
+  FaFilter,
+  FaSortUp,
+  FaRedo
 } from "react-icons/fa";
 import axios from "axios";
 import { motion } from "framer-motion"; // Import framer-motion for animations
@@ -34,29 +38,13 @@ const BookCar = () => {
   const [customerData, setCustomerData] = useState(null);
   let [carBooked, setCarBooked] = useState(null);
   const [filteredCars, setFilteredCars] = useState([]);
-  const [carTypeFilter, setCarTypeFilter] = useState("");
+  const [carModelFilter, setCarModelFilter] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
   const [priceFilter, setPriceFilter] = useState("");
   const [fuelTypeFilter, setFuelTypeFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false); // State to track loading
-
-  
-
-  const fetchCars = async () => {
-    setIsLoading(true); // Set loading to true before fetching
-    try {
-      const response = await axios.get(
-        "https://urban-motion-backend.vercel.app/api/cars/get-available-cars"
-      );
-      const availableCars = response.data.cars.filter((car) => !car.isHanded);
-      setCars(availableCars);
-      setFilteredCars(availableCars);
-    } catch (error) {
-      console.error("Error fetching cars:", error);
-    } finally {
-      setIsLoading(false); // Set loading to false after data is fetched
-    }
-  };
+  const [isVisible, setIsVisible] = useState(true); // State to track Visibility
+  const [isChecked, setIsChecked] = useState(false); // State to track Checkbox
 
   useEffect(() => {
     // Fetching available cars data
@@ -84,13 +72,29 @@ const BookCar = () => {
     fetchDataBeforeBooking();
   }, []);
 
+  const fetchCars = async () => {
+    setIsLoading(true); // Set loading to true before fetching
+    try {
+      const response = await axios.get(
+        "https://urban-motion-backend.vercel.app/api/cars/get-available-cars"
+      );
+      const availableCars = response.data.cars.filter((car) => !car.isHanded);
+      setCars(availableCars);
+      setFilteredCars(availableCars.slice(0, 6));
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+    } finally {
+      setIsLoading(false); // Set loading to false after data is fetched
+    }
+  };
+
   const handleFilterChange = () => {
     setIsLoading(true); // Show spinner when filters are applied
     let filtered = cars;
 
     // Filter by car type
-    if (carTypeFilter) {
-      filtered = filtered.filter((car) => car.carType === carTypeFilter);
+    if (carModelFilter) {
+      filtered = filtered.filter((car) => car.carType === carModelFilter);
     }
 
     // Filter by rating
@@ -107,7 +111,7 @@ const BookCar = () => {
 
     // Filter by fuel type
     if (fuelTypeFilter) {
-      filtered = filtered.filter((car) => car.fuelType === fuelTypeFilter);
+      filtered = filtered.filter((car) => car.carType === fuelTypeFilter);
     }
 
     setFilteredCars(filtered);
@@ -131,246 +135,387 @@ const BookCar = () => {
   };
 
   const handleBooking = async (car, toast) => {
-    if (customerData) {
-      carBooked = car;
-      setCarBooked(car);
-      const handleInputChange = (e) => {
-        car.durationGivenFor = `${e.target.value} days`;
-        setCarBooked(car);
-      };
-      if (carBooked) {
+    const userType = localStorage.getItem("userType");
+    if (userType) {
+      if (userType === "customer") {
+        if (customerData) {
+          carBooked = car;
+          setCarBooked(car);
+          const handleInputChange = (e) => {
+            car.durationGivenFor = `${e.target.value} days`;
+            setCarBooked(car);
+          };
+          if (carBooked) {
+            toast({
+              title: "Confirm Booking",
+              description: `Do you want to book ${carBooked.model}?`,
+              status: "info",
+              duration: 5000,
+              isClosable: true,
+              position: "top",
+              render: ({ onClose }) => (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Box
+                    color="#00db00"
+                    p={6}
+                    bg="black"
+                    borderRadius="xl"
+                    fontSize="lg"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    boxShadow="xl"
+                    width="500px"
+                    marginTop="48"
+                  >
+                    <Text mb={4} fontSize="xl" fontWeight="bold">
+                      Do you want to book {carBooked.model}?
+                    </Text>
+                    <Input
+                      placeholder="For how many days would you like to book this car?"
+                      onChange={handleInputChange}
+                      bg="gray.100"
+                      color="black"
+                      mb={2}
+                    />
+                    <HStack spacing={6}>
+                      <Button
+                        colorScheme="green"
+                        size="lg"
+                        onClick={async () => {
+                          try {
+                            // Send request to book the car
+                            console.log(`registrationNumber: ${carBooked.registrationNumber}, customerId: ${customerData._id}, durationGivenFor: ${carBooked.durationGivenFor}`);
+                            const response = await axios.post(
+                              "https://urban-motion-backend.vercel.app/api/cars/book-car",
+                              { registrationNumber: carBooked.registrationNumber, customerId: customerData._id, durationGivenFor: carBooked.durationGivenFor }
+                            );
+
+                            if (response.status === 200) {
+                              setIsLoading(true);
+                              // Show success toast after booking the car
+                              toast({
+                                title: "Booking Confirmed",
+                                description: `You have successfully booked the ${carBooked.model}. You can view the status in the Bookings tab of your dashboard.`,
+                                status: "success",
+                                duration: 5000,
+                                isClosable: true,
+                                position: "top",
+                                render: () => (
+                                  <Box
+                                    color="white"
+                                    p={6}
+                                    bg="green.500"
+                                    borderRadius="md"
+                                    fontSize="lg"
+                                    boxShadow="xl"
+                                  >
+                                    <Text>
+                                      You have successfully booked the {carBooked.model}. You
+                                      can view the status in the Bookings tab of your
+                                      dashboard.
+                                    </Text>
+                                  </Box>
+                                ),
+                              });
+                            }
+                            setTimeout(() => {
+                              setIsLoading(false);
+                              fetchCars();
+                            }, 5000);
+                          } catch (error) {
+                            console.error("Error booking car:", error);
+                          }
+                          onClose();
+                        }}
+                      >
+                        Yes
+                      </Button>
+                      <Button colorScheme="red" size="lg" onClick={onClose}>
+                        No
+                      </Button>
+                    </HStack>
+                  </Box>
+                </motion.div>
+              ),
+            });
+          }
+        } else {
+          toast({
+            title: "Warning",
+            description: "Please log in to our website first to proceed with booking a car.",
+            status: "warning",
+            duration: 5000,
+            isClosable: true,
+          });
+          setTimeout(() => {
+            router.push("/signin");
+          }, 500);
+        }
+      }
+      else if(userType==="retailer"){
         toast({
-          title: "Confirm Booking",
-          description: `Do you want to book ${carBooked.model}?`,
-          status: "info",
+          title: "Warning",
+          description: "You are a retailer. Please sign in with a Customer ID to book a car.",
+          status: "warning",
           duration: 5000,
           isClosable: true,
-          position: "top",
-          render: ({ onClose }) => (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Box
-                color="#00db00"
-                p={6}
-                bg="black"
-                borderRadius="xl"
-                fontSize="lg"
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                boxShadow="xl"
-                width="500px"
-                marginTop="48"
-              >
-                <Text mb={4} fontSize="xl" fontWeight="bold">
-                  Do you want to book {carBooked.model}?
-                </Text>
-                <Input
-                  placeholder="For many days, you want to book this car for?"
-                  onChange={handleInputChange}
-                  bg="gray.100"
-                  color="black"
-                  mb={2}
-                />
-                <HStack spacing={6}>
-                  <Button
-                    colorScheme="green"
-                    size="lg"
-                    onClick={async () => {
-                      try {
-                        // Send request to book the car
-                        console.log(`registrationNumber: ${carBooked.registrationNumber}, customerId: ${customerData._id}, durationGivenFor: ${carBooked.durationGivenFor}`);
-                        const response = await axios.post(
-                          "https://urban-motion-backend.vercel.app/api/cars/book-car",
-                          { registrationNumber: carBooked.registrationNumber, customerId: customerData._id, durationGivenFor: carBooked.durationGivenFor }
-                        );
-
-                        if (response.status === 200) {
-                          setIsLoading(true);
-                          // Show success toast after booking the car
-                          toast({
-                            title: "Booking Confirmed",
-                            description: `You have successfully booked the ${carBooked.model}. You can view the status in the Bookings tab of your dashboard.`,
-                            status: "success",
-                            duration: 5000,
-                            isClosable: true,
-                            position: "top",
-                            render: () => (
-                              <Box
-                                color="white"
-                                p={6}
-                                bg="green.500"
-                                borderRadius="md"
-                                fontSize="lg"
-                                boxShadow="xl"
-                              >
-                                <Text>
-                                  You have successfully booked the {carBooked.model}. You
-                                  can view the status in the Bookings tab of your
-                                  dashboard.
-                                </Text>
-                              </Box>
-                            ),
-                          });
-                        }
-                        setTimeout(() => {
-                          setIsLoading(false);
-                          fetchCars();
-                        }, 5000);
-                      } catch (error) {
-                        console.error("Error booking car:", error);
-                      }
-                      onClose();
-                    }}
-                  >
-                    Yes
-                  </Button>
-                  <Button colorScheme="red" size="lg" onClick={onClose}>
-                    No
-                  </Button>
-                </HStack>
-              </Box>
-            </motion.div>
-          ),
         });
       }
-    } else {
-      toast({
-        title: "Warning",
-        description: "Please log in to our website first to proceed with booking a car.",
-        status: "warning",
-        duration: 5000,
-        isClosable: true,
-      });
-      setTimeout(() => {
-        router.push("/signin");
-      }, 500);
+      else{
+        toast({
+          title: "Warning",
+          description: "You are an admin. Please sign in with a Customer ID to book a car.",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 
+  const handleToggle = () => {
+    setIsVisible((prev) => !prev); // Toggle visibility state
+  };
+  const onToggle = (isChecked) => {
+    if (isChecked) {
+      setFilteredCars(cars);
+    }
+    else {
+      setFilteredCars(cars.slice(0, 6));
+    }
+  };
+
+  const handleResetorClearFilter = () => {
+    // Reset the value of all select elements with specific IDs
+    setCarModelFilter("");
+    setRatingFilter("");
+    setFuelTypeFilter("");
+    setPriceFilter("");
+    fetchCars();
+  };
+
+  const handleCheckboxChange = () => {
+    const newValue = !isChecked;
+    setIsChecked(newValue);
+    onToggle(newValue);
+  };
+
   return (
-    <Box p={{ base: 4, md: 12 }} ml={{ base: 0, md: 8 }} bg="gray.900" borderRadius="lg" boxShadow="lg">
-      <Heading as="h1" size="lg" mb={6} color="white" textAlign="center">
-        Book <span style={{ color: "#00db00" }}>Your Favourite Cars</span> Today!
-      </Heading>
+    <>
+      <Box p={{ base: 4, md: 12 }} ml={{ base: 0, md: 8 }} bg="gray.900" boxShadow="lg" maxH={{ base: isVisible ? "600px" : "200px", md: isVisible ? "460px" : "200px" }}>
+        <Heading as="h1" size="lg" mb={2} color="white" textAlign="center">
+          Book <span style={{ color: "#00db00" }}>Your Favourite Cars</span> Today!
+        </Heading>
+        <Text color="gray.400" textAlign="center" mb={4}>
+          You can search and book a car, with or without filters.
+        </Text>
 
-      <VStack flexDir={{ base: "row", md: "column" }}>
-        <HStack spacing={{ base: 4, md: 44 }} mb={6} mt={{ base: 0, md: 2 }} justifyContent={{ base: "space-between", md: "space-around" }} alignItems={{ base: "unset", md: "center" }} flexDirection={{ base: "column", md: "unset" }}>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/available-car32.png" alt="Select Car Type" boxSize="40px" />
-          </Box>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/rating_cars.png" alt="Select Rating" boxSize="40px" />
-          </Box>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/car-fuel-type32.png" alt="Select Fuel Type" boxSize="40px" />
-          </Box>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/money 321.png" alt="Select Max Monthly Price" boxSize="40px" />
-          </Box>
+        <VStack flexDir={{ base: "row", md: "column" }} style={{ display: isVisible ? "flex" : "none" }}>
+          <HStack spacing={{ base: 4, md: 44 }} mb={{ base: 4, md: 2 }} mt={{ base: 0, md: 2 }} justifyContent={{ base: "space-between", md: "space-around" }} alignItems={{ base: "unset", md: "center" }} flexDirection={{ base: "column", md: "unset" }}>
+            <Box display="flex" alignItems="center">
+              <Image src="/Resources/available-car32.png" alt="Select Car Type" boxSize="40px" />
+            </Box>
+            <Box display="flex" alignItems="center">
+              <Image src="/Resources/rating_cars.png" alt="Select Rating" boxSize="40px" />
+            </Box>
+            <Box display="flex" alignItems="center">
+              <Image src="/Resources/car-fuel-type32.png" alt="Select Fuel Type" boxSize="40px" />
+            </Box>
+            <Box display="flex" alignItems="center">
+              <Image src="/Resources/money 321.png" alt="Select Max Monthly Price" boxSize="40px" />
+            </Box>
+          </HStack>
+
+          {/* Filters */}
+          <HStack spacing={4} mb={{ base: 4, md: 2 }} justify="center" flexDirection={{ base: "column", md: "unset" }} style={{ display: isVisible ? "flex" : "none" }}>
+            <Select
+              onChange={(e) => setCarModelFilter(e.target.value)}
+              defaultValue=""
+              value={carModelFilter}
+              bg="gray.100"
+              color="black"
+              _focus={{
+                outline: "none",
+                bg: "rgba(255, 255, 255, 0.7)",
+                borderColor: "rgba(0, 255, 0, 0.8)",
+                boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+              }}
+              _hover={{
+                bg: "rgba(255, 255, 255, 0.5)",
+                borderColor: "rgba(255, 255, 255, 0.5)",
+              }}
+            >
+              <option value="" disabled>
+                Select Car Model
+              </option>
+              <option value="Tesla">Tesla</option>
+              <option value="Sedan">Sedan</option>
+              <option value="SUV">SUV</option>
+              <option value="Hyundai">Hyundai</option>
+              <option value="Mercedes">Mercedes</option>
+              <option value="BMW">BMW</option>
+            </Select>
+
+            <Select
+              onChange={(e) => setRatingFilter(e.target.value)}
+              defaultValue=""
+              value={ratingFilter}
+              bg="gray.100"
+              color="black"
+              _focus={{
+                outline: "none",
+                bg: "rgba(255, 255, 255, 0.7)",
+                borderColor: "rgba(0, 255, 0, 0.8)",
+                boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+              }}
+              _hover={{
+                bg: "rgba(255, 255, 255, 0.5)",
+                borderColor: "rgba(255, 255, 255, 0.5)",
+              }}
+            >
+              <option value="" disabled>
+                Select Rating
+              </option>
+              <option value="1">1 Star ⭐</option>
+              <option value="2">2 Stars ⭐⭐</option>
+              <option value="3">3 Stars ⭐⭐⭐</option>
+              <option value="4">4 Stars ⭐⭐⭐⭐</option>
+              <option value="5">5 Stars ⭐⭐⭐⭐⭐</option>
+            </Select>
+
+            <Select
+              onChange={(e) => setFuelTypeFilter(e.target.value)}
+              bg="gray.100"
+              color="black"
+              defaultValue=""
+              value={fuelTypeFilter}
+              _focus={{
+                outline: "none",
+                bg: "rgba(255, 255, 255, 0.7)",
+                borderColor: "rgba(0, 255, 0, 0.8)",
+                boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+              }}
+              _hover={{
+                bg: "rgba(255, 255, 255, 0.5)",
+                borderColor: "rgba(255, 255, 255, 0.5)",
+              }}
+            >
+              <option value="" disabled>
+                Select Fuel Type
+              </option>
+              <option value="Diesel">Diesel</option>
+              <option value="Petrol">Petrol</option>
+              <option value="Electric">Electric</option>
+              <option value="Hybrid">Hybrid</option>
+            </Select>
+
+            <Select
+              onChange={(e) => setPriceFilter(e.target.value)}
+              defaultValue=""
+              value={priceFilter}
+              bg="gray.100"
+              color="black"
+              _focus={{
+                outline: "none",
+                bg: "rgba(255, 255, 255, 0.7)",
+                borderColor: "rgba(0, 255, 0, 0.8)",
+                boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+              }}
+              _hover={{
+                bg: "rgba(255, 255, 255, 0.5)",
+                borderColor: "rgba(255, 255, 255, 0.5)",
+              }}
+            >
+              <option value="" disabled>
+                Select Max Monthly Price
+              </option>
+              <option value="20000">₹20000</option>
+              <option value="30000">₹30000</option>
+              <option value="50000">₹50000</option>
+            </Select>
+          </HStack>
+        </VStack>
+        {/* Go Button */}
+        <HStack justifyContent="center" alignItems="center" mb={4} style={{ display: isVisible ? "flex" : "none" }}><Button
+          display={{ base: "flex", md: "unset" }}
+          alignItems="center"
+          fontSize="20px"
+          color="black"
+          px="4px"
+          pt="4px"
+          w={{ base: "20%", md: "5%" }}
+          borderRadius="md"
+          bg="white"
+          zIndex={3}
+          _hover={{
+            bg: "gray.500",
+            color: "#00db00",
+            transform: "scale(1.05)",
+            transition: "0.2s ease-in-out",
+          }}
+          flexDirection="column-reverse"
+          size="md" onClick={handleFilterChange}>
+          <Image
+            src="/Resources/search-car48.png"
+            alt=""
+            borderRadius="3"
+            p="4px"
+            pt="2"
+            mt={{ base: "-4", md: "-5" }}
+            zIndex={2}
+          />
+        </Button></HStack>
+        <HStack justifyContent="center" alignItems="center" mb={3} mt={2} style={{ display: isVisible ? "flex" : "none" }}>
+          <Checkbox
+            colorScheme="green"
+            size="lg"
+            isChecked={isChecked}
+            onChange={handleCheckboxChange}
+          >
+            <Text color="gray.100">
+              Show All Available Cars
+            </Text>
+          </Checkbox>
         </HStack>
-
-        {/* Filters */}
-        <HStack spacing={4} mb={6} justify="center" flexDirection={{ base: "column", md: "unset" }}>
-          <Select
-            onChange={(e) => setCarTypeFilter(e.target.value)}
-            defaultValue=""
-            value={carTypeFilter}
-            bg="gray.100"
-            color="black"
-          >
-            <option value="" disabled>
-              Select Car Type
-            </option>
-            <option value="Electric">Electric</option>
-            <option value="Sedan">Sedan</option>
-            <option value="SUV">SUV</option>
-          </Select>
-
-          <Select
-            onChange={(e) => setRatingFilter(e.target.value)}
-            defaultValue=""
-            value={ratingFilter}
-            bg="gray.100"
-            color="black"
-          >
-            <option value="" disabled>
-              Select Rating
-            </option>
-            <option value="1">1 Star ⭐</option>
-            <option value="2">2 Stars ⭐⭐</option>
-            <option value="3">3 Stars ⭐⭐⭐</option>
-            <option value="4">4 Stars ⭐⭐⭐⭐</option>
-            <option value="5">5 Stars ⭐⭐⭐⭐⭐</option>
-          </Select>
-
-          <Select
-            onChange={(e) => setFuelTypeFilter(e.target.value)}
-            bg="gray.100"
-            color="black"
-            defaultValue=""
-            value={fuelTypeFilter}
-          >
-            <option value="" disabled>
-              Select Fuel Type
-            </option>
-            <option value="Diesel">Diesel</option>
-            <option value="Petrol">Petrol</option>
-            <option value="Electric">Electric</option>
-          </Select>
-
-          <Select
-            onChange={(e) => setPriceFilter(e.target.value)}
-            defaultValue=""
-            value={priceFilter}
-            bg="gray.100"
-            color="black"
-          >
-            <option value="" disabled>
-              Select Max Monthly Price
-            </option>
-            <option value="20000">₹20000</option>
-            <option value="30000">₹30000</option>
-            <option value="50000">₹50000</option>
-          </Select>
-
-
+        <HStack justifyContent="center" alignItems="center" mb={3} mt={2} style={{ display: isVisible ? "flex" : "none" }}>
+          <IconButton
+            aria-label="Menu"
+            icon={<FaRedo />}
+            display={{ base: "flex", md: "flex" }}
+            bg="transparent"
+            color="#00db00"
+            fontSize="24px"
+            _hover={{
+              color: "gray.500",
+            }}
+            onClick={handleResetorClearFilter}
+            transition="transform 0.2s"
+            transform={!isVisible ? "rotate(360deg)" : "rotate(0deg)"}
+          />
         </HStack>
-      </VStack>
-      {/* Go Button */}
-      <HStack justifyContent="center" alignItems="center" mb={4}><Button
-        display={{ base: "flex", md: "unset" }}
-        alignItems="center"
-        fontSize="20px"
-        color="black"
-        px="4px"
-        pt="4px"
-        w={{ base: "20%", md: "5%" }}
-        borderRadius="md"
-        bg="white"
-        zIndex={3}
-        _hover={{
-          bg: "gray.500",
-          color: "#00db00",
-          transform: "scale(1.05)",
-          transition: "0.2s ease-in-out",
-        }}
-        flexDirection="column-reverse"
-        size="md" onClick={handleFilterChange}>
-        <Image
-          src="/Resources/search-car48.png"
-          alt=""
-          borderRadius="3"
-          p="4px"
-          pt="2"
-          mt={{ base: "-4", md: "-5" }}
-          zIndex={2}
-        />
-      </Button></HStack>
+        <HStack justifyContent="center" alignItems="center" mb={3} mt={2} display={{ base: "flex", md: "flex" }}>
+          <IconButton
+            aria-label="Menu"
+            icon={isVisible ? <FaSortUp /> : <FaFilter />}
+            display={{ base: "flex", md: "flex" }}
+            bg="transparent"
+            color="#00db00"
+            fontSize="24px"
+            _hover={{
+              color: "gray.500",
+            }}
+            onClick={handleToggle}
+            transition="transform 0.2s"
+            transform={!isVisible ? "rotate(360deg)" : "rotate(0deg)"}
+          />
+        </HStack>
+      </Box>
 
       {/* Spinner while cars are loading */}
       {isLoading ? (
@@ -379,13 +524,28 @@ const BookCar = () => {
           justifyContent="center"
           alignItems="center"
           flexDirection="column"
+          bg="gray.900"
+          p={16}
+          minH="200px"
+          width="100%"
         >
           <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
           <Spinner size="xl" color="green" />
         </Box>
-      ) : (
+      ) : filteredCars.length === 0 ? (<Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="200px"
+        flexDirection="column"
+      >
+        <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
+        <Text color="greenyellow" mb={2}>
+          Sorry, no cars match your filters. Please try adjusting your search criteria.
+        </Text>
+      </Box>) : (
         // Car Listings
-        <Box overflowY="scroll" maxH="600px" pb={4}>
+        <Box maxH={{ base: "auto", md: "auto" }} p={6} bg="gray.900" pl={16} width="100%" borderRadius={0}>
           <Wrap spacing={6} justify="center">
             {filteredCars.map((car) => (
               <WrapItem
@@ -395,7 +555,7 @@ const BookCar = () => {
                 bg="gray.700"
                 borderRadius="lg"
                 boxShadow="md"
-                width={{ base: "90%", md: "45%" }}
+                width={{ base: "90%", md: "30%" }}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
@@ -470,7 +630,7 @@ const BookCar = () => {
           </Wrap>
         </Box>
       )}
-    </Box>
+    </>
   );
 };
 

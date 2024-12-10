@@ -13,7 +13,8 @@ import {
   useToast, // Import useToast hook for displaying toasts
   Wrap,
   WrapItem,
-  Input
+  Input,
+  IconButton
 } from "@chakra-ui/react";
 import { motion } from "framer-motion"; // Import framer-motion for animations
 import { useState, useEffect } from "react";
@@ -21,23 +22,24 @@ import {
   FaStar,
   FaRegStar,
   FaShoppingCart,
-  FaCheckCircle,
+  FaFilter,
+  FaSortUp,
+  FaRedo
 } from "react-icons/fa";
 import axios from "axios";
-import { useRouter } from "next/router"; // Import useRouter for redirection
 
 const BookCar = () => {
   const [customerData, setCustomerData] = useState(null);
   const [cars, setCars] = useState([]);
   let [carBooked, setCarBooked] = useState(null);
   const [filteredCars, setFilteredCars] = useState([]);
-  const [carTypeFilter, setCarTypeFilter] = useState("");
+  const [carModelFilter, setCarModelFilter] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
   const [priceFilter, setPriceFilter] = useState("");
   const [fuelTypeFilter, setFuelTypeFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false); // State to track loading
+  const [isVisible, setIsVisible] = useState(true); // State to track visibility
   const toast = useToast(); // To display toast messages
-  const router = useRouter(); // Hook for redirection
 
   useEffect(() => {
     // Fetching available cars data
@@ -48,31 +50,33 @@ const BookCar = () => {
         .then((data) => setCustomerData(data.data))
         .catch((err) => console.error("Failed to fetch customer data:", err));
     }
-    const fetchCars = async () => {
-      setIsLoading(true); // Set loading to true before fetching
-      try {
-        const response = await axios.get(
-          "https://urban-motion-backend.vercel.app/api/cars/get-available-cars"
-        );
-        const availableCars = response.data.cars.filter((car) => !car.isHanded);
-        setCars(availableCars);
-        setFilteredCars(availableCars);
-      } catch (error) {
-        console.error("Error fetching cars:", error);
-      } finally {
-        setIsLoading(false); // Set loading to false after data is fetched
-      }
-    };
+
     fetchCars();
-  }, [router]); // Re-run if router changes
+  }, []); // Re-run if router changes
+
+  const fetchCars = async () => {
+    setIsLoading(true); // Set loading to true before fetching
+    try {
+      const response = await axios.get(
+        "https://urban-motion-backend.vercel.app/api/cars/get-available-cars"
+      );
+      const availableCars = response.data.cars.filter((car) => !car.isHanded);
+      setCars(availableCars);
+      setFilteredCars(availableCars);
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+    } finally {
+      setIsLoading(false); // Set loading to false after data is fetched
+    }
+  };
 
   const handleFilterChange = () => {
     setIsLoading(true); // Show spinner when filters are applied
     let filtered = cars;
 
     // Filter by car type
-    if (carTypeFilter) {
-      filtered = filtered.filter((car) => car.carType === carTypeFilter);
+    if (carModelFilter) {
+      filtered = filtered.filter((car) => car.model.toLowerCase().includes(carModelFilter.toLowerCase()));
     }
 
     // Filter by rating
@@ -89,7 +93,7 @@ const BookCar = () => {
 
     // Filter by fuel type
     if (fuelTypeFilter) {
-      filtered = filtered.filter((car) => car.fuelType === fuelTypeFilter);
+      filtered = filtered.filter((car) => car.carType === fuelTypeFilter);
     }
 
     setFilteredCars(filtered);
@@ -151,7 +155,7 @@ const BookCar = () => {
                 Do you want to book {carBooked.model}?
               </Text>
               <Input
-                placeholder="For many days, you want to book this car for?"
+                placeholder="For how many days would you like to book this car?"
                 onChange={handleInputChange}
                 bg="gray.100"
                 color="black"
@@ -217,132 +221,186 @@ const BookCar = () => {
     };
   };
 
+  const handleToggle = () => {
+    setIsVisible((prev) => !prev); // Toggle visibility state
+  };
+  const handleResetorClearFilter = () => {
+    // Reset the value of all select elements with specific IDs
+    setCarModelFilter("");
+    setRatingFilter("");
+    setFuelTypeFilter("");
+    setPriceFilter("");
+    fetchCars();
+  };
+
   return (
-    <Box p={{ base: 2, md: 6 }} bg="gray.800" borderRadius={"lg"} boxShadow="lg">
-      <Box textAlign="center" mb={6}>
-        <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
-          <Image src="/Resources/add-booking48.png" alt="" h="50px" />
-          <Heading as="h1" size="lg" color="#00db00" ml={2} mt={4}>
-            Book a Car
-          </Heading>
+    <>
+      <Box p={{ base: 2, md: 4 }} bg={{ base: "gray.800", md: "gray.800" }} borderRadius={"lg"} boxShadow="lg" maxH={{ base: isVisible ? "500px" : "200px", md: isVisible ? "380px" : "200px" }}>
+        <Box textAlign="center" mb={2}>
+          <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
+            <Image src="/Resources/add-booking48.png" alt="" h="50px" />
+            <Heading as="h1" size="lg" color="#00db00" ml={2} mt={2}>
+              Book a Car
+            </Heading>
+          </Box>
+          <Text color="gray.400">
+            You can search and book a car, with or without filters.
+          </Text>
         </Box>
-        <Text color="gray.400">
-          You can search and book a car, with or without filters.
-        </Text>
+        <VStack flexDir={{ base: "row", md: "column" }} style={{ display: isVisible ? "flex" : "none" }}>
+          <HStack spacing={{ base: 4, md: 44 }} mb={2} mt={{ base: 0, md: 2 }} justifyContent={{ base: "space-between", md: "space-around" }} alignItems={{ base: "unset", md: "center" }} flexDirection={{ base: "column", md: "unset" }}>
+            <Box display="flex" alignItems="center">
+              <Image src="/Resources/available-car32.png" alt="Select Car Type" boxSize="40px" />
+            </Box>
+            <Box display="flex" alignItems="center">
+              <Image src="/Resources/rating_cars.png" alt="Select Rating" boxSize="40px" />
+            </Box>
+            <Box display="flex" alignItems="center">
+              <Image src="/Resources/car-fuel-type32.png" alt="Select Fuel Type" boxSize="40px" />
+            </Box>
+            <Box display="flex" alignItems="center">
+              <Image src="/Resources/money 321.png" alt="Select Max Monthly Price" boxSize="40px" />
+            </Box>
+          </HStack>
+
+          {/* Filters */}
+          <HStack spacing={4} mb={2} justify="center" flexDirection={{ base: "column", md: "unset" }} style={{ display: isVisible ? "flex" : "none" }}>
+            <Select
+              onChange={(e) => setCarModelFilter(e.target.value)}
+              defaultValue=""
+              value={carModelFilter}
+              bg="gray.100"
+              color="black"
+            >
+              <option value="" disabled>
+                Select Car Model
+              </option>
+              <option value="Tesla">Tesla</option>
+              <option value="Sedan">Sedan</option>
+              <option value="SUV">SUV</option>
+              <option value="Hyundai">Hyundai</option>
+              <option value="Mercedes">Mercedes</option>
+              <option value="BMW">BMW</option>
+            </Select>
+
+            <Select
+              onChange={(e) => setRatingFilter(e.target.value)}
+              defaultValue=""
+              value={ratingFilter}
+              bg="gray.100"
+              color="black"
+            >
+              <option value="" disabled>
+                Select Rating
+              </option>
+              <option value="1">1 Star ⭐</option>
+              <option value="2">2 Stars ⭐⭐</option>
+              <option value="3">3 Stars ⭐⭐⭐</option>
+              <option value="4">4 Stars ⭐⭐⭐⭐</option>
+              <option value="5">5 Stars ⭐⭐⭐⭐⭐</option>
+            </Select>
+
+            <Select
+              onChange={(e) => setFuelTypeFilter(e.target.value)}
+              bg="gray.100"
+              color="black"
+              defaultValue=""
+              value={fuelTypeFilter}
+            >
+              <option value="" disabled>
+                Select Fuel Type
+              </option>
+              <option value="Diesel">Diesel</option>
+              <option value="Petrol">Petrol</option>
+              <option value="Electric">Electric</option>
+              <option value="Hybrid">Hybrid</option>
+            </Select>
+
+            <Select
+              onChange={(e) => setPriceFilter(e.target.value)}
+              defaultValue=""
+              value={priceFilter}
+              bg="gray.100"
+              color="black"
+            >
+              <option value="" disabled>
+                Select Max Monthly Price
+              </option>
+              <option value="20000">₹20000</option>
+              <option value="30000">₹30000</option>
+              <option value="50000">₹50000</option>
+            </Select>
+
+
+          </HStack>
+        </VStack>
+        {/* Go Button */}
+        <HStack justifyContent="center" alignItems="center" mb={3} mt={2} style={{ display: isVisible ? "flex" : "none" }}><Button
+          display={{ base: "flex", md: "unset" }}
+          alignItems="center"
+          fontSize="20px"
+          color="black"
+          px="4px"
+          pt="4px"
+          w={{ base: "20%", md: "5%" }}
+          borderRadius="md"
+          bg="white"
+          zIndex={3}
+          _hover={{
+            bg: "gray.500",
+            color: "#00db00",
+            transform: "scale(1.05)",
+            transition: "0.2s ease-in-out",
+          }}
+          flexDirection="column-reverse"
+          size="md" onClick={() => {
+            handleFilterChange();
+            handleToggle();
+          }}
+        >
+          <Image
+            src="/Resources/search-car48.png"
+            alt=""
+            borderRadius="3"
+            p="4px"
+            pt="2"
+            mt={{ base: "-4", md: "-4" }}
+            zIndex={2}
+          />
+        </Button></HStack>
+        <HStack justifyContent="center" alignItems="center" mb={3} mt={2} style={{ display: isVisible ? "flex" : "none" }}>
+          <IconButton
+            aria-label="Menu"
+            icon={<FaRedo />}
+            display={{ base: "flex", md: "flex" }}
+            bg="transparent"
+            color="#00db00"
+            fontSize="24px"
+            _hover={{
+              color: "gray.500",
+            }}
+            onClick={handleResetorClearFilter}
+            transition="transform 0.2s"
+            transform={!isVisible ? "rotate(360deg)" : "rotate(0deg)"}
+          />
+        </HStack>
+        <HStack justifyContent="center" alignItems="center" mb={3} mt={2} display={{ base: "flex", md: "flex" }}>
+          <IconButton
+            aria-label="Menu"
+            icon={isVisible ? <FaSortUp /> : <FaFilter />}
+            display={{ base: "flex", md: "flex" }}
+            bg="transparent"
+            color="#00db00"
+            fontSize="24px"
+            _hover={{
+              color: "gray.500",
+            }}
+            onClick={handleToggle}
+            transition="transform 0.2s"
+            transform={!isVisible ? "rotate(360deg)" : "rotate(0deg)"}
+          />
+        </HStack>
       </Box>
-      <VStack flexDir={{ base: "row", md: "column" }}>
-        <HStack spacing={{ base: 4, md: 44 }} mb={6} mt={{ base: 0, md: 2 }} justifyContent={{ base: "space-between", md: "space-around" }} alignItems={{ base: "unset", md: "center" }} flexDirection={{ base: "column", md: "unset" }}>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/available-car32.png" alt="Select Car Type" boxSize="40px" />
-          </Box>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/rating_cars.png" alt="Select Rating" boxSize="40px" />
-          </Box>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/car-fuel-type32.png" alt="Select Fuel Type" boxSize="40px" />
-          </Box>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/money 321.png" alt="Select Max Monthly Price" boxSize="40px" />
-          </Box>
-        </HStack>
-
-        {/* Filters */}
-        <HStack spacing={4} mb={6} justify="center" flexDirection={{ base: "column", md: "unset" }}>
-          <Select
-            onChange={(e) => setCarTypeFilter(e.target.value)}
-            defaultValue=""
-            value={carTypeFilter}
-            bg="gray.100"
-            color="black"
-          >
-            <option value="" disabled>
-              Select Car Type
-            </option>
-            <option value="Electric">Electric</option>
-            <option value="Sedan">Sedan</option>
-            <option value="SUV">SUV</option>
-          </Select>
-
-          <Select
-            onChange={(e) => setRatingFilter(e.target.value)}
-            defaultValue=""
-            value={ratingFilter}
-            bg="gray.100"
-            color="black"
-          >
-            <option value="" disabled>
-              Select Rating
-            </option>
-            <option value="1">1 Star ⭐</option>
-            <option value="2">2 Stars ⭐⭐</option>
-            <option value="3">3 Stars ⭐⭐⭐</option>
-            <option value="4">4 Stars ⭐⭐⭐⭐</option>
-            <option value="5">5 Stars ⭐⭐⭐⭐⭐</option>
-          </Select>
-
-          <Select
-            onChange={(e) => setFuelTypeFilter(e.target.value)}
-            bg="gray.100"
-            color="black"
-            defaultValue=""
-            value={fuelTypeFilter}
-          >
-            <option value="" disabled>
-              Select Fuel Type
-            </option>
-            <option value="Diesel">Diesel</option>
-            <option value="Petrol">Petrol</option>
-            <option value="Electric">Electric</option>
-          </Select>
-
-          <Select
-            onChange={(e) => setPriceFilter(e.target.value)}
-            defaultValue=""
-            value={priceFilter}
-            bg="gray.100"
-            color="black"
-          >
-            <option value="" disabled>
-              Select Max Monthly Price
-            </option>
-            <option value="20000">₹20000</option>
-            <option value="30000">₹30000</option>
-            <option value="50000">₹50000</option>
-          </Select>
-
-
-        </HStack>
-      </VStack>
-      {/* Go Button */}
-      <HStack justifyContent="center" alignItems="center" mb={4}><Button
-        display={{ base: "flex", md: "unset" }}
-        alignItems="center"
-        fontSize="20px"
-        color="black"
-        px="4px"
-        pt="4px"
-        w={{ base: "20%", md: "5%" }}
-        borderRadius="md"
-        bg="white"
-        zIndex={3}
-        _hover={{
-          bg: "gray.500",
-          color: "#00db00",
-          transform: "scale(1.05)",
-          transition: "0.2s ease-in-out",
-        }}
-        flexDirection="column-reverse"
-        size="md" onClick={handleFilterChange}>
-        <Image
-          src="/Resources/search-car48.png"
-          alt=""
-          borderRadius="3"
-          p="4px"
-          pt="2"
-          mt={{ base: "-4", md: "-4" }}
-          zIndex={2}
-        />
-      </Button></HStack>
 
       {/* Spinner while cars are loading */}
       {isLoading ? (
@@ -356,10 +414,28 @@ const BookCar = () => {
           <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
           <Spinner size="xl" color="green" />
         </Box>
-      ) : (
-        // Car Listings
-        <Box overflowY="scroll" maxH="600px" pb={4}>
-          <Wrap spacing={6} justify="center">
+      ) : filteredCars.length === 0 ? (<Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="200px"
+        flexDirection="column"
+      >
+        <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
+        <Text color="greenyellow" mb={2}>
+          Sorry, no cars match your filters. Please try adjusting your search criteria.
+        </Text>
+      </Box>) : (
+        <Box
+          overflowY="scroll"
+          maxH={{ base: "auto", md: isVisible ? "455px" : "555px" }}
+          bgColor="gray.800"
+          borderRadius="lg"
+          mt={1}
+          p={{ base: 2, md: 4 }}
+          width="100%"
+        >
+          <Wrap spacing={{ base: 4, md: 6 }} justify="center">
             {filteredCars.map((car) => (
               <WrapItem
                 mt={2}
@@ -370,42 +446,72 @@ const BookCar = () => {
                 boxShadow="md"
                 width={{ base: "90%", md: "45%" }}
                 display="flex"
-                justifyContent="center"
-                alignItems="center"
+                flexDir={{ base: "column", md: "row" }}
+                alignItems={{ base: "center", md: "unset" }}
+                justifyContent={{ base: "space-between", md: "center" }}
+                height={{ base: "unset", md: "unset" }}
                 border="3px solid gray.300"
                 _hover={{
                   transform: "scale(1.005)",
                   transition: "0.1s ease-in-out",
                 }}
               >
-                <HStack spacing={{ base: 2, md: 6 }} align="center" justify="space-between" flexDir={{ base: "column", md: "unset" }}>
+                <HStack
+                  spacing={{ base: 4, md: 6 }}
+                  align={{ base: "start", md: "center" }}
+                  flexDir={{ base: "column", md: "row" }}
+                  width="100%"
+                >
                   {/* Car Image */}
-                  <Image
-                    src="/car3.png" // Placeholder image (can be dynamic later)
-                    alt={car.model}
-                    boxSize="200px"
-                    objectFit="contain"
-                    borderRadius="md"
-                    _hover={{
-                      transform: "scale(1.01) scaleX(-1)",
-                      transition: "0.03s ease-in transform",
-                    }}
-                    cursor="pointer"
-                  />
+                  <Box flex="1" width={{ base: "100%", md: "unset" }}>
+                    <Image
+                      src="/car3.png" // Placeholder image (can be dynamic later)
+                      alt={car.model}
+                      boxSize={{ base: "150px", md: "200px" }}
+                      objectFit="contain"
+                      borderRadius="md"
+                      _hover={{
+                        transform: "scale(1.01) scaleX(-1)",
+                        transition: "0.03s ease-in transform",
+                      }}
+                      cursor="pointer"
+                      mx="auto" // Center the image in mobile view
+                    />
+                  </Box>
 
                   {/* Car Details */}
-                  <Box flex="1" >
-                    <Heading as="h3" size="md" color="rgba(0,300,0,1)" mb={2} fontFamily="mono">
+                  <Box
+                    flex="2"
+                    width="100%"
+                    mt={{ base: 4, md: 0 }}
+                    textAlign={{ base: "center", md: "left" }}
+                  >
+                    <Heading
+                      as="h3"
+                      size={{ base: "sm", md: "md" }}
+                      color="rgba(0,300,0,1)"
+                      mb={2}
+                      fontFamily="mono"
+                    >
                       {car.model}
                     </Heading>
                     <Text color="greenyellow" mb={2}>
                       {car.carType} - {car.registrationNumber}
                     </Text>
-                    <HStack spacing={1} mb={4}>
+                    <HStack
+                      spacing={1}
+                      mb={4}
+                      justify={{ base: "center", md: "start" }}
+                    >
                       {calculateStars(car.rating)}
                     </HStack>
 
-                    <HStack flexDir={{ base: "column", md: "unset" }} spacing={4} mb={4}>
+                    <HStack
+                      flexDir={{ base: "column", md: "row" }}
+                      spacing={4}
+                      mb={4}
+                      textAlign="center"
+                    >
                       <Box>
                         <Text color="gray.300" fontSize="sm">
                           Weekly Price
@@ -433,6 +539,7 @@ const BookCar = () => {
                       bg="gray.200"
                       _hover={{ color: "white", bg: "#00db00" }}
                       onClick={() => handleBooking(car, toast)} // Call booking handler
+                      width={{ base: "100%", md: "auto" }}
                     >
                       Book Now
                     </Button>
@@ -443,7 +550,7 @@ const BookCar = () => {
           </Wrap>
         </Box>
       )}
-    </Box>
+    </>
   );
 };
 

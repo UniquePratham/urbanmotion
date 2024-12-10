@@ -24,6 +24,7 @@ const Bookings = () => {
   const [customerData, setCustomerData] = useState(null);
   const [carBooked, setCarBooked] = useState(null);
   const [carId, setCarId] = useState("");
+  const [returnDate, setReturnDate] = useState(null);
   const [rating, setRating] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,9 +75,24 @@ const Bookings = () => {
         setIsLoading(false); // Stop isLoading if no car is booked
       }
     };
+    if (carBooked) {
+      calculateReturnDate();
+    }
 
     fetchData();
   }, []);
+
+
+  const calculateReturnDate = () => {
+    const duration = parseInt(carBooked.durationGivenFor); // Extract number from string
+    const handedOnDate = new Date(carBooked.handedOn);
+
+    // Add the extracted duration to the handedOnDate
+    handedOnDate.setDate(handedOnDate.getDate() + duration);
+
+    // Set the calculated date in the state
+    setReturnDate(handedOnDate.toLocaleString());
+  };
 
 
   const handleReturnClick = () => {
@@ -219,7 +235,7 @@ const Bookings = () => {
               </Text>
             </Box>
             {/* Use a wrapper box to align all text items */}
-            <VStack width="100%" spacing={{ base: 2, md: 8 }}>
+            <VStack width="100%" spacing={{ base: 2, md: 4 }}>
               <Text display="flex" justifyContent="space-between" width="100%">
                 <Text display="flex" justifyContent="left" width="40%">
                   <Image src="/Resources/model.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
@@ -239,7 +255,7 @@ const Bookings = () => {
               <Text display="flex" justifyContent="space-between" width="100%">
                 <Text display="flex" justifyContent="left" width="40%">
                   <Image src="/Resources/year32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
-                  <span>Pick-up Time:</span>{" "} </Text>
+                  <span>Car Booked Time:</span>{" "} </Text>
                 <span>{new Date(carBooked.handedOn).toLocaleString()}</span>
               </Text>
               <Text display="flex" justifyContent="space-between" width="100%">
@@ -257,6 +273,18 @@ const Bookings = () => {
                   <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Quarterly Pricing:</span>{" "}</Text>
                 <span>{carBooked.carPricing.quarterly}</span>
+              </Text>
+              <Text display="flex" justifyContent="space-between" width="100%">
+                <Text display="flex" justifyContent="left" width="40%">
+                  <Image src="/Resources/Calendar 32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                  <span>Duration Booked For:</span>{" "}</Text>
+                <span>{carBooked.durationGivenFor}</span>
+              </Text>
+              <Text display="flex" justifyContent="space-between" width="100%">
+                <Text display="flex" justifyContent="left" width="40%">
+                  <Image src="/Resources/mileage.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+                  <span>Return Date:</span>{" "}</Text>
+                <span>{returnDate}</span>
               </Text>
             </VStack>
             <Button

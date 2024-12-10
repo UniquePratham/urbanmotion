@@ -148,10 +148,19 @@ const SignIn = () => {
             color="black"
             mb={4}
             width={{ base: "300px", md: "350px" }}
-            _hover={{ bg: "gray.200" }}
             defaultValue=""
             value={userType}
             onChange={(e) => setUserType(e.target.value)}
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.5)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
           >
             <option value="" disabled>
               Select Account Type
@@ -169,7 +178,16 @@ const SignIn = () => {
             width={{ base: "300px", md: "350px" }}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            _hover={{ bg: "gray.200" }}
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.5)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
           />
           <Input
             name="password"
@@ -181,7 +199,16 @@ const SignIn = () => {
             width={{ base: "300px", md: "350px" }}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            _hover={{ bg: "gray.200" }}
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.7)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.5)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
           />
           {userType === "admin" && (
             <Input
@@ -191,9 +218,18 @@ const SignIn = () => {
               bg="gray.100"
               color="black"
               mb={4}
-              _hover={{ bg: "gray.600" }}
               value={adminPassphrase}
               onChange={(e) => setAdminPassphrase(e.target.value)}
+              _hover={{
+                bg: "rgba(255, 255, 255, 0.7)",
+                borderColor: "rgba(255, 255, 255, 0.5)",
+              }}
+              _focus={{
+                outline: "none",
+                bg: "rgba(255, 255, 255, 0.5)",
+                borderColor: "rgba(0, 255, 0, 0.8)",
+                boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+              }}
             />
           )}
           <Button

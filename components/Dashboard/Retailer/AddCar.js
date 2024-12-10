@@ -154,7 +154,7 @@ const AddCar = () => {
               </Box>
             </FormControl>
             <FormControl isRequired>
-              <FormLabel>Car Type</FormLabel>
+              <FormLabel>Car Fuel Type</FormLabel>
               <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
                 <Image src="/Resources/VehiclesBlue-100.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                 <Select
@@ -166,12 +166,12 @@ const AddCar = () => {
                   color="black"
                 >
                   <option value="" disabled>
-                    Select Car Type
+                    Select Car Fuel Type
                   </option>
-                  <option value="Sedan">Sedan</option>
-                  <option value="SUV">SUV</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="Petrol">Petrol</option>
                   <option value="Electric">Electric</option>
-                  <option value="Hatchback">Hatchback</option>
+                  <option value="Hybrid">Hybrid</option>
                 </Select>
               </Box>
             </FormControl>
