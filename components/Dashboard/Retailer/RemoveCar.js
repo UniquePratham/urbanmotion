@@ -38,7 +38,7 @@ const RemoveCar = () => {
     const fetchCars = async () => {
       try {
         setIsLoading(true);
-        const customerData = await fetchRetailerData();
+        const retailerData = await fetchRetailerData();
         if (retailerData && retailerData.carsSubmittedIdArray) {
           setCars(retailerData.carsSubmittedIdArray); // Update state
         }
