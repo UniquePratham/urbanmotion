@@ -269,6 +269,7 @@ const SignUp = () => {
               borderColor: "rgba(0, 255, 0, 0.8)",
               boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
             }}
+            type="text"
           />
           <Input
             name="email"
@@ -287,6 +288,7 @@ const SignUp = () => {
               borderColor: "rgba(0, 255, 0, 0.8)",
               boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
             }}
+            type="email"
           />
           <Input
             name="password"
@@ -324,6 +326,7 @@ const SignUp = () => {
               borderColor: "rgba(0, 255, 0, 0.8)",
               boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
             }}
+            type="text"
           />
           <Select
             name="verificationType"
@@ -366,6 +369,7 @@ const SignUp = () => {
               borderColor: "rgba(0, 255, 0, 0.8)",
               boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
             }}
+            type="text"
           />
           {formData.accountType === "admin" && (
             <>
@@ -386,6 +390,7 @@ const SignUp = () => {
                   borderColor: "rgba(0, 255, 0, 0.8)",
                   boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
                 }}
+                type="text"
               />
               <Input
                 name="passcode"
