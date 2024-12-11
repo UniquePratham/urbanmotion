@@ -15,7 +15,8 @@ import {
   Input,
   useToast,
   IconButton,
-  Checkbox
+  Checkbox,
+  Flex
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import {
@@ -545,7 +546,7 @@ const BookCar = () => {
         </Text>
       </Box>) : (
         // Car Listings
-        <Box maxH={{ base: "auto", md: "auto" }} p={6} bg="gray.900" pl={16} width="100%" borderRadius={0}>
+        <Box maxH={{ base: "auto", md: "auto" }} p={6} bg="gray.900" pl={{base:"6",md:16}} width="100%" borderRadius={0}>
           <Wrap spacing={6} justify="center">
             {filteredCars.map((car) => (
               <WrapItem
@@ -613,6 +614,7 @@ const BookCar = () => {
                     </HStack>
 
                     {/* Book Now Button */}
+                    <Flex justifyContent={{base:"center",md:"unset"}} width="100%">
                     <Button
                       leftIcon={<FaShoppingCart />}
                       colorScheme="green"
@@ -623,6 +625,7 @@ const BookCar = () => {
                     >
                       Book Now
                     </Button>
+                    </Flex>
                   </Box>
                 </HStack>
               </WrapItem>

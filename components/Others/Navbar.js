@@ -16,14 +16,17 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State for responsive menu
   const [sessionId, setSessionId] = useState(null); // Store sessionId in state
   const [userData, setUserData] = useState(null); // Store user data
+  const [userType, setUserType] = useState(null); // Store user type
   const [showProfileMenu, setShowProfileMenu] = useState(false); // Show/hide profile menu
   const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedSessionId = localStorage.getItem("sessionId");
-      if (storedSessionId) {
+      const storedUserType = localStorage.getItem("userType");
+      if (storedSessionId && storedUserType) {
         setSessionId(storedSessionId);
+        setUserType(storedUserType);
 
         // Fetch user data based on sessionId
         fetch(
@@ -113,6 +116,30 @@ const Navbar = () => {
              alignItems="center"
              w="300px"
            >
+             {userType ? (
+               <Text
+                 color="white"
+                 fontSize="14px"
+                 mb="1rem"
+                 textAlign="center"
+                 w="100%"
+                 wordBreak="break-word"
+                 textTransform="capitalize"
+               >
+                 Welcome, {userType}
+               </Text>
+             ) : (
+               <Text
+                 color="white"
+                 fontSize="14px"
+                 mb="1rem"
+                 textAlign="center"
+                 w="100%"
+                 wordBreak="break-word"
+               >
+                 Welcome, User
+               </Text>
+             )}
              {userData ? (
                <Text
                  color="white"
@@ -272,8 +299,19 @@ const Navbar = () => {
               {item}
             </Link>
           ))}
-          {sessionId && userData ? (
+          {sessionId && userData && userType ? (
             <>
+              <Text
+                color="white"
+                fontSize="22px"
+                mb="0.2rem"
+                textAlign="center"
+                w="100%"
+                wordBreak="break-word"
+                textTransform="capitalize"
+              >
+                Welcome, {userType}
+              </Text>
               <Text
                 color="white"
                 fontSize="22px"
