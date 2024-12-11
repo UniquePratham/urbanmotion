@@ -216,6 +216,10 @@ const Card = ({ userType, userData }) => {
               color="white"
               border="none"
               width="100%"
+              _hover={{
+                bg: "rgba(255, 255, 255, 0.2)",
+                borderColor: "rgba(255, 255, 255, 0.5)",
+              }}
               _focus={{
                 outline: "none",
                 bg: "rgba(255, 255, 255, 0.3)",
@@ -236,6 +240,10 @@ const Card = ({ userType, userData }) => {
                   bg="rgba(255, 255, 255, 0.1)"
                   color="white"
                   border="none"
+                  _hover={{
+                    bg: "rgba(255, 255, 255, 0.2)",
+                    borderColor: "rgba(255, 255, 255, 0.5)",
+                  }}
                   _focus={{
                     outline: "none",
                     bg: "rgba(255, 255, 255, 0.3)",
@@ -293,6 +301,10 @@ const Card = ({ userType, userData }) => {
               color="white"
               border="none"
               width="100%"
+              _hover={{
+                bg: "rgba(255, 255, 255, 0.2)",
+                borderColor: "rgba(255, 255, 255, 0.5)",
+              }}
               _focus={{
                 outline: "none",
                 bg: "rgba(255, 255, 255, 0.3)",
@@ -313,6 +325,10 @@ const Card = ({ userType, userData }) => {
                   bg="rgba(255, 255, 255, 0.1)"
                   color="white"
                   border="none"
+                  _hover={{
+                    bg: "rgba(255, 255, 255, 0.2)",
+                    borderColor: "rgba(255, 255, 255, 0.5)",
+                  }}
                   _focus={{ outline: "none", bg: "rgba(255, 255, 255, 0.2)" }}
                   width="100%"
                 />
