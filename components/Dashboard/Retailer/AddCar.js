@@ -10,10 +10,11 @@ import {
   useToast,
   VStack,
   HStack,
-  Image
+  Image,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import FileUpload from "./FileUploadComponent"; // Import the FileUpload component
 
 const AddCar = () => {
   const [carDetails, setCarDetails] = useState({
@@ -23,6 +24,7 @@ const AddCar = () => {
     quarterly: "",
     monthly: "",
     weekly: "",
+    carImage: "", // Added carImage state
   });
   const [ownerId, setOwnerId] = useState("");
   const toast = useToast();
@@ -44,10 +46,15 @@ const AddCar = () => {
       });
     }
   }, [toast]);
-  console.log("Owner : ",ownerId);
+  console.log("Owner : ", ownerId);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCarDetails({ ...carDetails, [name]: value });
+  };
+
+  const handleImageUpload = (imageUrl) => {
+    setCarDetails({ ...carDetails, carImage: imageUrl });
   };
 
   const handleSubmit = async (e) => {
@@ -58,12 +65,13 @@ const AddCar = () => {
       owner: ownerId,
       model: carDetails.model,
       carType: carDetails.carType,
-      isHanded:false,
+      isHanded: false,
       carPricing: {
         quarterly: Number(carDetails.quarterly),
         monthly: Number(carDetails.monthly),
         weekly: Number(carDetails.weekly),
       },
+      carImage: carDetails.carImage, // Add carImage to the data
     };
 
     console.log("JSON being sent:", JSON.stringify(carData, null, 2));
@@ -87,6 +95,7 @@ const AddCar = () => {
         quarterly: "",
         monthly: "",
         weekly: "",
+        carImage: "",
       });
     } catch (error) {
       toast({
@@ -103,7 +112,7 @@ const AddCar = () => {
   return (
     <Box
       w="full"
-      p={{base:2,md:6}}
+      p={{ base: 2, md: 6 }}
       bg="gray.800"
       borderRadius="lg"
       boxShadow="lg"
@@ -123,12 +132,32 @@ const AddCar = () => {
       </Box>
 
       <form onSubmit={handleSubmit}>
-        <HStack spacing={{base:4,md:16}} width="100%" justifyContent="center" alignItems="center" flexDirection={{base:"column",md:"unset"}}>
-          <VStack spacing={{base:2,md:8}} width={{base:"100%",md:"40%"}}>
+        <HStack
+          spacing={{ base: 4, md: 16 }}
+          width="100%"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection={{ base: "column", md: "unset" }}
+        >
+          <VStack
+            spacing={{ base: 2, md: 8 }}
+            width={{ base: "100%", md: "40%" }}
+          >
             <FormControl isRequired>
               <FormLabel>Registration Number</FormLabel>
-              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
-                <Image src="/Resources/id.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mb={4}
+              >
+                <Image
+                  src="/Resources/id.png"
+                  alt=""
+                  h="30px"
+                  mr={3}
+                  borderRadius={"lg"}
+                />
                 <Input
                   placeholder="Enter registration number"
                   name="registrationNumber"
@@ -141,8 +170,19 @@ const AddCar = () => {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Model</FormLabel>
-              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
-                <Image src="/Resources/model.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mb={4}
+              >
+                <Image
+                  src="/Resources/model.png"
+                  alt=""
+                  h="30px"
+                  mr={3}
+                  borderRadius={"lg"}
+                />
                 <Input
                   placeholder="Enter car model"
                   name="model"
@@ -155,8 +195,19 @@ const AddCar = () => {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Car Fuel Type</FormLabel>
-              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
-                <Image src="/Resources/VehiclesBlue-100.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mb={4}
+              >
+                <Image
+                  src="/Resources/VehiclesBlue-100.png"
+                  alt=""
+                  h="30px"
+                  mr={3}
+                  borderRadius={"lg"}
+                />
                 <Select
                   name="carType"
                   defaultValue=""
@@ -176,11 +227,25 @@ const AddCar = () => {
               </Box>
             </FormControl>
           </VStack>
-          <VStack  spacing={{base:2,md:8}} width={{base:"100%",md:"40%"}}>
+          <VStack
+            spacing={{ base: 2, md: 8 }}
+            width={{ base: "100%", md: "40%" }}
+          >
             <FormControl isRequired>
               <FormLabel>Pricing (Quarterly)</FormLabel>
-              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
-                <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mb={4}
+              >
+                <Image
+                  src="/Resources/rental-price-per-day321.png"
+                  alt=""
+                  h="30px"
+                  mr={3}
+                  borderRadius={"lg"}
+                />
                 <Input
                   type="number"
                   placeholder="Enter quarterly pricing"
@@ -194,8 +259,19 @@ const AddCar = () => {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Pricing (Monthly)</FormLabel>
-              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
-                <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mb={4}
+              >
+                <Image
+                  src="/Resources/rental-price-per-day321.png"
+                  alt=""
+                  h="30px"
+                  mr={3}
+                  borderRadius={"lg"}
+                />
                 <Input
                   type="number"
                   placeholder="Enter monthly pricing"
@@ -209,8 +285,19 @@ const AddCar = () => {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Pricing (Weekly)</FormLabel>
-              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
-                <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mb={4}
+              >
+                <Image
+                  src="/Resources/rental-price-per-day321.png"
+                  alt=""
+                  h="30px"
+                  mr={3}
+                  borderRadius={"lg"}
+                />
                 <Input
                   type="number"
                   placeholder="Enter weekly pricing"
@@ -224,19 +311,40 @@ const AddCar = () => {
             </FormControl>
           </VStack>
         </HStack>
-        <HStack spacing={{base:4,md:16}}  width="100%" justifyContent="center" alignItems="center" mt={4}>
-          <VStack  spacing={{base:2,md:8}} width={{base:"100%",md:"40%"}}>
+        <HStack
+          spacing={{ base: 4, md: 16 }}
+          width="100%"
+          justifyContent="center"
+          alignItems="center"
+          mt={4}
+        >
+          <VStack
+            spacing={{ base: 2, md: 8 }}
+            width={{ base: "100%", md: "40%" }}
+          >
             <FormControl>
               <FormLabel>Car Image</FormLabel>
-              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
-                <Image src="/Resources/BookingWhite.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
-                <Input type="file" disabled />
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mb={4}
+              >
+                <Image
+                  src="/Resources/BookingWhite.png"
+                  alt=""
+                  h="30px"
+                  mr={3}
+                  borderRadius={"lg"}
+                />
+                <FileUpload onImageUpload={handleImageUpload} />
               </Box>
               <Text fontSize="sm" color="gray.500">
-                Image upload functionality will be added later.
+                Image upload functionality is integrated.
               </Text>
             </FormControl>
-            <Button bg="#00db00"
+            <Button
+              bg="#00db00"
               color="white"
               border="2px solid transparent"
               borderRadius="md"
@@ -252,13 +360,16 @@ const AddCar = () => {
               sx={{
                 boxShadow: "0 0 10px #00db00, 0 0 20px rgba(0, 219, 0, 0.5)",
                 transition: "0.3s ease",
-              }} size="lg" width="half" type="submit">
-              Submit
+              }}
+              size="lg"
+              type="submit"
+            >
+              Add Car
             </Button>
           </VStack>
         </HStack>
       </form>
-    </Box >
+    </Box>
   );
 };
 

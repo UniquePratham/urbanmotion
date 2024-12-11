@@ -7,6 +7,7 @@ import DiscountBanner from "@/components/HeroSection/DiscountBanner";
 import FeatureHighlights from "@/components/HeroSection/FeatureHighlights";
 import FAQSection from "@/components/HeroSection/FAQSection";
 import Footer from "@/components/Others/Footer";
+import TestFileUpload from "@/components/Dashboard/Retailer/TestFileUpload";
 
 const Home = () => {
   return (
