@@ -435,7 +435,7 @@ const BookCar = () => {
           p={{ base: 2, md: 4 }}
           width="100%"
         >
-          <Wrap spacing={{ base: 4, md: 6 }} justify="center">
+          <Wrap spacing={{ base: 4, md: 6 }} justify="center" pl={{base:3,md:0}}>
             {filteredCars.map((car) => (
               <WrapItem
                 mt={2}
@@ -539,7 +539,7 @@ const BookCar = () => {
                       bg="gray.200"
                       _hover={{ color: "white", bg: "#00db00" }}
                       onClick={() => handleBooking(car, toast)} // Call booking handler
-                      width={{ base: "100%", md: "auto" }}
+                      width={{ base: "unset", md: "auto" }}
                     >
                       Book Now
                     </Button>

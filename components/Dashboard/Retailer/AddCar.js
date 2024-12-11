@@ -165,6 +165,7 @@ const AddCar = () => {
                   onChange={handleInputChange}
                   bg="gray.100"
                   color="black"
+                  type="text"
                 />
               </Box>
             </FormControl>
@@ -190,6 +191,7 @@ const AddCar = () => {
                   onChange={handleInputChange}
                   bg="gray.100"
                   color="black"
+                  type="text"
                 />
               </Box>
             </FormControl>

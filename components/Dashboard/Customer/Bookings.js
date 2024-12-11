@@ -230,19 +230,19 @@ const Bookings = () => {
           <Spinner size="xl" color="green" />
         </Box>
       ) : carBooked ? (
-        <HStack flexDirection={{ base: "column", md: "unset" }}>
+        <HStack flexDirection={{ base: "column-reverse", md: "unset" }}>
           <VStack
-            p={5}
+            p={{base:2,md:5}}
             boxShadow="md"
             borderRadius="lg"
             bg="gray.800"
-            height="100vh"
+            height={{base:"80vh",md:"105vh"}}
             alignItems="center"
             flexDirection={{ base: "column", md: "column" }}
             width={{ base: "100%", md: "50%" }}
             spacing={10}
           >
-            <Box textAlign="center" mb={6}>
+            <Box textAlign="center" mb={2} display={{base:"none",md:"unset"}}>
               <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
                 <Image src="/Resources/booking.png" alt="" h="50px" mr={2} />
                 <Heading as="h1" size="lg" color="white" ml={2} mt={{ base: 6, md: 4 }}>
@@ -254,66 +254,65 @@ const Bookings = () => {
               </Text>
             </Box>
             {/* Use a wrapper box to align all text items */}
-            <VStack width="100%" spacing={{ base: 2, md: 4 }}>
-              <Text display="flex" justifyContent="space-between" width="100%">
-                <Text display="flex" justifyContent="left" width="40%">
+            <VStack width="100%" spacing={{ base: 2, md: 4 }} fontSize={{base:"sm",md:"md"}}>
+              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
                   <Image src="/Resources/model.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Car Model:</span> </Text><span>{carBooked.model}</span>
               </Text>
-              <Text display="flex" justifyContent="space-between" width="100%">
-                <Text display="flex" justifyContent="left" width="40%">
+              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
                   <Image src="/Resources/car-fuel-type32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Car Fuel Type:</span> </Text> <span>{carBooked.carType}</span>
               </Text>
-              <Text display="flex" justifyContent="space-between" width="100%">
-                <Text display="flex" justifyContent="left" width="40%">
+              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
+              <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
                   <Image src="/Resources/id.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Registration Number:</span> </Text>
                 <span>{carBooked.registrationNumber}</span>
               </Text>
-              <Text display="flex" justifyContent="space-between" width="100%">
-                <Text display="flex" justifyContent="left" width="40%">
+              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
+              <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
                   <Image src="/Resources/year32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Car Booked Time:</span>{" "} </Text>
                 <span>{new Date(carBooked.handedOn).toLocaleString()}</span>
               </Text>
-              <Text display="flex" justifyContent="space-between" width="100%">
-                <Text display="flex" justifyContent="left" width="40%">
+              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
+              <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
                   <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Weekly Pricing:</span></Text> <span>{carBooked.carPricing.weekly}</span>
               </Text>
-              <Text display="flex" justifyContent="space-between" width="100%">
-                <Text display="flex" justifyContent="left" width="40%">
+              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
+              <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
                   <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Monthly Pricing:</span> </Text> <span>{carBooked.carPricing.monthly}</span>
               </Text>
-              <Text display="flex" justifyContent="space-between" width="100%">
-                <Text display="flex" justifyContent="left" width="40%">
+              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
                   <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Quarterly Pricing:</span>{" "}</Text>
                 <span>{carBooked.carPricing.quarterly}</span>
               </Text>
-              <Text display="flex" justifyContent="space-between" width="100%">
-                <Text display="flex" justifyContent="left" width="40%">
+              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
                   <Image src="/Resources/Calendar 32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Duration Booked For:</span>{" "}</Text>
                 <span>{carBooked.durationGivenFor}</span>
               </Text>
-              <Text display="flex" justifyContent="space-between" width="100%">
-                <Text display="flex" justifyContent="left" width="40%">
+              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" alignItems="center">
+                <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
                   <Image src="/Resources/mileage.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Return Date:</span>{" "}</Text>
                 <span>{returnDate}</span>
               </Text>
             </VStack>
             <Button
-              mt={4}
               colorScheme="green"
               bg="gray.600"
               color="#00db00"
               _hover={{ color: "white", bg: "rgba(0,200,0,0.6)" }}
               onClick={handleReturnClick}
-              p={{ base: 8, md: 6 }}
+              p={{ base: 6, md: 6 }}
               display="flex"
               justifyContent="center"
               alignItems="center"
@@ -331,7 +330,18 @@ const Bookings = () => {
             </Button>
           </VStack>
 
-          <Box p={5} boxShadow="md" borderRadius="lg" bg="gray.800" height={{ base: "35vh", md: "100vh" }} display={{ base: "flex", md: "flex" }} justifyContent="center" alignItems="center" flexDirection="column" width={{ base: "100%", md: "50%" }}>
+          <Box p={5} boxShadow="md" borderRadius="lg" bg="gray.800" height={{ base: "55vh", md: "105vh" }} display={{ base: "flex", md: "flex" }} justifyContent="center" alignItems="center" flexDirection="column" width={{ base: "100%", md: "50%" }}>
+          <Box textAlign="center" mb={2} display={{base:"unset",md:"none"}} mt={4}>
+              <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+                <Image src="/Resources/booking.png" alt="" h="50px" mr={2} />
+                <Heading as="h1" size="lg" color="white" ml={2} mt={{ base: 6, md: 4 }}>
+                  Your <span style={{ color: "#00db00" }}> Car Booking</span> Details
+                </Heading>
+              </Box>
+              <Text color="gray.400">
+                You can view the currently booked car here.
+              </Text>
+            </Box>
             <Image
               src="/car3.png" // Placeholder image (can be dynamic later)
               alt=""
@@ -344,7 +354,7 @@ const Bookings = () => {
               }}
               cursor="pointer"
             />
-            <Text display="flex" justifyContent="center" width="100%" fontSize="3xl" color="#00db00">
+            <Text display="flex" justifyContent="center" width="100%" fontSize={{base:"xl",md:"3xl"}} color="#00db00">
               {carBooked.model}
             </Text>
           </Box>
