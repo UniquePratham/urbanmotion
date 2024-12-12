@@ -11,9 +11,12 @@ import {
   VStack,
   HStack,
   Image,
-  Spinner
+  Spinner,
+  IconButton
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { FaTrash } from "react-icons/fa";
+import axios from "axios";
 
 const AddCar = () => {
   const [carDetails, setCarDetails] = useState({
@@ -27,8 +30,9 @@ const AddCar = () => {
   });
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [ownerId, setOwnerId] = useState("");
+  const fileInputRef = useRef();
   const toast = useToast();
 
   useEffect(() => {
@@ -55,10 +59,15 @@ const AddCar = () => {
     setCarDetails({ ...carDetails, [name]: value });
   };
   const handleImageChange = (e) => {
+    setUploadedImageUrl("");
     const file = e.target.files[0];
     if (file) {
       setImage(file);
     }
+  };
+  const resetFileInput = () => {
+    setImage(null);
+    fileInputRef.current.value = ""; // Clear the file input
   };
   const handleImageUpload = async () => {
     if (!image) {
@@ -89,28 +98,42 @@ const AddCar = () => {
           body: formData
         })
 
-        const data = await response.json();
-        const uploadedImagePublicId = data.public_id;
-        console.log(uploadedImagePublicId);
-        setCarDetails({ ...carDetails, ["carImage"]: uploadedImagePublicId });
-
-        const uploadedUrl = data.url;
-        setUploadedImageUrl(uploadedUrl);
-
-        toast({
-          title: "Image uploaded successfully!",
-          description: "The image has been uploaded to Cloudinary.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      setLoading(false);
+        if (response.status === 200) {
+          const data = await response.json();
+          const uploadedImagePublicId = data.public_id;
+          console.log(uploadedImagePublicId);
+          const uploadedUrl = data.url;
+          setUploadedImageUrl(uploadedUrl);
+          setLoading(false);
+          setImage(null);
+          resetFileInput();
+          return uploadedImagePublicId;
+        }
+        else {
+          toast({
+            title: "Failed to upload image!",
+            description: "The image cannot been uploaded to Cloudinary.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "top",
+            variant: "subtle",
+            bgColor: "teal.500",
+            color: "white",
+          });
+        }
+        setLoading(false);
+        setImage(null);
+        resetFileInput();
+        return null;
       }
 
       // Extract the URL from the response and set it
 
     } catch (error) {
       setLoading(false);
+      setImage(null);
+      resetFileInput();
       console.error("Error uploading image:", error);
       toast({
         title: "Error uploading image",
@@ -118,6 +141,10 @@ const AddCar = () => {
         status: "error",
         duration: 3000,
         isClosable: true,
+        position: "top",
+        variant: "subtle",
+        bgColor: "teal.500",
+        color: "white",
       });
     }
   };
@@ -125,34 +152,61 @@ const AddCar = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const carData = {
-      registrationNumber: carDetails.registrationNumber,
-      owner: ownerId,
-      model: carDetails.model,
-      carType: carDetails.carType,
-      isHanded: false,
-      carPricing: {
-        quarterly: Number(carDetails.quarterly),
-        monthly: Number(carDetails.monthly),
-        weekly: Number(carDetails.weekly),
-      },
-      carImage: carDetails.carImage, // Add carImage to the data
-    };
-
-    console.log("JSON being sent:", JSON.stringify(carData, null, 2));
-
     try {
+      const uploadedImagePublicId = await handleImageUpload();
+
+      if (!uploadedImagePublicId) {
+        toast({
+          title: "Image upload failed",
+          description: "Please try again to upload the image.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+          variant: "subtle",
+          bgColor: "teal.500",
+          color: "white",
+        });
+        return; // Exit early if the image upload fails
+      }
+
+      setCarDetails({ ...carDetails, ["carImage"]: uploadedImagePublicId });
+      const updatedCarDetails = {
+        ...carDetails,
+        carImage: uploadedImagePublicId, // Ensure the carImage is correctly set
+      };
+
+      const carData = {
+        registrationNumber: updatedCarDetails.registrationNumber,
+        owner: ownerId,
+        model: updatedCarDetails.model,
+        carType: updatedCarDetails.carType,
+        isHanded: false,
+        carPricing: {
+          quarterly: Number(updatedCarDetails.quarterly),
+          monthly: Number(updatedCarDetails.monthly),
+          weekly: Number(updatedCarDetails.weekly),
+        },
+        carImage: updatedCarDetails.carImage, // Add carImage to the data
+      };
+
+      console.log("JSON being sent:", JSON.stringify(carData, null, 2));
+
       const response = await axios.post(
         "https://urban-motion-backend.vercel.app/api/cars/add-car",
         carData
       );
-      if (response.status === 200) {
+      if (response.status === 201) {
         toast({
           title: "Car added successfully!",
           description: "The car has been added to your inventory.",
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "top",
+          variant: "subtle",
+          bgColor: "teal.500",
+          color: "white",
         });
         setCarDetails({
           registrationNumber: "",
@@ -165,6 +219,7 @@ const AddCar = () => {
         });
       }
     } catch (error) {
+      console.error("Error during car submission:", error);
       toast({
         title: "Error adding car",
         description:
@@ -448,63 +503,80 @@ const AddCar = () => {
           mt={4}
         >
           <VStack
-            spacing={{ base: 2, md: 8 }}
-            width={{ base: "100%", md: "70%" }}
+            spacing={{ base: 2, md: carDetails.carImage ? 2 : uploadedImageUrl ? 2 : 8 }}
+            width={{ base: "100%", md: "100%" }}
           >
-            <FormControl isRequired>
-              <FormLabel>Car Image</FormLabel>
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                mb={4}
-              >
-                <Image
-                  src="/Resources/BookingWhite.png"
-                  alt=""
-                  h="30px"
-                  mr={3}
-                  borderRadius={"lg"}
-                />
-                <Box position="relative" display="inline-block">
-                  <Input
-                    type="file"
-                    onChange={handleImageChange}
-                    accept="image/*"
-                    opacity="0"
-                    position="absolute"
-                    width="100%"
-                    height="100%"
-                    top="0"
-                    left="0"
-                    zIndex="1"
-                    cursor="pointer"
+            <HStack>
+              <FormControl isRequired>
+                <FormLabel>Car Image</FormLabel>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  width="100%"
+                >
+                  <Image
+                    src="/Resources/BookingWhite.png"
+                    alt=""
+                    h="30px"
+                    mr={3}
+                    borderRadius={"lg"}
                   />
-                  <Box
-                    as="button"
-                    bg="gray.100"
-                    color="black"
-                    px="4"
-                    py="2"
-                    borderRadius="md"
-                    textAlign="center"
-                    _hover={{
-                      bg: "rgba(255, 255, 255, 0.5)",
-                      borderColor: "rgba(255, 255, 255, 0.5)",
-                    }}
-                    _focus={{
-                      outline: "none",
-                      bg: "rgba(255, 255, 255, 0.7)",
-                      borderColor: "rgba(0, 255, 0, 0.8)",
-                      boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
-                    }}
-                  >
-                    Upload File
+                  <Box position="relative" display="inline-block">
+                    <Input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleImageChange}
+                      accept="image/*"
+                      opacity="0"
+                      position="absolute"
+                      width="100%"
+                      height="100%"
+                      top="0"
+                      left="0"
+                      zIndex="1"
+                      cursor="pointer"
+                    />
+                    <Box
+                      as="button"
+                      bg="gray.100"
+                      color="black"
+                      px="4"
+                      py="2"
+                      borderRadius="md"
+                      textAlign="center"
+                      _hover={{
+                        bg: "rgba(255, 255, 255, 0.5)",
+                        borderColor: "rgba(255, 255, 255, 0.5)",
+                      }}
+                      _focus={{
+                        outline: "none",
+                        bg: "rgba(255, 255, 255, 0.7)",
+                        borderColor: "rgba(0, 255, 0, 0.8)",
+                        boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+                      }}
+                    >
+                      {image ? image.name : "Choose a file"}
+                    </Box>
                   </Box>
+                  <IconButton
+                    display={image ? "unset" : "none"}
+                    aria-label="Menu"
+                    icon={<FaTrash />}
+                    bg="transparent"
+                    color="red"
+                    fontSize={{ base: "16px", md: "24px" }}
+                    _hover={{
+                      color: "white",
+                    }}
+                    onClick={resetFileInput}
+                    zIndex={12}
+                    ml={3}
+                    transition="all ease-in-out 0.3s"
+                  />
                 </Box>
-                <Button bgColor="black" color="white" onClick={handleImageUpload} ml={3}>Upload</Button>
-              </Box>
-            </FormControl>
+              </FormControl>
+            </HStack>
             {loading ? (<Box
               display="flex"
               justifyContent="center"
@@ -513,9 +585,9 @@ const AddCar = () => {
               flexDirection="column"
             >
               <Spinner size="sm" color="green" />
-            </Box>) : carDetails.carImage && (
-              <Box mt={4}>
-                <Text mt={2} color="blue.500" fontSize="sm">
+            </Box>) : uploadedImageUrl && (
+              <Box mb={6}>
+                <Text color="green.700" fontSize="sm">
                   <a
                     href={uploadedImageUrl}
                     target="_blank"

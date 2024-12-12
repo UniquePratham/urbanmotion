@@ -8,13 +8,15 @@ import {
   HStack,
   useToast,
   Spinner,
+  Input
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
 const RemoveCar = () => {
-  const [cars, setCars] = useState([]);
+  const [car, setCar] = useState(null);
+  const [registrationNumber, setRegistrationNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
@@ -26,7 +28,7 @@ const RemoveCar = () => {
         try {
           const response = await fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`);
           const data = await response.json();
-          return data.data; // Return the customer data
+          return data.data;
         } catch (error) {
           console.error("Failed to fetch retailer data:", error);
           return null;
@@ -34,33 +36,9 @@ const RemoveCar = () => {
       }
       return null;
     };
-
-    const fetchCars = async () => {
-      try {
-        setIsLoading(true);
-        const retailerData = await fetchRetailerData();
-        if (retailerData && retailerData.carsSubmittedIdArray) {
-          setCars(retailerData.carsSubmittedIdArray); // Update state
-        }
-      }
-      catch (error) {
-        console.error("Error fetching cars:", error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch cars. Please try again later.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchCars();
   }, []);
 
-  const handleDelete = async (car, index) => {
+  const handleDelete = async (car) => {
     const registrationNumber = car.registrationNumber;
 
     try {
@@ -68,9 +46,6 @@ const RemoveCar = () => {
       await axios.delete(
         `https://urban-motion-backend.vercel.app/api/cars/delete-car?registrationNumber=${registrationNumber}`
       );
-
-      // Remove the car from the UI
-      setCars((prevCars) => prevCars.filter((_, i) => i !== index));
 
       toast({
         title: "Deleted",
@@ -92,67 +67,81 @@ const RemoveCar = () => {
   };
 
   return (
-    <Box p={6} bg="gray.900" borderRadius="lg" boxShadow="lg">
-      <Box textAlign="center" mb={6}>
-        <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
-          <Image src="/Resources/car_return48.png" alt="" h="50px" mr={2} />
-          <Heading as="h1" size="lg" color="#00db00" ml={2} mt={4}>
-            Remove Car
-          </Heading>
+    <Box p={6} bg="gray.800" borderRadius="lg" boxShadow="xl" minH="100vh" justifyContent="center" alignItems="center" display="flex" flexDir="column" bgImage="url('/Resources/failed.png')" bgSize="25% 40%"
+      bgRepeat="no-repeat"
+      bgPosition="center">
+      <Box
+        position="absolute"
+        top="10"
+        left="10"
+        right="10"
+        bottom="20"
+        backgroundColor="gray.800"  // Adjust opacity
+        opacity="0.7"
+        zIndex="1"
+      />
+      <Box
+        position="relative"
+        zIndex="2"
+        color="white"
+        p="4"
+      >
+        <Box textAlign="center" mb={6}>
+          <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+            <Image src="/Resources/car_return48.png" alt="" h="50px" mr={2} />
+            <Heading as="h1" size="xl" color="#00db00" ml={2} mt={4}>
+              Remove Car
+            </Heading>
+          </Box>
+          <Text color="gray.400">
+            Enter the registration number of the car you want to delete and confirm the deletion.
+          </Text>
         </Box>
-        <Text color="gray.400">
-          Enter the registration number of the car you want to delete and confirm the deletion.
-        </Text>
-      </Box>
-
-      {isLoading ? (
-        <Spinner color="teal.400" size="xl" />
-      ) : (
-        <VStack
-          spacing={6}
-          align="stretch"
-          maxHeight="100vh"
-          overflowY="auto"
-          pr={4}
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <Input
+            name="registrationNumber"
+            placeholder="Car Registration Number"
+            bg="gray.100"
+            color="black"
+            mb={4}
+            width={{ base: "300px", md: "350px" }}
+            value={registrationNumber}
+            onChange={(e) => setRegistrationNumber(e.target.value)}
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.9)",
+              borderColor: "rgba(255, 255, 255, 0.5)",
+            }}
+            _focus={{
+              outline: "none",
+              bg: "rgba(255, 255, 255, 0.8)",
+              borderColor: "rgba(0, 255, 0, 0.8)",
+              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+            }}
+          />
+        </Box>
+        <HStack justifyContent="center" alignItems="center" mb={4}>   <Button
+          colorScheme="green"
+          bg="#00db00"
+          color="gray.100"
+          _hover={{ color: "#00db00", bg: "gray.100" }}
+          onClick={handleDelete}
+          p={{ base: 6, md: 6 }}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          mb={2}
         >
-          {cars.map((car, index) => (
-            <Box
-              key={car.registrationNumber}
-              p={4}
-              bg="gray.800"
-              borderRadius="md"
-              boxShadow="md"
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <HStack spacing={4}>
-                <Image
-                  src={car.image || "https://via.placeholder.com/100"}
-                  alt={car.model}
-                  boxSize="100px"
-                  borderRadius="md"
-                  objectFit="cover"
-                />
-                <VStack align="start" spacing={1}>
-                  <Text fontSize="lg" fontWeight="bold" color="white">
-                    {car.model}
-                  </Text>
-                  <Text fontSize="md" color="gray.300">
-                    {car.registrationNumber}
-                  </Text>
-                </VStack>
-              </HStack>
-              <Button
-                colorScheme="red"
-                onClick={() => handleDelete(car, index)}
-              >
-                Delete
-              </Button>
-            </Box>
-          ))}
-        </VStack>
-      )}
+          <Image
+            src="/Resources/unavailable-car32.png"
+            alt=""
+            h="50px"
+            borderRadius="3"
+            p="4px"
+            zIndex={2}
+          />
+          <span>Return Car</span>
+        </Button></HStack>
+      </Box>
     </Box>
   );
 };

@@ -16,7 +16,9 @@ import {
   Image,
   HStack,
   VStack,
-  Heading
+  Heading,
+  Alert,
+  AlertIcon
 } from "@chakra-ui/react";
 import axios from "axios";
 
@@ -225,6 +227,7 @@ const Bookings = () => {
           alignItems="center"
           minHeight="200px"
           flexDirection="column"
+          mt={64}
         >
           <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
           <Spinner size="xl" color="green" />
@@ -365,10 +368,14 @@ const Bookings = () => {
           justifyContent="center"
           alignItems="center"
           height="100vh"
+          flexDirection="column"
         >
-          <Text fontSize="xl" fontWeight="">
-            No bookings found
-          </Text>
+          <Image src="/Resources/BookingBlue.png" alt="" h="150px" mb={2} />
+                  <Alert status="info" borderRadius="xl"
+          color="black" width="50%">
+                    <AlertIcon />
+                    No booking found.
+                  </Alert>
         </Box>
       )}
 
