@@ -12,39 +12,33 @@ import { useRouter } from "next/router";
 
 // Import icons from react-icons
 import {
-  FaUsers,
-  FaWarehouse,
   FaCar,
-  FaUser,
+  FaWarehouse,
   FaChartBar,
   FaFileAlt,
   FaDatabase,
+  FaUser,
+  FaUsers,
 } from "react-icons/fa";
 
 const AdminDashboard = () => {
   const [adminData, setAdminData] = useState(null);
-  const [activeComponent, setActiveComponent] = useState("manage-users"); // Default active component
+  const [activeComponent, setActiveComponent] = useState("profile"); // Default active component
   const router = useRouter();
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
     if (sessionId) {
-      fetch(`https://your-api-endpoint.com/api/sessions/${sessionId}`)
+      // Fetch admin session data using the sessionId from localStorage
+      fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`)
         .then((res) => res.json())
         .then((data) => setAdminData(data.data))
         .catch((err) => console.error("Failed to fetch admin data:", err));
+    } else {
+      // Redirect to login page if sessionId doesn't exist
+      router.push("/login");
     }
   }, []);
-
-  const sidebarData = [
-    { icon: FaUsers, label: "Manage Users", path: "manage-users" },
-    { icon: FaWarehouse, label: "Manage Retailers", path: "manage-retailers" },
-    { icon: FaCar, label: "Manage Cars", path: "manage-cars" },
-    { icon: FaChartBar, label: "Statistics", path: "statistics" },
-    { icon: FaFileAlt, label: "User Reports", path: "user-reports" },
-    { icon: FaDatabase, label: "System Logs", path: "system-logs" },
-    { icon: FaUser, label: "Profile", path: "profile" }
-  ];
 
   // Handle clicking sidebar buttons to change active component
   const handleSidebarClick = (componentName) => {
@@ -66,11 +60,21 @@ const AdminDashboard = () => {
       case "system-logs":
         return <SystemLogs />;
       case "profile":
-        return <MainContent />; // Display admin profile content
+        return <MainContent adminData={adminData} />; // Pass adminData to MainContent
       default:
         return <ManageUsers />;
     }
   };
+
+  const sidebarData = [
+    { icon: FaUsers, label: "Manage Users", path: "manage-users" },
+    { icon: FaWarehouse, label: "Manage Retailers", path: "manage-retailers" },
+    { icon: FaCar, label: "Manage Cars", path: "manage-cars" },
+    { icon: FaChartBar, label: "Statistics", path: "statistics" },
+    { icon: FaFileAlt, label: "User Reports", path: "user-reports" },
+    { icon: FaDatabase, label: "System Logs", path: "system-logs" },
+    { icon: FaUser, label: "Profile", path: "profile" },
+  ];
 
   return (
     <Flex direction={{ base: "column", md: "row" }}>
@@ -83,8 +87,8 @@ const AdminDashboard = () => {
         flex="1"
         p={4}
         color="white"
-        borderRadius="20px"
-        bg="gray.800" // Ensure the content area has a solid background
+        borderRadius={{ base: 0, md: "20px" }}
+        bg="gray.900" // Ensure the content area has a solid background
         zIndex={10} // Ensure the content area is above the sidebar
         position="relative" // Keep content positioned above the sidebar
       >

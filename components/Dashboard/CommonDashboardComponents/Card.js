@@ -67,7 +67,7 @@ const Card = ({ userType, userData }) => {
     } else if (userType === "retailer") {
       endpoint = "https://urban-motion-backend.vercel.app/api/retailers/update-retailer";
     } else if (userType === "admin") {
-      endpoint = "https://urban-motion-backend.vercel.app/api/admin/update-admin";
+      endpoint = "https://urban-motion-backend.vercel.app/api/admins/update-admin";
     } else {
       toast({
         title: "Invalid User Type",
