@@ -168,138 +168,141 @@ const Cars = () => {
           Here you can view the all the cars that are in your inventory.
         </Text>
       </Box>
-      <VStack flexDir={{ base: "row", md: "column" }} style={{ display: isVisible ? "flex" : "none" }}>
-        <HStack spacing={{ base: 4, md: 44 }} mb={2} mt={{ base: 0, md: 2 }} justifyContent={{ base: "space-between", md: "space-around" }} alignItems={{ base: "unset", md: "center" }} flexDirection={{ base: "column", md: "unset" }}>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/rating_cars.png" alt="Select Rating" boxSize="40px" />
-          </Box>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/car-fuel-type32.png" alt="Select Fuel Type" boxSize="40px" />
-          </Box>
-          <Box display="flex" alignItems="center">
-            <Image src="/Resources/money 321.png" alt="Select Max Monthly Price" boxSize="40px" />
-          </Box>
-        </HStack>
+      {/* Filters */}
+      {filteredCars.length > 0 && (
+        <>
+          <VStack flexDir={{ base: "row", md: "column" }} style={{ display: isVisible ? "flex" : "none" }}>
+            <HStack spacing={{ base: 4, md: 44 }} mb={2} mt={{ base: 0, md: 2 }} justifyContent={{ base: "space-between", md: "space-around" }} alignItems={{ base: "unset", md: "center" }} flexDirection={{ base: "column", md: "unset" }}>
+              <Box display="flex" alignItems="center">
+                <Image src="/Resources/rating_cars.png" alt="Select Rating" boxSize="40px" />
+              </Box>
+              <Box display="flex" alignItems="center">
+                <Image src="/Resources/car-fuel-type32.png" alt="Select Fuel Type" boxSize="40px" />
+              </Box>
+              <Box display="flex" alignItems="center">
+                <Image src="/Resources/money 321.png" alt="Select Max Monthly Price" boxSize="40px" />
+              </Box>
+            </HStack>
+            <HStack spacing={4} mb={2} justify="center" flexDirection={{ base: "column", md: "unset" }} style={{ display: isVisible ? "flex" : "none" }}>
+              <Select
+                onChange={(e) => setRatingFilter(e.target.value)}
+                defaultValue=""
+                value={ratingFilter}
+                bg="gray.100"
+                color="black"
+              >
+                <option value="" disabled>
+                  Select Rating
+                </option>
+                <option value="1">1 Star ⭐</option>
+                <option value="2">2 Stars ⭐⭐</option>
+                <option value="3">3 Stars ⭐⭐⭐</option>
+                <option value="4">4 Stars ⭐⭐⭐⭐</option>
+                <option value="5">5 Stars ⭐⭐⭐⭐⭐</option>
+              </Select>
 
-        {/* Filters */}
-        <HStack spacing={4} mb={2} justify="center" flexDirection={{ base: "column", md: "unset" }} style={{ display: isVisible ? "flex" : "none" }}>
-          <Select
-            onChange={(e) => setRatingFilter(e.target.value)}
-            defaultValue=""
-            value={ratingFilter}
-            bg="gray.100"
+              <Select
+                onChange={(e) => setFuelTypeFilter(e.target.value)}
+                bg="gray.100"
+                color="black"
+                defaultValue=""
+                value={fuelTypeFilter}
+              >
+                <option value="" disabled>
+                  Select Fuel Type
+                </option>
+                <option value="Diesel">Diesel</option>
+                <option value="Petrol">Petrol</option>
+                <option value="Electric">Electric</option>
+                <option value="Hybrid">Hybrid</option>
+              </Select>
+
+              <Select
+                onChange={(e) => setPriceFilter(e.target.value)}
+                defaultValue=""
+                value={priceFilter}
+                bg="gray.100"
+                color="black"
+              >
+                <option value="" disabled>
+                  Select Max Monthly Price
+                </option>
+                <option value="20000">₹20000</option>
+                <option value="30000">₹30000</option>
+                <option value="50000">₹50000</option>
+              </Select>
+
+
+            </HStack>
+          </VStack>
+          {/* Go Button */}
+          <HStack justifyContent="center" alignItems="center" mb={3} mt={2} style={{ display: isVisible ? "flex" : "none" }}><Button
+            display={{ base: "flex", md: "unset" }}
+            alignItems="center"
+            fontSize="20px"
             color="black"
+            px="4px"
+            pt="4px"
+            w={{ base: "20%", md: "5%" }}
+            borderRadius="md"
+            bg="white"
+            zIndex={3}
+            _hover={{
+              bg: "gray.500",
+              color: "#00db00",
+              transform: "scale(1.05)",
+              transition: "0.2s ease-in-out",
+            }}
+            flexDirection="column-reverse"
+            size="md" onClick={() => {
+              handleFilterChange();
+              handleToggle();
+            }}
           >
-            <option value="" disabled>
-              Select Rating
-            </option>
-            <option value="1">1 Star ⭐</option>
-            <option value="2">2 Stars ⭐⭐</option>
-            <option value="3">3 Stars ⭐⭐⭐</option>
-            <option value="4">4 Stars ⭐⭐⭐⭐</option>
-            <option value="5">5 Stars ⭐⭐⭐⭐⭐</option>
-          </Select>
-
-          <Select
-            onChange={(e) => setFuelTypeFilter(e.target.value)}
-            bg="gray.100"
-            color="black"
-            defaultValue=""
-            value={fuelTypeFilter}
-          >
-            <option value="" disabled>
-              Select Fuel Type
-            </option>
-            <option value="Diesel">Diesel</option>
-            <option value="Petrol">Petrol</option>
-            <option value="Electric">Electric</option>
-            <option value="Hybrid">Hybrid</option>
-          </Select>
-
-          <Select
-            onChange={(e) => setPriceFilter(e.target.value)}
-            defaultValue=""
-            value={priceFilter}
-            bg="gray.100"
-            color="black"
-          >
-            <option value="" disabled>
-              Select Max Monthly Price
-            </option>
-            <option value="20000">₹20000</option>
-            <option value="30000">₹30000</option>
-            <option value="50000">₹50000</option>
-          </Select>
-
-
-        </HStack>
-      </VStack>
-      {/* Go Button */}
-      <HStack justifyContent="center" alignItems="center" mb={3} mt={2} style={{ display: isVisible ? "flex" : "none" }}><Button
-        display={{ base: "flex", md: "unset" }}
-        alignItems="center"
-        fontSize="20px"
-        color="black"
-        px="4px"
-        pt="4px"
-        w={{ base: "20%", md: "5%" }}
-        borderRadius="md"
-        bg="white"
-        zIndex={3}
-        _hover={{
-          bg: "gray.500",
-          color: "#00db00",
-          transform: "scale(1.05)",
-          transition: "0.2s ease-in-out",
-        }}
-        flexDirection="column-reverse"
-        size="md" onClick={() => {
-          handleFilterChange();
-          handleToggle();
-        }}
-      >
-        <Image
-          src="/Resources/search-car48.png"
-          alt=""
-          borderRadius="3"
-          p="4px"
-          pt="2"
-          mt={{ base: "-4", md: "-4" }}
-          zIndex={2}
-        />
-      </Button></HStack>
-      <HStack justifyContent="center" alignItems="center" mb={3} mt={2} style={{ display: isVisible ? "flex" : "none" }}>
-        <IconButton
-          aria-label="Menu"
-          icon={<FaRedo />}
-          display={{ base: "flex", md: "flex" }}
-          bg="transparent"
-          color="#00db00"
-          fontSize="24px"
-          _hover={{
-            color: "gray.500",
-          }}
-          onClick={handleResetorClearFilter}
-          transition="transform 0.2s"
-          transform={!isVisible ? "rotate(360deg)" : "rotate(0deg)"}
-        />
-      </HStack>
-      <HStack justifyContent="center" alignItems="center" mb={3} mt={2} display={{ base: "flex", md: "flex" }}>
-        <IconButton
-          aria-label="Menu"
-          icon={isVisible ? <FaSortUp /> : <FaFilter />}
-          display={{ base: "flex", md: "flex" }}
-          bg="transparent"
-          color="#00db00"
-          fontSize="24px"
-          _hover={{
-            color: "gray.500",
-          }}
-          onClick={handleToggle}
-          transition="transform 0.2s"
-          transform={!isVisible ? "rotate(360deg)" : "rotate(0deg)"}
-        />
-      </HStack>
+            <Image
+              src="/Resources/search-car48.png"
+              alt=""
+              borderRadius="3"
+              p="4px"
+              pt="2"
+              mt={{ base: "-4", md: "-4" }}
+              zIndex={2}
+            />
+          </Button></HStack>
+          <HStack justifyContent="center" alignItems="center" mb={3} mt={2} style={{ display: isVisible ? "flex" : "none" }}>
+            <IconButton
+              aria-label="Menu"
+              icon={<FaRedo />}
+              display={{ base: "flex", md: "flex" }}
+              bg="transparent"
+              color="#00db00"
+              fontSize="24px"
+              _hover={{
+                color: "gray.500",
+              }}
+              onClick={handleResetorClearFilter}
+              transition="transform 0.2s"
+              transform={!isVisible ? "rotate(360deg)" : "rotate(0deg)"}
+            />
+          </HStack>
+          <HStack justifyContent="center" alignItems="center" mb={3} mt={2} display={{ base: "flex", md: "flex" }}>
+            <IconButton
+              aria-label="Menu"
+              icon={isVisible ? <FaSortUp /> : <FaFilter />}
+              display={{ base: "flex", md: "flex" }}
+              bg="transparent"
+              color="#00db00"
+              fontSize="24px"
+              _hover={{
+                color: "gray.500",
+              }}
+              onClick={handleToggle}
+              transition="transform 0.2s"
+              transform={!isVisible ? "rotate(360deg)" : "rotate(0deg)"}
+            />
+          </HStack>
+        </>
+      )}
       {filteredCars.length > 0 ? (
         <Grid templateColumns="repeat(auto-fit, minmax(1, 1fr))" gap={4}>
           {filteredCars.map((car) => (
@@ -331,7 +334,7 @@ const Cars = () => {
                     style={{
                       width: "250px",
                       height: "150px",
-                      objectFit: "cover",
+                      objectFit: "contain",
                       borderRadius: "8px",
                     }}
                   />) : (<Image
@@ -340,7 +343,7 @@ const Cars = () => {
                     style={{
                       width: "250px",
                       height: "150px",
-                      objectFit: "cover",
+                      objectFit: "contain",
                       borderRadius: "8px",
                     }}
                     boxSize={{ base: "unset", md: "300px" }} // Adjust size as needed
@@ -421,7 +424,7 @@ const Cars = () => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        minHeight="200px"
+        minHeight="75vh"
         flexDirection="column"
       >
         <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
