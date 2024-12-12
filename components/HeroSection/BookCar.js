@@ -28,7 +28,8 @@ import {
   FaRedo
 } from "react-icons/fa";
 import axios from "axios";
-import { motion } from "framer-motion"; // Import framer-motion for animations
+import { motion } from "framer-motion";
+import { CldImage } from 'next-cloudinary';
 import { useRouter } from "next/router";
 
 
@@ -140,6 +141,16 @@ const BookCar = () => {
     if (userType) {
       if (userType === "customer") {
         if (customerData) {
+          if (customerData.carCurrentlyBookedId) {
+            toast({
+              title: "Car Already Booked",
+              description: "Please return the current car before booking a new one.",
+              status: "info",
+              duration: 5000,
+              isClosable: true,
+            });
+            return;
+          }
           carBooked = car;
           setCarBooked(car);
           const handleInputChange = (e) => {
@@ -162,22 +173,23 @@ const BookCar = () => {
                 >
                   <Box
                     color="#00db00"
-                    p={6}
+                    p={{ base: 2, md: 6 }}
                     bg="black"
                     borderRadius="xl"
-                    fontSize="lg"
+                    fontSize={{ base: "md", md: "lg" }}
                     display="flex"
                     flexDirection="column"
                     justifyContent="center"
                     alignItems="center"
                     boxShadow="xl"
-                    width="500px"
+                    width={{ base: "350px", md: "500px" }}
                     marginTop="48"
                   >
-                    <Text mb={4} fontSize="xl" fontWeight="bold">
+                    <Text mb={4} fontSize={{ base: "md", md: "xl" }} fontWeight="bold">
                       Do you want to book {carBooked.model}?
                     </Text>
                     <Input
+                      size={{ base: "xs", md: "md" }}
                       placeholder="For how many days would you like to book this car?"
                       onChange={handleInputChange}
                       bg="gray.100"
@@ -191,7 +203,6 @@ const BookCar = () => {
                         onClick={async () => {
                           try {
                             // Send request to book the car
-                            console.log(`registrationNumber: ${carBooked.registrationNumber}, customerId: ${customerData._id}, durationGivenFor: ${carBooked.durationGivenFor}`);
                             const response = await axios.post(
                               "https://urban-motion-backend.vercel.app/api/cars/book-car",
                               { registrationNumber: carBooked.registrationNumber, customerId: customerData._id, durationGivenFor: carBooked.durationGivenFor }
@@ -232,6 +243,7 @@ const BookCar = () => {
                           } catch (error) {
                             console.error("Error booking car:", error);
                           }
+                          fetchCars();
                           onClose();
                         }}
                       >
@@ -259,7 +271,7 @@ const BookCar = () => {
           }, 500);
         }
       }
-      else if(userType==="retailer"){
+      else if (userType === "retailer") {
         toast({
           title: "Warning",
           description: "You are a retailer. Please sign in with a Customer ID to book a car.",
@@ -268,7 +280,7 @@ const BookCar = () => {
           isClosable: true,
         });
       }
-      else{
+      else {
         toast({
           title: "Warning",
           description: "You are an admin. Please sign in with a Customer ID to book a car.",
@@ -546,7 +558,7 @@ const BookCar = () => {
         </Text>
       </Box>) : (
         // Car Listings
-        <Box maxH={{ base: "auto", md: "auto" }} p={6} bg="gray.900" pl={{base:"6",md:16}} width="100%" borderRadius={0}>
+        <Box maxH={{ base: "auto", md: "auto" }} p={6} bg="gray.900" pl={{ base: "6", md: 16 }} width="100%" borderRadius={0}>
           <Wrap spacing={6} justify="center">
             {filteredCars.map((car) => (
               <WrapItem
@@ -568,18 +580,40 @@ const BookCar = () => {
               >
                 <HStack spacing={{ base: 2, md: 6 }} align="center" justify="space-between" flexDir={{ base: "column", md: "unset" }}>
                   {/* Car Image */}
-                  <Image
-                    src="/car3.png" // Placeholder image (can be dynamic later)
-                    alt={car.model}
-                    boxSize="200px"
-                    objectFit="contain"
-                    borderRadius="md"
+                  <Box width="250px"
+                    height="150px"
+                    overflow="hidden"
+                    borderRadius="8px"
                     _hover={{
                       transform: "scale(1.01) scaleX(-1)",
-                      transition: "0.03s ease-in transform",
-                    }}
-                    cursor="pointer"
-                  />
+                      transition: "transform 0.3s ease-in",
+                    }}>
+                    {car.carImage ? (<CldImage
+                      src={car.carImage}
+                      alt="Car Image"
+                      width="250"
+                      height="150"
+                      style={{
+                        width: "250px",
+                        height: "150px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                      }}
+                    />) : (<Image
+                      src="/dummy_car.png"
+                      alt={car.model}
+                      boxSize={{ base: "150px", md: "200px" }}
+                      objectFit="contain"
+                      borderRadius="md"
+                      _hover={{
+                        transform: "scale(1.01) scaleX(-1)",
+                        transition: "0.03s ease-in transform",
+                      }}
+                      cursor="pointer"
+                      mx="auto"
+                    />
+                    )}
+                  </Box>
 
                   {/* Car Details */}
                   <Box flex="1" >
@@ -614,17 +648,17 @@ const BookCar = () => {
                     </HStack>
 
                     {/* Book Now Button */}
-                    <Flex justifyContent={{base:"center",md:"unset"}} width="100%">
-                    <Button
-                      leftIcon={<FaShoppingCart />}
-                      colorScheme="green"
-                      variant="outline"
-                      bg="gray.200"
-                      _hover={{ color: "white", bg: "#00db00" }}
-                      onClick={() => handleBooking(car, toast)} // Call booking handler
-                    >
-                      Book Now
-                    </Button>
+                    <Flex justifyContent={{ base: "center", md: "unset" }} width="100%">
+                      <Button
+                        leftIcon={<FaShoppingCart />}
+                        colorScheme="green"
+                        variant="outline"
+                        bg="gray.200"
+                        _hover={{ color: "white", bg: "#00db00" }}
+                        onClick={() => handleBooking(car, toast)} // Call booking handler
+                      >
+                        Book Now
+                      </Button>
                     </Flex>
                   </Box>
                 </HStack>

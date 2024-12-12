@@ -26,6 +26,7 @@ import {
   FaSortUp,
   FaRedo
 } from "react-icons/fa";
+import { CldImage } from 'next-cloudinary';
 import axios from "axios";
 
 const BookCar = () => {
@@ -117,6 +118,18 @@ const BookCar = () => {
   };
 
   const handleBooking = async (car, toast) => {
+    if (customerData) {
+      if (customerData.carCurrentlyBookedId) {
+        toast({
+          title: "Car Already Booked",
+          description: "Please return the current car before booking a new one.",
+          status: "info",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+    }
     carBooked = car;
     setCarBooked(car);
     const handleInputChange = (e) => {
@@ -139,22 +152,23 @@ const BookCar = () => {
           >
             <Box
               color="#00db00"
-              p={6}
+              p={{ base: 2, md: 6 }}
               bg="black"
               borderRadius="xl"
-              fontSize="lg"
+              fontSize={{ base: "md", md: "lg" }}
               display="flex"
               flexDirection="column"
               justifyContent="center"
               alignItems="center"
               boxShadow="xl"
-              width="500px"
+              width={{ base: "350px", md: "500px" }}
               marginTop="48"
             >
-              <Text mb={4} fontSize="xl" fontWeight="bold">
+              <Text mb={4} fontSize={{ base: "md", md: "xl" }} fontWeight="bold">
                 Do you want to book {carBooked.model}?
               </Text>
               <Input
+                size={{ base: "xs", md: "md" }}
                 placeholder="For how many days would you like to book this car?"
                 onChange={handleInputChange}
                 bg="gray.100"
@@ -168,7 +182,6 @@ const BookCar = () => {
                   onClick={async () => {
                     try {
                       // Send request to book the car
-                      console.log(`registrationNumber: ${carBooked.registrationNumber}, customerId: ${customerData._id}, durationGivenFor: ${carBooked.durationGivenFor}`);
                       const response = await axios.post(
                         "https://urban-motion-backend.vercel.app/api/cars/book-car",
                         { registrationNumber: carBooked.registrationNumber, customerId: customerData._id, durationGivenFor: carBooked.durationGivenFor }
@@ -205,6 +218,7 @@ const BookCar = () => {
                     } catch (error) {
                       console.error("Error booking car:", error);
                     }
+                    fetchCars();
                     onClose();
                   }}
                 >
@@ -218,6 +232,7 @@ const BookCar = () => {
           </motion.div>
         ),
       });
+      handleResetorClearFilter();
     };
   };
 
@@ -368,7 +383,7 @@ const BookCar = () => {
             zIndex={2}
           />
         </Button></HStack>
-        <HStack justifyContent="center" alignItems="center" mb={3} mt={2} style={{ display: isVisible ? "flex" : "none" }}>
+        <HStack justifyContent="center" alignItems="center" mb={2} mt={2} style={{ display: isVisible ? "flex" : "none" }}>
           <IconButton
             aria-label="Menu"
             icon={<FaRedo />}
@@ -384,7 +399,7 @@ const BookCar = () => {
             transform={!isVisible ? "rotate(360deg)" : "rotate(0deg)"}
           />
         </HStack>
-        <HStack justifyContent="center" alignItems="center" mb={3} mt={2} display={{ base: "flex", md: "flex" }}>
+        <HStack justifyContent="center" alignItems="center" mb={2} display={{ base: "flex", md: "flex" }}>
           <IconButton
             aria-label="Menu"
             icon={isVisible ? <FaSortUp /> : <FaFilter />}
@@ -428,14 +443,14 @@ const BookCar = () => {
       </Box>) : (
         <Box
           overflowY="scroll"
-          maxH={{ base: "auto", md: isVisible ? "455px" : "555px" }}
+          maxH={{ base: "auto", md: isVisible ? "350px" : "555px" }}
           bgColor="gray.800"
           borderRadius="lg"
           mt={1}
           p={{ base: 2, md: 4 }}
           width="100%"
         >
-          <Wrap spacing={{ base: 4, md: 6 }} justify="center" pl={{base:3,md:0}}>
+          <Wrap spacing={{ base: 4, md: 6 }} justify="center" pl={{ base: 3, md: 0 }}>
             {filteredCars.map((car) => (
               <WrapItem
                 mt={2}
@@ -463,9 +478,27 @@ const BookCar = () => {
                   width="100%"
                 >
                   {/* Car Image */}
-                  <Box flex="1" width={{ base: "100%", md: "unset" }}>
-                    <Image
-                      src="/car3.png" // Placeholder image (can be dynamic later)
+                  <Box width="250px"
+                    height="150px"
+                    overflow="hidden"
+                    borderRadius="8px"
+                    _hover={{
+                      transform: "scale(1.01) scaleX(-1)",
+                      transition: "transform 0.3s ease-in",
+                    }}>
+                    {car.carImage ? (<CldImage
+                      src={car.carImage}
+                      alt="Car Image"
+                      width="250"
+                      height="150"
+                      style={{
+                        width: "250px",
+                        height: "150px",
+                        objectFit: "contain",
+                        borderRadius: "8px",
+                      }}
+                    />) : (<Image
+                      src="/dummy_car.png"
                       alt={car.model}
                       boxSize={{ base: "150px", md: "200px" }}
                       objectFit="contain"
@@ -475,8 +508,9 @@ const BookCar = () => {
                         transition: "0.03s ease-in transform",
                       }}
                       cursor="pointer"
-                      mx="auto" // Center the image in mobile view
+                      mx="auto"
                     />
+                    )}
                   </Box>
 
                   {/* Car Details */}

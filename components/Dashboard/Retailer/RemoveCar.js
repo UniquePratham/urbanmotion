@@ -15,46 +15,167 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const RemoveCar = () => {
-  const [car, setCar] = useState(null);
+  const [retailerData, setRetailerData] = useState(null);
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
-    // Fetching cars data
+    fetchRetailerData();
+  }, [])
+
+
+  const fetchRetailerData = async () => {
     const sessionId = localStorage.getItem("sessionId");
-    const fetchRetailerData = async () => {
-      if (sessionId) {
+    if (sessionId) {
+      try {
+        const response = await axios.get(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`);
+        const data = await response.data;
+        setRetailerData(data.data);
+      } catch (error) {
+        console.error("Failed to fetch retailer data:", error);
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+    try {
+      const fetchCar = async () => {
         try {
-          const response = await fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`);
-          const data = await response.json();
+          // Get the car details from the backend
+          const response = await axios.get(
+            `https://urban-motion-backend.vercel.app/api/cars/car?registrationNumber=${registrationNumber}`
+          );
+          const data = await response.data;
           return data.data;
         } catch (error) {
-          console.error("Failed to fetch retailer data:", error);
-          return null;
+          console.error("Error getting car details:", error);
+          return null
         }
+      };
+      const car = await fetchCar();
+      await fetchRetailerData();
+      console.log(retailerData);
+      console.log(car);
+      if (retailerData.carsSubmittedIdArray.includes(car._id) && !car.isHanded) {
+        console.log("inside");
+        toast({
+          title: "Confirm Deleting Your Car",
+          description: `Do you really want to delete ${car.model}?`,
+          status: "info",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+          render: ({ onClose }) => (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Box
+                color="#00db00"
+                p={6}
+                bg="black"
+                borderRadius="xl"
+                fontSize="lg"
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                boxShadow="xl"
+                width="500px"
+                marginTop="48"
+              >
+                <Text mb={4} fontSize="xl" fontWeight="bold">
+                  Do you want to delete {car.model}?
+                </Text>
+                <HStack spacing={6}>
+                  <Button
+                    colorScheme="green"
+                    size="lg"
+                    onClick={async () => {
+                      try {
+                        // Delete the car from the backend
+                        const response = await axios.delete(
+                          `https://urban-motion-backend.vercel.app/api/cars/delete-car?registrationNumber=${registrationNumber}`
+                        );
+
+                        if (response.status === 200) {
+
+                          // Show success toast after booking the car
+                          toast({
+                            title: "Car Deleted Successfully",
+                            description: `Car ${car.model} with registration number ${registrationNumber} has been successfully deleted.`,
+                            status: "success",
+                            duration: 5000,
+                            isClosable: true,
+                            position: "top",
+                            render: () => (
+                              <Box
+                                color="white"
+                                p={6}
+                                bg="green.500"
+                                borderRadius="md"
+                                fontSize="lg"
+                                boxShadow="xl"
+                              >
+                                <Text>
+                                  Car {car.model} with registration number {registrationNumber} has been successfully deleted.
+                                </Text>
+                              </Box>
+                            ),
+                          });
+                        }
+                      } catch (error) {
+                        setRegistrationNumber("");
+                        console.error("Error deleting car:", error);
+                        toast({
+                          title: "Error",
+                          description: "Failed to delete the car. Please try again.",
+                          status: "error",
+                          duration: 5000,
+                          isClosable: true,
+                        });
+                      }
+                      onClose();
+                      setRegistrationNumber("");
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button colorScheme="red" size="lg" onClick={() => {
+                    toast({
+                      title: "Car Not Deleted",
+                      description: "The deletion process was canceled.",
+                      status: "info",
+                      duration: 5000,
+                      isClosable: true,
+                    });
+                    setRegistrationNumber("");
+                    onClose();
+                  }}>
+                    No
+                  </Button>
+                </HStack>
+              </Box>
+            </motion.div>
+          ),
+        });
       }
-      return null;
-    };
-  }, []);
-
-  const handleDelete = async (car) => {
-    const registrationNumber = car.registrationNumber;
-
-    try {
-      // Delete the car from the backend
-      await axios.delete(
-        `https://urban-motion-backend.vercel.app/api/cars/delete-car?registrationNumber=${registrationNumber}`
-      );
-
-      toast({
-        title: "Deleted",
-        description: `Car with registration number ${registrationNumber} has been successfully deleted.`,
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
+      else if (car.isHanded) {
+        toast({
+          title: "Car Deletion Not Allowed",
+          description: "This car is currently booked. Please wait until the booking period ends to remove it from your inventory.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+      setRegistrationNumber("");
+      setIsLoading(false);
     } catch (error) {
+      setRegistrationNumber("");
       console.error("Error deleting car:", error);
       toast({
         title: "Error",
@@ -63,10 +184,29 @@ const RemoveCar = () => {
         duration: 5000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
   };
 
-  return (
+  return (<>
+    {isLoading && (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+        flexDirection="column"
+        opacity="0.5"
+        position="absolute"
+        bg="black"
+        zIndex={3}
+        width="97.5%"
+        borderRadius="lg"
+      >
+        <Image src="/Resources/car-rent.png" alt="" h="50px" mb={60} />
+        <Spinner size="xl" color="green" />
+      </Box>
+    )}
     <Box p={6} bg="gray.800" borderRadius="lg" boxShadow="xl" minH="100vh" justifyContent="center" alignItems="center" display="flex" flexDir="column" bgImage="url('/Resources/failed.png')" bgSize="25% 40%"
       bgRepeat="no-repeat"
       bgPosition="center">
@@ -143,6 +283,7 @@ const RemoveCar = () => {
         </Button></HStack>
       </Box>
     </Box>
+  </>
   );
 };
 

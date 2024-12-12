@@ -20,6 +20,7 @@ import {
   Alert,
   AlertIcon
 } from "@chakra-ui/react";
+import { CldImage } from 'next-cloudinary';
 import axios from "axios";
 
 const Bookings = () => {
@@ -93,6 +94,7 @@ const Bookings = () => {
     };
 
     fetchData();
+    fetchCustomerData();
   }, [toast]);
 
   useEffect(() => {
@@ -235,17 +237,17 @@ const Bookings = () => {
       ) : carBooked ? (
         <HStack flexDirection={{ base: "column-reverse", md: "unset" }}>
           <VStack
-            p={{base:2,md:5}}
+            p={{ base: 2, md: 5 }}
             boxShadow="md"
             borderRadius="lg"
             bg="gray.800"
-            height={{base:"80vh",md:"105vh"}}
+            height={{ base: "80vh", md: "105vh" }}
             alignItems="center"
             flexDirection={{ base: "column", md: "column" }}
             width={{ base: "100%", md: "50%" }}
             spacing={10}
           >
-            <Box textAlign="center" mb={2} display={{base:"none",md:"unset"}}>
+            <Box textAlign="center" mb={2} display={{ base: "none", md: "unset" }}>
               <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
                 <Image src="/Resources/booking.png" alt="" h="50px" mr={2} />
                 <Heading as="h1" size="lg" color="white" ml={2} mt={{ base: 6, md: 4 }}>
@@ -257,53 +259,53 @@ const Bookings = () => {
               </Text>
             </Box>
             {/* Use a wrapper box to align all text items */}
-            <VStack width="100%" spacing={{ base: 2, md: 4 }} fontSize={{base:"sm",md:"md"}}>
-              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
-                <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
+            <VStack width="100%" spacing={{ base: 2, md: 4 }} fontSize={{ base: "sm", md: "md" }}>
+              <Text display="flex" justifyContent={{ base: "space-between", md: "space-between" }} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{ base: "40%", md: "40%" }} alignItems="center">
                   <Image src="/Resources/model.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Car Model:</span> </Text><span>{carBooked.model}</span>
               </Text>
-              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
-                <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
+              <Text display="flex" justifyContent={{ base: "space-between", md: "space-between" }} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{ base: "40%", md: "40%" }} alignItems="center">
                   <Image src="/Resources/car-fuel-type32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Car Fuel Type:</span> </Text> <span>{carBooked.carType}</span>
               </Text>
-              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
-              <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
+              <Text display="flex" justifyContent={{ base: "space-between", md: "space-between" }} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{ base: "40%", md: "40%" }} alignItems="center">
                   <Image src="/Resources/id.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Registration Number:</span> </Text>
                 <span>{carBooked.registrationNumber}</span>
               </Text>
-              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
-              <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
+              <Text display="flex" justifyContent={{ base: "space-between", md: "space-between" }} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{ base: "40%", md: "40%" }} alignItems="center">
                   <Image src="/Resources/year32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Car Booked Time:</span>{" "} </Text>
                 <span>{new Date(carBooked.handedOn).toLocaleString()}</span>
               </Text>
-              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
-              <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
+              <Text display="flex" justifyContent={{ base: "space-between", md: "space-between" }} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{ base: "40%", md: "40%" }} alignItems="center">
                   <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Weekly Pricing:</span></Text> <span>{carBooked.carPricing.weekly}</span>
               </Text>
-              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
-              <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
+              <Text display="flex" justifyContent={{ base: "space-between", md: "space-between" }} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{ base: "40%", md: "40%" }} alignItems="center">
                   <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Monthly Pricing:</span> </Text> <span>{carBooked.carPricing.monthly}</span>
               </Text>
-              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
-                <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
+              <Text display="flex" justifyContent={{ base: "space-between", md: "space-between" }} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{ base: "40%", md: "40%" }} alignItems="center">
                   <Image src="/Resources/rental-price-per-day321.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Quarterly Pricing:</span>{" "}</Text>
                 <span>{carBooked.carPricing.quarterly}</span>
               </Text>
-              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" mb={2} alignItems="center">
-                <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
+              <Text display="flex" justifyContent={{ base: "space-between", md: "space-between" }} width="100%" mb={2} alignItems="center">
+                <Text display="flex" justifyContent="left" width={{ base: "40%", md: "40%" }} alignItems="center">
                   <Image src="/Resources/Calendar 32.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Duration Booked For:</span>{" "}</Text>
                 <span>{carBooked.durationGivenFor}</span>
               </Text>
-              <Text display="flex" justifyContent={{base:"space-between",md:"space-between"}} width="100%" alignItems="center">
-                <Text display="flex" justifyContent="left" width={{base:"40%",md:"40%"}} alignItems="center">
+              <Text display="flex" justifyContent={{ base: "space-between", md: "space-between" }} width="100%" alignItems="center">
+                <Text display="flex" justifyContent="left" width={{ base: "40%", md: "40%" }} alignItems="center">
                   <Image src="/Resources/mileage.png" alt="" h="30px" mr={3} borderRadius={"lg"} />
                   <span>Return Date:</span>{" "}</Text>
                 <span>{returnDate}</span>
@@ -334,7 +336,7 @@ const Bookings = () => {
           </VStack>
 
           <Box p={5} boxShadow="md" borderRadius="lg" bg="gray.800" height={{ base: "55vh", md: "105vh" }} display={{ base: "flex", md: "flex" }} justifyContent="center" alignItems="center" flexDirection="column" width={{ base: "100%", md: "50%" }}>
-          <Box textAlign="center" mb={2} display={{base:"unset",md:"none"}} mt={4}>
+            <Box textAlign="center" mb={2} display={{ base: "unset", md: "none" }} mt={4}>
               <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
                 <Image src="/Resources/booking.png" alt="" h="50px" mr={2} />
                 <Heading as="h1" size="lg" color="white" ml={2} mt={{ base: 6, md: 4 }}>
@@ -345,19 +347,52 @@ const Bookings = () => {
                 You can view the currently booked car here.
               </Text>
             </Box>
-            <Image
-              src="/car3.png" // Placeholder image (can be dynamic later)
-              alt=""
-              boxSize="500px"
-              objectFit="contain"
-              borderRadius="md"
+            <Box
+              width="100%" // Make it responsive to fill the screen width on mobile
+              maxWidth="350px" // Limit max width for better design on smaller devices
+              height="auto" // Allow height to adjust dynamically
+              overflow="hidden"
+              borderRadius="30px" // Adjusted for a better look on mobile
+              mx="auto" // Center the box horizontally
               _hover={{
-                transform: "scale(1.01) scaleX(-1)",
-                transition: "0.03s ease-in transform",
+                transform: "scale(1.05)", // Simple hover effect without flipping
+                transition: "transform 0.3s ease-in-out",
               }}
-              cursor="pointer"
-            />
-            <Text display="flex" justifyContent="center" width="100%" fontSize={{base:"xl",md:"3xl"}} color="#00db00">
+              transform={{base:"unset",md:"scale(1.2)"}}
+              mb={{base:"unset",md:8}}
+            >
+              {carBooked.carImage ? (
+                <CldImage
+                  src={carBooked.carImage}
+                  alt="Car Image"
+                  width="300" // Adjust image size for mobile
+                  height="300"
+                  style={{
+                    width: "100%", // Image takes full width of the container
+                    height: "auto", // Maintain aspect ratio
+                    objectFit: "contain",
+                    borderRadius: "30px", // Match container's borderRadius
+                  }}
+                />
+              ) : (
+                <Image
+                  src="/dummy_car.png"
+                  alt={carBooked.model}
+                  boxSize="100%" // Dynamically adjust size
+                  maxWidth="300px" // Limit the size for better visuals on mobile
+                  objectFit="contain"
+                  borderRadius="md"
+                  _hover={{
+                    transform: "scale(1.05)", // Responsive hover effect
+                    transition: "0.3s ease-in-out",
+                  }}
+                  cursor="pointer"
+                  mx="auto"
+                />
+              )}
+            </Box>
+
+            <Text display="flex" justifyContent="center" width="100%" fontSize={{ base: "xl", md: "3xl" }} color="#00db00">
               {carBooked.model}
             </Text>
           </Box>
@@ -371,11 +406,11 @@ const Bookings = () => {
           flexDirection="column"
         >
           <Image src="/Resources/BookingBlue.png" alt="" h="150px" mb={2} />
-                  <Alert status="info" borderRadius="xl"
-          color="black" width="50%">
-                    <AlertIcon />
-                    No booking found.
-                  </Alert>
+          <Alert status="info" borderRadius="xl"
+            color="black" width="50%">
+            <AlertIcon />
+            No booking found.
+          </Alert>
         </Box>
       )}
 
