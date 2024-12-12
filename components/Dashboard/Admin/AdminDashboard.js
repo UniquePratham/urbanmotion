@@ -65,15 +65,16 @@ const AdminDashboard = () => {
         return <ManageUsers />;
     }
   };
+  
 
   const sidebarData = [
+    { icon: FaUser, label: "Profile", path: "profile" },
     { icon: FaUsers, label: "Manage Users", path: "manage-users" },
     { icon: FaWarehouse, label: "Manage Retailers", path: "manage-retailers" },
     { icon: FaCar, label: "Manage Cars", path: "manage-cars" },
     { icon: FaChartBar, label: "Statistics", path: "statistics" },
     { icon: FaFileAlt, label: "User Reports", path: "user-reports" },
     { icon: FaDatabase, label: "System Logs", path: "system-logs" },
-    { icon: FaUser, label: "Profile", path: "profile" },
   ];
 
   return (
