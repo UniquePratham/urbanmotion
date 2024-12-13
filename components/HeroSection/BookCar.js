@@ -596,7 +596,7 @@ const BookCar = () => {
                       style={{
                         width: "250px",
                         height: "150px",
-                        objectFit: "cover",
+                        objectFit: "contain",
                         borderRadius: "8px",
                       }}
                     />) : (<Image

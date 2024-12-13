@@ -25,6 +25,29 @@ const RemoveCar = () => {
   }, [])
 
 
+  const handleImageDelete = async (public_id) => {
+    try {
+      const response = await fetch("/api/delete_image", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ public_id: public_id }),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Image deleted successfully:", result);
+      } else {
+        const error = await response.json();
+        console.error("Error:", error);
+      }
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
+
   const fetchRetailerData = async () => {
     const sessionId = localStorage.getItem("sessionId");
     if (sessionId) {
@@ -56,10 +79,7 @@ const RemoveCar = () => {
       };
       const car = await fetchCar();
       await fetchRetailerData();
-      console.log(retailerData);
-      console.log(car);
       if (retailerData.carsSubmittedIdArray.includes(car._id) && !car.isHanded) {
-        console.log("inside");
         toast({
           title: "Confirm Deleting Your Car",
           description: `Do you really want to delete ${car.model}?`,
@@ -96,6 +116,7 @@ const RemoveCar = () => {
                     size="lg"
                     onClick={async () => {
                       try {
+                        handleImageDelete(car.carImage);
                         // Delete the car from the backend
                         const response = await axios.delete(
                           `https://urban-motion-backend.vercel.app/api/cars/delete-car?registrationNumber=${registrationNumber}`

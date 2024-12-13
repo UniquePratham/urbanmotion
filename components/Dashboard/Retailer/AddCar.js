@@ -29,7 +29,9 @@ const AddCar = () => {
     carImage: "", // Added carImage state
   });
   const [image, setImage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [retailerData, setRetailerData] = useState(null);
+  const [isUploadingImage, setIsLUploadingImage] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [ownerId, setOwnerId] = useState("");
   const fileInputRef = useRef();
@@ -40,7 +42,7 @@ const AddCar = () => {
     if (sessionId) {
       fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`)
         .then((res) => res.json())
-        .then((data) => setOwnerId(data.data._id))
+        .then((data) => { setRetailerData(data); setOwnerId(data.data._id) })
         .catch((err) => console.error("Failed to fetch customer data:", err));
     } else {
       toast({
@@ -52,7 +54,6 @@ const AddCar = () => {
       });
     }
   }, [toast]);
-  console.log("Owner : ", ownerId);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -80,6 +81,8 @@ const AddCar = () => {
       });
       return;
     }
+    if (isUploadingImage) return; // Prevent multiple triggers
+    setIsLUploadingImage(true);
 
     const formData = new FormData();
     formData.append("file", image);
@@ -87,7 +90,7 @@ const AddCar = () => {
     formData.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
     formData.append("folder", "urbanmotion/retailercars");
 
-    setLoading(true);
+    setIsLoading(true);
 
     // Log the payload being sent to Cloudinary
 
@@ -101,10 +104,9 @@ const AddCar = () => {
         if (response.status === 200) {
           const data = await response.json();
           const uploadedImagePublicId = data.public_id;
-          console.log(uploadedImagePublicId);
           const uploadedUrl = data.url;
           setUploadedImageUrl(uploadedUrl);
-          setLoading(false);
+          setIsLoading(false);
           setImage(null);
           resetFileInput();
           return uploadedImagePublicId;
@@ -122,7 +124,7 @@ const AddCar = () => {
             color: "white",
           });
         }
-        setLoading(false);
+        setIsLoading(false);
         setImage(null);
         resetFileInput();
         return null;
@@ -131,7 +133,7 @@ const AddCar = () => {
       // Extract the URL from the response and set it
 
     } catch (error) {
-      setLoading(false);
+      setIsLoading(false);
       setImage(null);
       resetFileInput();
       console.error("Error uploading image:", error);
@@ -147,19 +149,100 @@ const AddCar = () => {
         color: "white",
       });
     }
+    finally {
+      setIsLUploadingImage(false); // Reset the flag once upload completes
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const uploadedImagePublicId = await handleImageUpload();
+      if (retailerData) {
+        if (retailerData.isVerified) {
+          const uploadedImagePublicId = await handleImageUpload();
 
-      if (!uploadedImagePublicId) {
+          if (!uploadedImagePublicId) {
+            toast({
+              title: "Image upload failed",
+              description: "Please try again to upload the image.",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+              position: "top",
+              variant: "subtle",
+              bgColor: "teal.500",
+              color: "white",
+            });
+            return; // Exit early if the image upload fails
+          }
+
+          setCarDetails({ ...carDetails, ["carImage"]: uploadedImagePublicId });
+          const updatedCarDetails = {
+            ...carDetails,
+            carImage: uploadedImagePublicId, // Ensure the carImage is correctly set
+          };
+
+          const carData = {
+            registrationNumber: updatedCarDetails.registrationNumber,
+            owner: ownerId,
+            model: updatedCarDetails.model,
+            carType: updatedCarDetails.carType,
+            isHanded: false,
+            carPricing: {
+              quarterly: Number(updatedCarDetails.quarterly),
+              monthly: Number(updatedCarDetails.monthly),
+              weekly: Number(updatedCarDetails.weekly),
+            },
+            carImage: updatedCarDetails.carImage, // Add carImage to the data
+          };
+          const response = await axios.post(
+            "https://urban-motion-backend.vercel.app/api/cars/add-car",
+            carData
+          );
+          if (response.status === 201) {
+            toast({
+              title: "Car added successfully!",
+              description: "The car has been added to your inventory.",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+              position: "top",
+              variant: "subtle",
+              bgColor: "teal.500",
+              color: "white",
+            });
+            setCarDetails({
+              registrationNumber: "",
+              model: "",
+              carType: "",
+              quarterly: "",
+              monthly: "",
+              weekly: "",
+              carImage: "",
+            });
+          }
+        }
+        else {
+          toast({
+            title: "Retailer Not Verified",
+            description: "Your account is not verified. Please complete the verification process to add a car.",
+            status: "warning",
+            duration: 5000,
+            isClosable: true,
+            position: "top",
+            variant: "subtle",
+            bgColor: "teal.500",
+            color: "white",
+          });
+          return;
+        }
+      }
+      else {
         toast({
-          title: "Image upload failed",
-          description: "Please try again to upload the image.",
-          status: "error",
+          title: "Retailer Data Not Avaliable",
+          description: "Unable to process retailerdata",
+          status: "warning",
           duration: 5000,
           isClosable: true,
           position: "top",
@@ -168,55 +251,6 @@ const AddCar = () => {
           color: "white",
         });
         return; // Exit early if the image upload fails
-      }
-
-      setCarDetails({ ...carDetails, ["carImage"]: uploadedImagePublicId });
-      const updatedCarDetails = {
-        ...carDetails,
-        carImage: uploadedImagePublicId, // Ensure the carImage is correctly set
-      };
-
-      const carData = {
-        registrationNumber: updatedCarDetails.registrationNumber,
-        owner: ownerId,
-        model: updatedCarDetails.model,
-        carType: updatedCarDetails.carType,
-        isHanded: false,
-        carPricing: {
-          quarterly: Number(updatedCarDetails.quarterly),
-          monthly: Number(updatedCarDetails.monthly),
-          weekly: Number(updatedCarDetails.weekly),
-        },
-        carImage: updatedCarDetails.carImage, // Add carImage to the data
-      };
-
-      console.log("JSON being sent:", JSON.stringify(carData, null, 2));
-
-      const response = await axios.post(
-        "https://urban-motion-backend.vercel.app/api/cars/add-car",
-        carData
-      );
-      if (response.status === 201) {
-        toast({
-          title: "Car added successfully!",
-          description: "The car has been added to your inventory.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-          position: "top",
-          variant: "subtle",
-          bgColor: "teal.500",
-          color: "white",
-        });
-        setCarDetails({
-          registrationNumber: "",
-          model: "",
-          carType: "",
-          quarterly: "",
-          monthly: "",
-          weekly: "",
-          carImage: "",
-        });
       }
     } catch (error) {
       console.error("Error during car submission:", error);
@@ -346,7 +380,7 @@ const AddCar = () => {
                 mb={4}
               >
                 <Image
-                  src="/Resources/VehiclesBlue-100.png"
+                  src="/Resources/car-fuel-type32.png"
                   alt=""
                   h="30px"
                   mr={3}
@@ -577,7 +611,7 @@ const AddCar = () => {
                 </Box>
               </FormControl>
             </HStack>
-            {loading ? (<Box
+            {isLoading ? (<Box
               display="flex"
               justifyContent="center"
               alignItems="center"

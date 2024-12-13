@@ -184,7 +184,7 @@ const MainContent = ({ customerData }) => {
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Rate Your Experience</ModalHeader>
+          <ModalHeader>Change Your Password</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Input
