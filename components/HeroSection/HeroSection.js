@@ -4,6 +4,8 @@ import { useGLTF, OrbitControls } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion"; // For popup animation
 import { keyframes } from "@emotion/react";
+import { useRouter } from "next/router";
+
 
 const fadeIn = keyframes`
   from {
@@ -59,10 +61,29 @@ const LamborghiniModel = () => {
 
 const HeroSection = () => {
   // Popup animation on component mount
+  const router = useRouter();
+  const [sessionId, setSessionId] = useState(null); // Initial fast spin speed
+
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.8 },
     visible: { opacity: 1, scale: 1, transition: { duration: 0.8 } },
   };
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+    if (sessionId) {
+      setSessionId(sessionId);
+    }
+  }, [])
+
+  const handleBookNow = () => {
+    if (sessionId) {
+      router.push("/dashboard");
+    } else {
+      router.push("/signin");
+    }
+  }
+
 
   return (
     <motion.div
@@ -150,7 +171,7 @@ const HeroSection = () => {
             textTransform="uppercase"
             cursor="pointer"
             zIndex="2"
-            as="a" href="#BookCar"
+            onClick={ handleBookNow }
           >
             Book Now
           </Button>

@@ -388,7 +388,7 @@ const Cars = () => {
                         mb={4}
                         justify={{ base: "center", md: "start" }}
                       >
-                        <Text as="span" color="lightgreen">Rating:</Text> {calculateStars(car.rating) || "No rating yet"}
+                        <Text as="span" color="lightgreen">Rating:</Text> {car.rating>0 ? calculateStars(car.rating) : "No rating yet"}
                       </HStack>
                     </Text>
                   </Grid>
