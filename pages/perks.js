@@ -70,12 +70,11 @@ const Perks = () => {
                   borderRadius="lg"
                   boxShadow="lg"
                   overflow="hidden"
-                  _hover={{
+                >
+                  <Image src={perk.image} alt={perk.alt} w="full" h="200px" objectFit="cover" cursor="pointer" _hover={{
                     transform: "scale(1.05)",
                     transition: "transform 0.3s ease-in-out",
-                  }}
-                >
-                  <Image src={perk.image} alt={perk.alt} w="full" h="200px" objectFit="cover" />
+                  }}/>
                 </MotionBox>
               );
             }
@@ -96,6 +95,7 @@ const Perks = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.2 }} // Only one transition prop
+                cursor="pointer"
               >
                 <Icon as={perk.icon} w={16} h={16} color="#00db00" mb={4} />
                 <Heading fontSize="xl" color="white" mb={3} textAlign="center">

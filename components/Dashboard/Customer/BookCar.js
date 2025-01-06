@@ -119,13 +119,30 @@ const BookCar = () => {
 
   const handleBooking = async (car, toast) => {
     if (customerData) {
-      if (customerData.carCurrentlyBookedId) {
+      if (!customerData.isVerified) {
+        toast({
+          title: "Customer Not Verified",
+          description: "Your account is not verified. Please complete the verification process to book a car.",
+          status: "info",
+          duration: 5000,
+          isClosable: true,
+          variant: "subtle",
+          bgColor: "teal.500",
+          color: "white",
+        });
+        return;
+      }
+      else if (customerData.carCurrentlyBookedId) {
         toast({
           title: "Car Already Booked",
           description: "Please return the current car before booking a new one.",
           status: "info",
           duration: 5000,
           isClosable: true,
+          position: "top",
+          variant: "subtle",
+          bgColor: "teal.500",
+          color: "white",
         });
         return;
       }
@@ -141,7 +158,6 @@ const BookCar = () => {
         title: "Confirm Booking",
         description: `Do you want to book ${carBooked.model}?`,
         status: "info",
-        duration: 5000,
         isClosable: true,
         position: "top",
         render: ({ onClose }) => (

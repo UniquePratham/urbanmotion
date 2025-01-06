@@ -141,7 +141,20 @@ const BookCar = () => {
     if (userType) {
       if (userType === "customer") {
         if (customerData) {
-          if (customerData.carCurrentlyBookedId) {
+          if (!customerData.isVerified) {
+            toast({
+              title: "Customer Not Verified",
+              description: "Your account is not verified. Please complete the verification process to book a car.",
+              status: "info",
+              duration: 5000,
+              isClosable: true,
+              variant: "subtle",
+              bgColor: "teal.500",
+              color: "white",
+            });
+            return;
+          }
+          else if (customerData.carCurrentlyBookedId) {
             toast({
               title: "Car Already Booked",
               description: "Please return the current car before booking a new one.",
@@ -162,7 +175,6 @@ const BookCar = () => {
               title: "Confirm Booking",
               description: `Do you want to book ${carBooked.model}?`,
               status: "info",
-              duration: 5000,
               isClosable: true,
               position: "top",
               render: ({ onClose }) => (
@@ -580,7 +592,7 @@ const BookCar = () => {
               >
                 <HStack spacing={{ base: 2, md: 6 }} align="center" justify="space-between" flexDir={{ base: "column", md: "unset" }}>
                   {/* Car Image */}
-                  <Box width="250px"
+                  <Box width="150px"
                     height="150px"
                     overflow="hidden"
                     borderRadius="8px"
@@ -591,10 +603,10 @@ const BookCar = () => {
                     {car.carImage ? (<CldImage
                       src={car.carImage}
                       alt="Car Image"
-                      width="250"
+                      width="150"
                       height="150"
                       style={{
-                        width: "250px",
+                        width: "150px",
                         height: "150px",
                         objectFit: "contain",
                         borderRadius: "8px",
@@ -602,7 +614,7 @@ const BookCar = () => {
                     />) : (<Image
                       src="/dummy_car.png"
                       alt={car.model}
-                      boxSize={{ base: "150px", md: "200px" }}
+                      boxSize={{ base: "150px", md: "150px" }}
                       objectFit="contain"
                       borderRadius="md"
                       _hover={{

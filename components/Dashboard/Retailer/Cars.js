@@ -9,8 +9,11 @@ import {
   FaShoppingCart,
   FaFilter,
   FaSortUp,
-  FaRedo
+  FaRedo,
+  FaSave,
+  FaEdit
 } from "react-icons/fa";
+
 
 const Cars = () => {
   const [cars, setCars] = useState([]);
@@ -153,6 +156,19 @@ const Cars = () => {
     setFuelTypeFilter("");
     setPriceFilter("");
     fetchCars();
+  };
+
+
+  const handleEditClick = () => {
+    setIsFlipped(!isFlipped);
+    setIsEditable(!isEditable);
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   return (
@@ -309,6 +325,7 @@ const Cars = () => {
             <GridItem
               key={car._id}
               p={4}
+              pb={10}
               bg="gray.700"
               border="1px solid #00db00"
               borderRadius="md"
@@ -316,7 +333,22 @@ const Cars = () => {
               _hover={{ boxShadow: "lg", transform: "scale(1.01)" }}
               transition="all 0.3s"
             >
+              <IconButton
+                aria-label="Menu"
+                // icon={isEditable ? <FaSave /> : <FaEdit />}
+                icon={<FaEdit />}
+                bg="transparent"
+                color="white"
+                fontSize={{ base: "16px", md: "24px" }}
+                _hover={{
+                  color: "#00db00",
+                }}
+                // onClick={isEditable ? handleSave : handleEditClick}
+                position="sticky"
+                zIndex={12}
+              />
               <Grid templateColumns="1fr 2fr" gap={4} alignItems="center">
+
                 {/* Left Column: Car Image */}
                 <Box width="250px"
                   height="150px"
@@ -326,6 +358,7 @@ const Cars = () => {
                     transform: "scale(1.01) scaleX(-1)",
                     transition: "transform 0.3s ease-in",
                   }}>
+
                   {car.carImage ? (<CldImage
                     src={car.carImage}
                     alt="Car Image"
@@ -388,7 +421,7 @@ const Cars = () => {
                         mb={4}
                         justify={{ base: "center", md: "start" }}
                       >
-                        <Text as="span" color="lightgreen">Rating:</Text> {car.rating>0 ? calculateStars(car.rating) : "No rating yet"}
+                        <Text as="span" color="lightgreen">Rating:</Text> {car.rating > 0 ? calculateStars(car.rating) : "No rating yet"}
                       </HStack>
                     </Text>
                   </Grid>
