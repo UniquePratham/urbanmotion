@@ -7,6 +7,7 @@ import {
   Text,
   VStack,
   Button,
+  Spinner
 } from "@chakra-ui/react";
 import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
 import { useState, useEffect } from "react";
@@ -14,7 +15,7 @@ import { useRouter } from "next/router";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State for responsive menu
-  const [sessionId, setSessionId] = useState(null); // Store sessionId in state
+  const [sessionId, setSessionId] = useState("temporary"); // Store sessionId in state
   const [userData, setUserData] = useState(null); // Store user data
   const [userType, setUserType] = useState(null); // Store user type
   const [showProfileMenu, setShowProfileMenu] = useState(false); // Show/hide profile menu
@@ -37,6 +38,9 @@ const Navbar = () => {
             setUserData(data); // Ensure a new reference
           })
           .catch((err) => console.error("Error fetching user data:", err));
+      }
+      else {
+        setSessionId(null);
       }
     }
   }, []);
@@ -90,144 +94,14 @@ const Navbar = () => {
           </Link>
         ))}
 
-        {/* Profile Icon and Dropdown */}
-        {sessionId && userData ? (
-          <Flex align="center" position="relative">
-            <Image
-              cursor="pointer"
-              onClick={() => setShowProfileMenu(!showProfileMenu)}
-              src="/Resources/DefaultMale.png" 
-              alt="" 
-              h="50px"
-              w="50px"
-            />
-            {showProfileMenu && (
-             <Box
-             position="absolute"
-             top="50px"
-             right="0"
-             bg="gray.900"
-             p="1rem"
-             borderRadius="md"
-             zIndex="1000"
-             boxShadow="0px 4px 6px rgba(0, 0, 0, 0.2)"
-             display="flex"
-             flexDirection="column"
-             alignItems="center"
-             w="300px"
-           >
-             {userType ? (
-               <Text
-                 color="white"
-                 fontSize="14px"
-                 mb="1rem"
-                 textAlign="center"
-                 w="100%"
-                 wordBreak="break-word"
-                 textTransform="capitalize"
-               >
-                 Welcome, {userType}
-               </Text>
-             ) : (
-               <Text
-                 color="white"
-                 fontSize="14px"
-                 mb="1rem"
-                 textAlign="center"
-                 w="100%"
-                 wordBreak="break-word"
-               >
-                 Welcome, User
-               </Text>
-             )}
-             {userData ? (
-               <Text
-                 color="white"
-                 fontSize="14px"
-                 mb="1rem"
-                 textAlign="center"
-                 w="100%"
-                 wordBreak="break-word"
-               >
-                 Hi, {userData.data.name}
-               </Text>
-             ) : (
-               <Text
-                 color="white"
-                 fontSize="14px"
-                 mb="1rem"
-                 textAlign="center"
-                 w="100%"
-                 wordBreak="break-word"
-               >
-                 Hi, User
-               </Text>
-             )}
-           
-             <Link
-               href="/dashboard"
-               fontSize="16px"
-               fontWeight="bold"
-               bg="green.500"
-               color="white"
-               w="90%"
-               textAlign="center"
-               borderRadius="md"
-               py="12px"
-               _hover={{
-                 background: "linear-gradient(90deg, #00db00, #009900)",
-                 color: "white",
-               }}
-               display="flex"
-               justifyContent="center"
-               alignItems="center"
-               gap="10px"
-               mb="1rem"
-               transition="all 0.3s"
-             >
-               <Image
-                 src="/Resources/Dashboard.png"
-                 alt="Dashboard Icon"
-                 h="24px"
-                 bg="white"
-                 borderRadius="3"
-                 padding="4px"
-               />
-               Dashboard
-             </Link>
-           
-             <Button
-               aria-label="Logout"
-               colorScheme="red"
-               fontSize="16px"
-               fontWeight="bold"
-               py="23px"
-               w="90%"
-               onClick={handleLogout}
-               _hover={{
-                 background: "linear-gradient(90deg, red, maroon)",
-                 color: "white",
-               }}
-               display="flex"
-               justifyContent="center"
-               alignItems="center"
-               gap="10px"
-               transition="all 0.3s"
-             >
-               <Image
-                 src="/Resources/Logout_Blue.png"
-                 alt="Logout Icon"
-                 h="24px"
-                 bg="white"
-                 borderRadius="3"
-                 padding="4px"
-               />
-               Logout
-             </Button>
-           </Box>           
-            )}
+        {sessionId === "temporary" ? (
+          <Flex justifyContent="center" alignItems="center" h="50px">
+            <Spinner color="green.500" size="md" />
+            <Text ml="2" color="white" fontSize="14px">
+              Loading user details...
+            </Text>
           </Flex>
-        ) : (
+        ) : sessionId === null ? (
           <Link
             href="/signin"
             display="inline-flex"
@@ -248,7 +122,142 @@ const Navbar = () => {
             <FaUserCircle style={{ marginRight: "8px" }} />
             Login
           </Link>
+        ) : (
+          <Flex align="center" position="relative">
+            <Image
+              cursor="pointer"
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+              src="/Resources/DefaultMale.png"
+              alt=""
+              h="50px"
+              w="50px"
+            />
+            {showProfileMenu && (
+              <Box
+                position="absolute"
+                top="50px"
+                right="0"
+                bg="gray.900"
+                p="1rem"
+                borderRadius="md"
+                zIndex="1000"
+                boxShadow="0px 4px 6px rgba(0, 0, 0, 0.2)"
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                w="300px"
+              >
+                {userType ? (
+                  <Text
+                    color="white"
+                    fontSize="14px"
+                    mb="1rem"
+                    textAlign="center"
+                    w="100%"
+                    wordBreak="break-word"
+                    textTransform="capitalize"
+                  >
+                    Welcome, {userType}
+                  </Text>
+                ) : (
+                  <Text
+                    color="white"
+                    fontSize="14px"
+                    mb="1rem"
+                    textAlign="center"
+                    w="100%"
+                    wordBreak="break-word"
+                  >
+                    Welcome, User
+                  </Text>
+                )}
+                {userData ? (
+                  <Text
+                    color="white"
+                    fontSize="14px"
+                    mb="1rem"
+                    textAlign="center"
+                    w="100%"
+                    wordBreak="break-word"
+                  >
+                    Hi, {userData.data.name}
+                  </Text>
+                ) : (
+                  <Text
+                    color="white"
+                    fontSize="14px"
+                    mb="1rem"
+                    textAlign="center"
+                    w="100%"
+                    wordBreak="break-word"
+                  >
+                    Hi, User
+                  </Text>
+                )}
+                <Link
+                  href="/dashboard"
+                  fontSize="16px"
+                  fontWeight="bold"
+                  bg="green.500"
+                  color="white"
+                  w="90%"
+                  textAlign="center"
+                  borderRadius="md"
+                  py="12px"
+                  _hover={{
+                    background: "linear-gradient(90deg, #00db00, #009900)",
+                    color: "white",
+                  }}
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  gap="10px"
+                  mb="1rem"
+                  transition="all 0.3s"
+                >
+                  <Image
+                    src="/Resources/Dashboard.png"
+                    alt="Dashboard Icon"
+                    h="24px"
+                    bg="white"
+                    borderRadius="3"
+                    padding="4px"
+                  />
+                  Dashboard
+                </Link>
+                <Button
+                  aria-label="Logout"
+                  colorScheme="red"
+                  fontSize="16px"
+                  fontWeight="bold"
+                  py="23px"
+                  w="90%"
+                  onClick={handleLogout}
+                  _hover={{
+                    background: "linear-gradient(90deg, red, maroon)",
+                    color: "white",
+                  }}
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  gap="10px"
+                  transition="all 0.3s"
+                >
+                  <Image
+                    src="/Resources/Logout_Blue.png"
+                    alt="Logout Icon"
+                    h="24px"
+                    bg="white"
+                    borderRadius="3"
+                    padding="4px"
+                  />
+                  Logout
+                </Button>
+              </Box>
+            )}
+          </Flex>
         )}
+
       </Flex>
 
       {/* Hamburger Icon for Mobile */}
@@ -299,7 +308,35 @@ const Navbar = () => {
               {item}
             </Link>
           ))}
-          {sessionId && userData && userType ? (
+          {sessionId === "temporary" ? (
+            <VStack justifyContent="center" alignItems="center" h="50px" w="100%">
+              <Spinner color="green.500" size="md" />
+              <Text color="gray.700" fontSize="16px" mt="2">
+                Loading user details...
+              </Text>
+            </VStack>
+          ) : sessionId === null ? (
+            <Link
+              href="/signin"
+              display="inline-flex"
+              alignItems="center"
+              fontSize="15px"
+              color="black"
+              bg="#00db00"
+              px="14px"
+              py="6px"
+              borderRadius="sm"
+              _hover={{
+                bg: "white",
+                color: "black",
+                transform: "scale(1.05)",
+                transition: "0.2s ease-in-out",
+              }}
+            >
+              <FaUserCircle style={{ marginRight: "8px" }} />
+              Login
+            </Link>
+          ) : userData && userType ? (
             <>
               <Text
                 color="white"
@@ -322,89 +359,68 @@ const Navbar = () => {
               >
                 Hi, {userData.data.name}
               </Text>
-            <Link
-              href="/dashboard"
-              fontSize="16px"
-              fontWeight="bold"
-              bg="green.500"
-              color="white"
-              w="50%"
-              textAlign="center"
-              borderRadius="md"
-              py="12px"
-              _hover={{
-                background: "linear-gradient(90deg, #00db00, #009900)",
-                color: "white",
-              }}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              gap="10px"
-              mb="0.2rem"
-              transition="all 0.3s"
-            >
-              <Image
-                src="/Resources/Dashboard.png"
-                alt="Dashboard Icon"
-                h="24px"
-                bg="white"
-                borderRadius="3"
-                padding="4px"
-              />
-              Dashboard
-            </Link>
-          
-            <Button
-              aria-label="Logout"
-              colorScheme="red"
-              fontSize="16px"
-              fontWeight="bold"
-              py="23px"
-              w="50%"
-              onClick={handleLogout}
-              _hover={{
-                background: "linear-gradient(90deg, red, maroon)",
-                color: "white",
-              }}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              gap="10px"
-              transition="all 0.3s"
-            >
-              <Image
-                src="/Resources/Logout_Blue.png"
-                alt="Logout Icon"
-                h="24px"
-                bg="white"
-                borderRadius="3"
-                padding="4px"
-              />
-              Logout
-            </Button>
+              <Link
+                href="/dashboard"
+                fontSize="16px"
+                fontWeight="bold"
+                bg="green.500"
+                color="white"
+                w="50%"
+                textAlign="center"
+                borderRadius="md"
+                py="12px"
+                _hover={{
+                  background: "linear-gradient(90deg, #00db00, #009900)",
+                  color: "white",
+                }}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                gap="10px"
+                mb="0.2rem"
+                transition="all 0.3s"
+              >
+                <Image
+                  src="/Resources/Dashboard.png"
+                  alt="Dashboard Icon"
+                  h="24px"
+                  bg="white"
+                  borderRadius="3"
+                  padding="4px"
+                />
+                Dashboard
+              </Link>
+              <Button
+                aria-label="Logout"
+                colorScheme="red"
+                fontSize="16px"
+                fontWeight="bold"
+                py="23px"
+                w="50%"
+                onClick={handleLogout}
+                _hover={{
+                  background: "linear-gradient(90deg, red, maroon)",
+                  color: "white",
+                }}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                gap="10px"
+                transition="all 0.3s"
+              >
+                <Image
+                  src="/Resources/Logout_Blue.png"
+                  alt="Logout Icon"
+                  h="24px"
+                  bg="white"
+                  borderRadius="3"
+                  padding="4px"
+                />
+                Logout
+              </Button>
             </>
-          ) : (
-            <Link
-              href="/signin"
-              display="inline-flex"
-              alignItems="center"
-              fontSize="15px"
-              color="black"
-              bg="#00db00"
-              px="14px"
-              py="6px"
-              borderRadius="sm"
-              _hover={{
-                bg: "white",
-                color: "black",
-                transform: "scale(1.05)",
-                transition: "0.2s ease-in-out",
-              }}
-            >
-              <FaUserCircle style={{ marginRight: "8px" }} />
-              Login
-            </Link>
-          )}
+          ):(<></>)
+        }
         </VStack>
       )}
     </Flex>

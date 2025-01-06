@@ -6,6 +6,7 @@ import {
   Image,
   Avatar,
   Icon,
+  filter,
 } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
 import { motion, useInView } from "framer-motion";
@@ -115,7 +116,7 @@ const TestimonialSection = () => {
             />
           ))}
         </Flex>
-        <Avatar src="/profile.png" name="Eleanor Smith" />
+        <Avatar src="/profile.png" name="Eleanor Smith" _hover={{transform:"scale(1.5)"}} />
       </MotionBox>
 
       {/* Right Content */}
@@ -124,7 +125,7 @@ const TestimonialSection = () => {
         position="relative"
         textAlign="center"
         maxWidth={{ base: "100%", md: "50%" }}
-        zIndex="0"
+        zIndex={{base:"0",md:"13"}}
         height="100%"
       >
         {/* Image 1 */}
@@ -138,13 +139,15 @@ const TestimonialSection = () => {
           left={{ base: "-20", md: "0%" }}
           top={{ base: "0%", md: "5%" }}
           boxShadow="lg"
-          zIndex="10"
+          zIndex={{base:"10",md:"15"}}
           margin={4}
           initial={{ opacity: 0, x: -100 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1.2 }}
-          opacity="0.9"
+          opacity={{base:"0.6 !important",md:"1 !important"}}
           borderRadius="1rem"
+          cursor="crosshair"
+          _hover={{ opacity: "0.5 !important",filter: "brightness(0.8)",transform:"scale(1.05) rotate(-10deg) translate3d(-1rem,0.5rem,3rem) !important", zIndex:"13" }}
         />
         {/* Image 2 */}
         <MotionImage
@@ -157,13 +160,15 @@ const TestimonialSection = () => {
           position={{ base: "relative", md: "absolute" }}
           bottom={{ base: "25%", md: "5%" }}
           boxShadow="lg"
-          zIndex="11"
+          zIndex={{base:"11",md:"14"}}
           margin={4}
           initial={{ opacity: 0, x: 100 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1.4 }}
-          opacity="0.2"
+          opacity={{base:"0.6 !important",md:"1 !important"}}
           borderRadius="1rem"
+          cursor="crosshair"
+          _hover={{ opacity: "0.5 !important",filter: "brightness(0.8)",transform:"scale(1.05) rotate(10deg) translate3d(-1rem,0.5rem,3rem) !important" }}
         />
       </Box>
     </Flex>

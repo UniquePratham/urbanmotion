@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Text, VStack, HStack, Spinner, Input, Button, IconButton, Image, Select, SimpleGrid, useToast } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { FaEdit, FaSave } from "react-icons/fa";
+import { FaEdit, FaSave, FaTimesCircle } from "react-icons/fa";
 
 const MotionBox = motion(Box);
 
@@ -21,6 +21,11 @@ const Card = ({ userType, userData }) => {
   const handleEditClick = () => {
     setIsFlipped(!isFlipped);
     setIsEditable(!isEditable);
+  };
+  const handleCancelClick = () => {
+    setIsFlipped(!isFlipped);
+    setIsEditable(!isEditable);
+    setFormData(userData);
   };
 
   const handleInputChange = (field, value) => {
@@ -147,14 +152,31 @@ const Card = ({ userType, userData }) => {
         right={{ base: -2, md: 3 }}
         zIndex={12}
       />
+      <IconButton
+        aria-label="Menu"
+        icon={<FaTimesCircle />}
+        display={isEditable ? "block" : "none"}
+        bg="transparent"
+        color="black"
+        fontSize={{ base: "16px", md: "24px" }}
+        _hover={{
+          color: "white",
+        }}
+        onClick={handleCancelClick}
+        position="absolute"
+        top={{ base: -2, md: 3 }}
+        left={{ base: 1, md: 3 }}
+        zIndex={12}
+      />
       {userType === "loading" && (<Box
         display="flex"
         justifyContent="center"
         alignItems="center"
-        minHeight="200px"
         flexDirection="column"
+        minHeight="200px"
       >
-        <Spinner size="2xl" color="green" />
+        <Spinner boxSize="70px" color="white" />
+        <Text color="green" fontSize="xl" mt={4}>Loading User Details</Text>
       </Box>)}
 
       {/* Front Side of the Card */}

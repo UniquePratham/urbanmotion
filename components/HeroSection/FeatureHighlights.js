@@ -51,8 +51,10 @@ const FeatureHighlights = () => {
           w={{ base: "90%", sm: "300px", md: "250px" }}
           transition="transform 0.2s"
           _hover={{
-            transform: "scale(1.05)",
+            transform: "scale(1.03) rotate(5deg) translate3d(-1rem,0.5rem,3rem)",
             boxShadow: "2xl",
+            bg: "gray.800",
+            boxShadow: "0px 0px 20px 5px #00db00",
           }}
         >
           <Icon

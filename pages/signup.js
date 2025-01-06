@@ -146,7 +146,7 @@ const SignUp = () => {
         alignItems="center"
         justifyContent="center"
         width="100vw"
-        flexDir={{base:"column-reverse",md:"unset"}}
+        flexDir={{ base: "column-reverse", md: "unset" }}
       >
         {/* Left Panel */}
         <MotionBox
@@ -159,14 +159,14 @@ const SignUp = () => {
           py={12}
           w={{ base: "100%", md: "30%" }}
           textAlign="center"
-          minH={{base:"60vh",md:"100vh"}}
+          minH={{ base: "60vh", md: "100vh" }}
           borderRadius={{ base: "none", md: "lg" }}
           display="flex"
-          justifyContent={{base:"unset",md:"center"}}
+          justifyContent={{ base: "unset", md: "center" }}
           alignItems="center"
           flexDirection="column"
         >
-          <Heading fontSize={{base:"2xl",md:"4xl"}} mb={4} zIndex={2}>
+          <Heading fontSize={{ base: "2xl", md: "4xl" }} mb={4} zIndex={2}>
             Welcome Back!
           </Heading>
           <Text fontSize="md" mb={8} zIndex={2}>
@@ -196,7 +196,7 @@ const SignUp = () => {
           >
             SIGN IN
           </Button>
-          <Image src="/side_car_right.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} display={{base:"flex",md:"none"}} justifyContent="center" alignItems="center"/>
+          <Image src="/side_car_right.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} display={{ base: "flex", md: "none" }} justifyContent="center" alignItems="center" />
         </MotionBox>
 
         {/* Right Panel */}
@@ -309,25 +309,27 @@ const SignUp = () => {
               boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
             }}
           />
-          <Input
-            name="drivingLicenseId"
-            placeholder="Driving License ID (optional)"
-            bg="gray.100"
-            mb={2}
-            width={{ base: "300px", md: "300px" }}
-            onChange={handleAdditionalChange}
-            _hover={{
-              bg: "rgba(255, 255, 255, 0.7)",
-              borderColor: "rgba(255, 255, 255, 0.5)",
-            }}
-            _focus={{
-              outline: "none",
-              bg: "rgba(255, 255, 255, 0.5)",
-              borderColor: "rgba(0, 255, 0, 0.8)",
-              boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
-            }}
-            type="text"
-          />
+          {formData.accountType === "customer" &&
+            <Input
+              name="drivingLicenseId"
+              placeholder="Driving License ID (optional)"
+              bg="gray.100"
+              mb={2}
+              width={{ base: "300px", md: "300px" }}
+              onChange={handleAdditionalChange}
+              _hover={{
+                bg: "rgba(255, 255, 255, 0.7)",
+                borderColor: "rgba(255, 255, 255, 0.5)",
+              }}
+              _focus={{
+                outline: "none",
+                bg: "rgba(255, 255, 255, 0.5)",
+                borderColor: "rgba(0, 255, 0, 0.8)",
+                boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+              }}
+              type="text"
+            />
+          }
           <Select
             name="verificationType"
             bg="gray.100"
@@ -345,10 +347,10 @@ const SignUp = () => {
               borderColor: "rgba(0, 255, 0, 0.8)",
               boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
             }}
-            >
-              <option value="" disabled>
-                Select Verification ID Type
-              </option>
+          >
+            <option value="" disabled>
+              Select Verification ID Type
+            </option>
             <option value="aadhar">Aadhar</option>
             <option value="pan">PAN</option>
           </Select>
@@ -439,16 +441,16 @@ const SignUp = () => {
             SIGN UP
           </Button>
           {isLoading ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            minHeight="200px"
-          >
-            <Spinner size="md" color="black" />
-          </Box>
-        ) : null}
-          <Image src="/side_car_right.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} right={10} display={{base:"none",md:"unset"}}/>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="200px"
+            >
+              <Spinner size="md" color="black" />
+            </Box>
+          ) : null}
+          <Image src="/side_car_right.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} right={10} display={{ base: "none", md: "unset" }} />
         </MotionBox>
       </Flex>
     </>

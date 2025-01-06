@@ -53,7 +53,7 @@ const Sidebar = ({ text, datas, onSidebarClick }) => {
         transition="transform 0.2s"
         transform={isOpen ? "rotate(90deg)" : "rotate(0deg)"}
         position="absolute"
-        right={3}
+        right={5}
         top={5}
         zIndex={12}
       />
