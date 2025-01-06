@@ -6,7 +6,6 @@ import ManageRetailers from "./ManageRetailers";
 import ManageCars from "./ManageCars";
 import Statistics from "./Statistics";
 import UserReports from "./UserReports";
-import SystemLogs from "./SystemLogs";
 import MainContent from "./MainContent"; // Import MainContent
 import { useRouter } from "next/router";
 
@@ -57,8 +56,6 @@ const AdminDashboard = () => {
         return <Statistics />;
       case "user-reports":
         return <UserReports />;
-      case "system-logs":
-        return <SystemLogs />;
       case "profile":
         return <MainContent adminData={adminData} />; // Pass adminData to MainContent
       default:
@@ -74,7 +71,6 @@ const AdminDashboard = () => {
     { icon: FaCar, label: "Manage Cars", path: "manage-cars" },
     { icon: FaChartBar, label: "Statistics", path: "statistics" },
     { icon: FaFileAlt, label: "User Reports", path: "user-reports" },
-    { icon: FaDatabase, label: "System Logs", path: "system-logs" },
   ];
 
   return (

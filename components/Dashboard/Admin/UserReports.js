@@ -60,7 +60,7 @@ const UserReports = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
     doc.addImage("pdf_logo.png", "PNG", 10, 10, 50, 10); // Add logo
-    doc.text("User Report - UrbanMotion", 80, 20);
+    doc.text("Report - UrbanMotion", 80, 20);
     doc.setFontSize(12);
 
     if (type === "customers") {
