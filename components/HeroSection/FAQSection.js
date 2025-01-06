@@ -123,6 +123,7 @@ const FAQSection = () => {
               fontSize={{ base: "sm", md: "md" }}
               bg="gray.800"
               color="gray.300"
+              borderRadius="md"
               borderTop="1px solid #00dc00"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}

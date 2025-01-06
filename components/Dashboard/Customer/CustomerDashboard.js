@@ -7,7 +7,6 @@ import Bookings from "./Bookings";
 import Notifications from "./Notifications";
 import Payments from "./Payments";
 import RentalHistory from "./RentalHistory";
-import { useRouter } from "next/router";
 
 // Import icons from react-icons
 import {
@@ -22,7 +21,6 @@ import {
 const CustomerDashboard = () => {
   const [customerData, setCustomerData] = useState(null);
   const [activeComponent, setActiveComponent] = useState("profile"); // Default active component
-  const router = useRouter();
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");

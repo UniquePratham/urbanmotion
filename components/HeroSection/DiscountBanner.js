@@ -1,7 +1,7 @@
 import { Box, Text, Flex, Icon } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FaCarSide, FaPercentage } from "react-icons/fa";
+import { FaCarSide } from "react-icons/fa";
 
 const DiscountBanner = () => {
   // Dynamic sale percentage based on the current date
@@ -46,8 +46,9 @@ const DiscountBanner = () => {
           justifyContent="center"
           direction={{ base: "column", md: "row" }}
           gap={3}
+          _hover={{ textDecoration: "underline",color:"gray.100", }} 
         >
-          <Icon as={FaCarSide} w={6} h={6} color="black" />
+          <Icon as={FaCarSide} w={6} h={6}/>
           <Text
             fontSize={{ base: "sm", md: "lg" }}
             fontWeight="medium"

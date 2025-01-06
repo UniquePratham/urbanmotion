@@ -42,7 +42,7 @@ const AddCar = () => {
     if (sessionId) {
       fetch(`https://urban-motion-backend.vercel.app/api/sessions/${sessionId}`)
         .then((res) => res.json())
-        .then((data) => { setRetailerData(data); setOwnerId(data.data._id) })
+        .then((data) => { setRetailerData(data.data); setOwnerId(data.data._id) })
         .catch((err) => console.error("Failed to fetch customer data:", err));
     } else {
       toast({
@@ -159,6 +159,7 @@ const AddCar = () => {
 
     try {
       if (retailerData) {
+        console.log('isVerified : ', retailerData.isVerified);
         if (retailerData.isVerified) {
           const uploadedImagePublicId = await handleImageUpload();
 
