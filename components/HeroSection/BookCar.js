@@ -331,17 +331,6 @@ const BookCar = () => {
               ),
             });
           }
-        } else {
-          toast({
-            title: "Warning",
-            description: "Please log in to our website first to proceed with booking a car.",
-            status: "warning",
-            duration: 5000,
-            isClosable: true,
-          });
-          setTimeout(() => {
-            router.push("/signin");
-          }, 500);
         }
       }
       else if (userType === "retailer") {
@@ -362,6 +351,18 @@ const BookCar = () => {
           isClosable: true,
         });
       }
+    }
+    else {
+      toast({
+        title: "Warning",
+        description: "Please log in to our website first to proceed with booking a car.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        router.push("/signin");
+      }, 500);
     }
   };
 

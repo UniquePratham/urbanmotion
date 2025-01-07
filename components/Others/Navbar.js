@@ -51,6 +51,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("sessionId");
+    localStorage.removeItem("userType");
     setSessionId(null);
     router.push("/signin");
   };
