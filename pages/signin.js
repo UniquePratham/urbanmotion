@@ -11,7 +11,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Navbar from "@/components/Others/Navbar";
 
@@ -23,8 +23,29 @@ const SignIn = () => {
   const [userType, setUserType] = useState("customer");
   const [adminPassphrase, setAdminPassphrase] = useState("");
   const [isLoading, setIsLoading] = useState(false); // State to track loading
+  const [isRouterLoading, setIsRouterLoading] = useState(true); // State to track loading
   const toast = useToast();
   const router = useRouter();
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+    const userType = localStorage.getItem("userType");
+
+    if (sessionId && userType) {
+      router.push("/dashboard");
+      toast({
+        title: "Already Logged In",
+        description: "You are already logged in. Redirecting to the dashboard.",
+        status: "info",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    else{
+      setIsRouterLoading(false);
+    }
+  }, [router, toast]);
+
 
   const handleSignIn = async () => {
     try {
@@ -106,6 +127,23 @@ const SignIn = () => {
 
   return (
     <>
+      {isRouterLoading && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+          flexDirection="column"
+          position="absolute"
+          bg="rgba(0,0,0,0.5)"
+          zIndex={3}
+          width="100%"
+          borderRadius="lg"
+        >
+          <Image src="/Resources/car-rent.png" alt="" h="50px" zIndex={4} />
+          <Spinner size="xl" color="green" />
+        </Box>
+      )}
       <Navbar />
       <Flex
         minH={{ base: "100vh", md: "100vh" }}
@@ -255,15 +293,15 @@ const SignIn = () => {
             SIGN IN
           </Button>
           {isLoading ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            minHeight="200px"
-          >
-            <Spinner size="md" color="black" />
-          </Box>
-        ) : null}
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="200px"
+            >
+              <Spinner size="md" color="black" />
+            </Box>
+          ) : null}
           <Image src="/side_car_left.png" alt="Logo" h="200px" cursor="pointer" position="absolute" bottom={0} left={10} display={{ base: "none", md: "unset" }} />
         </MotionBox>
 

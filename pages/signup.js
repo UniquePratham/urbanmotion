@@ -10,10 +10,9 @@ import {
   Image,
   Spinner,
 } from "@chakra-ui/react";
-import { color, motion } from "framer-motion";
-import { useState } from "react";
+import { motion } from "framer-motion";
+import { useState,useEffect } from "react";
 import Navbar from "@/components/Others/Navbar";
-import { FaUser, FaStore, FaCrown } from "react-icons/fa";
 import { useRouter } from "next/router";
 
 
@@ -21,7 +20,7 @@ const MotionBox = motion(Box);
 
 const SignUp = () => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false); // State to track loading
+  const [isLoading, setIsLoading] = useState(true); // State to track loading
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,6 +35,25 @@ const SignUp = () => {
     passcode: "", // Only for admin
   });
   const toast = useToast();
+
+  useEffect(() => {
+      const sessionId = localStorage.getItem("sessionId");
+      const userType = localStorage.getItem("userType");
+  
+      if (sessionId && userType) {
+        router.push("/dashboard");
+        toast({
+          title: "Already Logged In",
+          description: "You are already logged in. Redirecting to the dashboard.",
+          status: "info",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+      else{
+        setIsLoading(false);
+      }
+    }, [router, toast]);
 
   // General input change handler
   const handleInputChange = (e) => {
@@ -138,6 +156,23 @@ const SignUp = () => {
   };
   return (
     <>
+      {isLoading && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+          flexDirection="column"
+          position="absolute"
+          bg="rgba(0,0,0,0.5)"
+          zIndex={3}
+          width="100%"
+          borderRadius="lg"
+        >
+          <Image src="/Resources/car-rent.png" alt="" h="50px" zIndex={4} />
+          <Spinner size="xl" color="green" />
+        </Box>
+      )}
       <Navbar />
       <Flex
         minH="100vh"

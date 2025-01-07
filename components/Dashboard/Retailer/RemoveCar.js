@@ -217,9 +217,8 @@ const RemoveCar = () => {
         alignItems="center"
         minHeight="100vh"
         flexDirection="column"
-        opacity="0.5"
         position="absolute"
-        bg="black"
+        bg="rgba(0,0,0,0.5)"
         zIndex={3}
         width="97.5%"
         borderRadius="lg"
