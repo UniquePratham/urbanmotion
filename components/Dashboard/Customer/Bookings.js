@@ -222,8 +222,7 @@ const Bookings = () => {
     const remainingDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
 
     // Set the calculated remaining days in the state
-    // setRemainingDays(remainingDays);
-    setRemainingDays(30);
+    setRemainingDays(remainingDays);
   };
 
 
@@ -273,10 +272,6 @@ const Bookings = () => {
 
       calculateNumberofInstallments(actualDays);
       const installmentAmt = parseInt(numberPaymentsDone) * wholeCost;
-
-      // console.log('Final Price:', finalPrice);
-      // console.log('Installment Amount:', installmentAmt);
-
       // Update states only after all calculations are complete
       setActualDays(actualDays);
       setFinalPaymentPrice(finalPrice);
