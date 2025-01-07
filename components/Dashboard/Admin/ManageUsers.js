@@ -48,47 +48,50 @@ const ManageUsers = () => {
 
   return (
     <Box
-      w="full"
+      w={{ base: "100%", md: "90%", lg: "100%" }}
       p={5}
       bg="gray.800"
       color="white"
       borderRadius="lg"
       boxShadow="lg"
+      mx="auto"
     >
-      <Heading size="lg" mb={8}>
+      <Heading size={{ base: "md", md: "lg" }} mb={8} textAlign="center">
         Manage Users
       </Heading>
 
-      <Table variant="simple" colorScheme="teal">
-        <Thead>
-          <Tr>
-            <Th>Name</Th>
-            <Th>Email</Th>
-            <Th>Driving License</Th>
-            <Th>Verification Status</Th>
-            <Th>Actions</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {users.map((user, index) => (
-            <Tr key={index}>
-              <Td>{user.name}</Td>
-              <Td>{user.email}</Td>
-              <Td>{user.drivingLicenseId}</Td>
-              <Td>{user.isVerified ? "Verified" : "Not Verified"}</Td>
-              <Td>
-                <Button
-                  size="sm"
-                  colorScheme="blue"
-                  onClick={() => toggleDetails(user)}
-                >
-                  More Details
-                </Button>
-              </Td>
+      <Box overflowX="auto">
+        <Table variant="simple" colorScheme="teal">
+          <Thead>
+            <Tr>
+              <Th>Name</Th>
+              <Th>Email</Th>
+              <Th>Driving License</Th>
+              <Th>Verification Status</Th>
+              <Th>Actions</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {users.map((user, index) => (
+              <Tr key={index}>
+                <Td>{user.name}</Td>
+                <Td>{user.email}</Td>
+                <Td>{user.drivingLicenseId}</Td>
+                <Td>{user.isVerified ? "Verified" : "Not Verified"}</Td>
+                <Td>
+                  <Button
+                    size="sm"
+                    colorScheme="blue"
+                    onClick={() => toggleDetails(user)}
+                  >
+                    More Details
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
 
       {/* Modal for user details */}
       {selectedUser && isModalOpen && (
@@ -102,6 +105,9 @@ const ManageUsers = () => {
           borderRadius="md"
           boxShadow="lg"
           zIndex="overlay"
+          width={{ base: "90%", md: "60%", lg: "40%" }}
+          maxHeight="80vh"
+          overflowY="auto"
         >
           <Heading size="md" mb={4}>
             User Details

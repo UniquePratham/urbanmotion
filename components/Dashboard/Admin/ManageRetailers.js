@@ -62,51 +62,54 @@ const ManageRetailers = () => {
 
   return (
     <Box
-      w="full"
+      w={{ base: "100%", md: "90%", lg: "100%" }}
       p={5}
       bg="gray.800"
       color="white"
       borderRadius="lg"
       boxShadow="lg"
+      mx="auto"
     >
-      <Heading size="lg" mb={8}>
+      <Heading size={{ base: "md", md: "lg" }} mb={8} textAlign="center">
         Manage Retailers
       </Heading>
 
-      <Table variant="simple" colorScheme="teal">
-        <Thead>
-          <Tr>
-            <Th>Name</Th>
-            <Th>Email</Th>
-            <Th>Verification Status</Th>
-            <Th>Actions</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {retailers.length > 0 ? (
-            retailers.map((retailer, index) => (
-              <Tr key={index}>
-                <Td>{retailer.name}</Td>
-                <Td>{retailer.email}</Td>
-                <Td>{retailer.isVerified ? "Verified" : "Not Verified"}</Td>
-                <Td>
-                  <Button
-                    size="sm"
-                    colorScheme="blue"
-                    onClick={() => toggleDetails(retailer)}
-                  >
-                    More Details
-                  </Button>
-                </Td>
-              </Tr>
-            ))
-          ) : (
+      <Box overflowX="auto">
+        <Table variant="simple" colorScheme="teal">
+          <Thead>
             <Tr>
-              <Td colSpan={5}>No retailers found.</Td>
+              <Th>Name</Th>
+              <Th>Email</Th>
+              <Th>Verification Status</Th>
+              <Th>Actions</Th>
             </Tr>
-          )}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {retailers.length > 0 ? (
+              retailers.map((retailer, index) => (
+                <Tr key={index}>
+                  <Td>{retailer.name}</Td>
+                  <Td>{retailer.email}</Td>
+                  <Td>{retailer.isVerified ? "Verified" : "Not Verified"}</Td>
+                  <Td>
+                    <Button
+                      size="sm"
+                      colorScheme="blue"
+                      onClick={() => toggleDetails(retailer)}
+                    >
+                      More Details
+                    </Button>
+                  </Td>
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={5}>No retailers found.</Td>
+              </Tr>
+            )}
+          </Tbody>
+        </Table>
+      </Box>
 
       {/* Modal for retailer details */}
       {selectedRetailer && isModalOpen && (
@@ -120,6 +123,9 @@ const ManageRetailers = () => {
           borderRadius="md"
           boxShadow="lg"
           zIndex="overlay"
+          width={{ base: "90%", md: "60%", lg: "40%" }}
+          maxHeight="80vh"
+          overflowY="auto"
         >
           <Heading size="md" mb={4}>
             Retailer Details
