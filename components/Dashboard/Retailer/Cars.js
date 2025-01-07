@@ -710,8 +710,7 @@ const Cars = () => {
                       Car Pricing:
                     </Text>
                     <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={1}>
-                    <Icon as={FaRupeeSign} color="white" mb={-0.5} />
-                      <Text fontSize="sm">- Weekly:   <Input
+                      <Text fontSize="sm">- Weekly:   ₹<Input
                         placeholder="Weekly Price"
                         defaultValue={car.carPricing.weekly}
                         onChange={(e) => handleInputCarPricingChange("weekly", e.target.value)}
@@ -733,8 +732,7 @@ const Cars = () => {
                           boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
                         }}
                       /></Text>
-                       <Icon as={FaRupeeSign} color="white" mb={-0.5} />
-                      <Text fontSize="sm">- Monthly:  <Input
+                      <Text fontSize="sm">- Monthly:  ₹<Input
                         placeholder="Monthly Price"
                         defaultValue={car.carPricing.monthly}
                         onChange={(e) => handleInputCarPricingChange("monthly", e.target.value)}
@@ -756,8 +754,7 @@ const Cars = () => {
                           boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
                         }}
                       /></Text>
-                       <Icon as={FaRupeeSign} color="white" mb={-0.5} />
-                      <Text fontSize="sm">- Quarterly:  <Input
+                      <Text fontSize="sm">- Quarterly:  ₹<Input
                         placeholder="Quarterly Price"
                         defaultValue={car.carPricing.quarterly}
                         onChange={(e) => handleInputCarPricingChange("quarterly", e.target.value)}

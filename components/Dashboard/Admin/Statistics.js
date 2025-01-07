@@ -8,6 +8,7 @@ import {
   Stack,
   Divider,
   Spinner,
+  Image
 } from "@chakra-ui/react";
 import { Line, Bar } from "react-chartjs-2";
 import { useState, useEffect } from "react";
@@ -122,9 +123,12 @@ const Statistics = () => {
 
   return (
     <Box p={5}>
-      <Heading size="lg" mb={8}>
-        Statistics Overview
-      </Heading>
+       <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
+            <Image src="/Resources/Application Types 512.png" alt="" h="50px" />
+            <Heading as="h1" size="lg" color="#00db00" ml={2} mt={2}>
+              Statistics Overview
+            </Heading>
+          </Box>
 
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
         <Card>

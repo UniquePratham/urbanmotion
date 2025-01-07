@@ -8,6 +8,7 @@ import {
   Spinner,
   useToast,
   Icon,
+  Image
 } from "@chakra-ui/react";
 import { FaUsers, FaStore, FaCar } from "react-icons/fa"; // Importing icons
 import axios from "axios";
@@ -115,9 +116,12 @@ const UserReports = () => {
 
   return (
     <Box p={5} bg="gray.800" minH="100vh" color="white">
-      <Heading size="lg" mb={8} color="teal.300" textAlign="center">
-        User Reports
-      </Heading>
+       <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
+            <Image src="/Resources/car-driver-type32.png" alt="" h="50px" />
+            <Heading as="h1" size="lg" color="#00db00" ml={2} mt={2}>
+              Users Reports
+            </Heading>
+          </Box>
       <Text mb={4} textAlign="center" fontSize="lg">
         Download the latest reports for users, retailers, and cars.
       </Text>

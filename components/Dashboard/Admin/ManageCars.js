@@ -25,6 +25,7 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Image
 } from "@chakra-ui/react";
 import { motion } from "framer-motion"; // For animations
 import { useState, useEffect } from "react";
@@ -127,7 +128,12 @@ const ManageCars = () => {
       bg="gray.800"
       color="white"
     >
-      <Heading size="lg">Manage Cars</Heading>
+      <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
+        <Image src="/Resources/Vehicles.png" alt="" h="50px" />
+        <Heading as="h1" size="lg" color="#00db00" ml={2} mt={2}>
+          Manage Cars
+        </Heading>
+      </Box>
 
       <Box
         w="full"

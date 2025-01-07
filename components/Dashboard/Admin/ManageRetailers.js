@@ -10,6 +10,7 @@ import {
   Td,
   Button,
   useToast,
+  Image
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -70,9 +71,12 @@ const ManageRetailers = () => {
       boxShadow="lg"
       mx="auto"
     >
-      <Heading size={{ base: "md", md: "lg" }} mb={8} textAlign="center">
-        Manage Retailers
-      </Heading>
+       <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
+            <Image src="/Resources/users1.png" alt="" h="50px" />
+            <Heading as="h1" size="lg" color="#00db00" ml={2} mt={2}>
+              Manage Retailers
+            </Heading>
+          </Box>
 
       <Box overflowX="auto">
         <Table variant="simple" colorScheme="teal">
