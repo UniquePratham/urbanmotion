@@ -11,7 +11,8 @@ import {
   FaRedo,
   FaSave,
   FaEdit,
-  FaTimes
+  FaTimes,
+  FaRupeeSign
 } from "react-icons/fa";
 
 
