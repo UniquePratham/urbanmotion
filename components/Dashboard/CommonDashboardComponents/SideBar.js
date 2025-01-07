@@ -30,6 +30,7 @@ const Sidebar = ({ text, datas, onSidebarClick }) => {
   const handleLogout = () => {
     // Logic to handle logout, like clearing user data or redirecting
     localStorage.removeItem("sessionId");
+    localStorage.removeItem("userType");
     router.push("/signin"); // Redirect to login page after logout
   };
   const toggleMenu = () => {
@@ -62,7 +63,7 @@ const Sidebar = ({ text, datas, onSidebarClick }) => {
           w={{ base: "100vw", md: "20%" }}
           bg="gray.900"
           p={4}
-          h={{ base: "100vh", md: "110vh" }}
+          h={{ base: "100vh", md: "auto" }}
           color="white"
           shadow="xl"
           position={{ base: "absolute", md: "sticky" }}
