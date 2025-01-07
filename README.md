@@ -1,36 +1,175 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# URBANMOTION - Car Rental System
 
-## Getting Started
+[![Website](https://img.shields.io/badge/website-live-brightgreen)](https://urbanmotion.vercel.app/)
 
-First, run the development server:
+![URBANMOTION](https://via.placeholder.com/800x400?text=URBANMOTION+Car+Rental+System)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+URBANMOTION is a cutting-edge car rental system designed to enhance urban mobility by streamlining car rental operations for customers, retailers, and management personnel. With real-time data synchronization, intuitive user interfaces, and robust backend support, URBANMOTION delivers a seamless and efficient car rental experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [System Architecture](#system-architecture)
+- [Use-Case Diagram](#use-case-diagram)
+- [Installation](#installation)
+- [Usage](#usage)
+- [System Roles](#system-roles)
+- [Non-Functional Requirements](#non-functional-requirements)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+---
 
-## Learn More
+## Overview
+URBANMOTION integrates essential features like car inventory management, real-time availability tracking, secure payment systems, and comprehensive administrative tools. It caters to multiple actors including customers, retailers, managers, and admins (CTO, CFO, Owners).
 
-To learn more about Next.js, take a look at the following resources:
+*Live Demo:* [urbanmotion.vercel.app](https://urbanmotion.vercel.app/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Screenshots
+![Home Page](/public/ss.png "HomePage")
+![PaymentPage](/public/ss1.png "PaymentPage")
+![My Booking](/public/ss2.png "MyBooking")
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Features
+- *Car Inventory Management:* Add, update, and remove cars with real-time availability tracking.
+- *Online Booking:* Customers can book and return cars with ease.
+- *Payment Processing:* Secure handling of payments and fines.
+- *Automated Notifications:* Alerts for bookings, returns, and overdue payments.
+- *Role-Based Access Control:* Admins, retailers, customers, and managers have distinct privileges.
+- *Performance Optimization:* Scalable, responsive design handling up to 10,000 concurrent users.
+- *Multi-Platform Accessibility:* Supports web and mobile interfaces.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+---
+
+## System Architecture
+URBANMOTION follows a modular architecture with the following components:
+- *Frontend:* React.js for dynamic and responsive user interfaces.
+- *Backend:* Node.js with Express for robust API handling.
+- *Database:* MongoDB for scalable and secure data storage.
+- *Hosting:* Vercel for seamless deployment.
+- *Payment Gateway:* Integration with Stripe for secure payment processing.
+
+---
+
+## Use-Case Diagram
+![Use-Case Diagram](/public/usecase%20diagram.png "Use-Case Diagram")
+
+The use-case diagram outlines the interactions between actors (customers, retailers, managers, and admins) and the URBANMOTION system. It highlights key functionalities such as booking cars, managing inventory, processing payments, and generating reports.
+
+---
+
+## Installation
+
+### Prerequisites
+- Node.js (v16 or higher)
+- MongoDB (or any compatible database)
+
+### Steps
+1. Clone the repository:
+   bash
+   git clone https://github.com/username/urbanmotion.git
+   
+2. Navigate to the project directory:
+   bash
+   cd urbanmotion
+   
+3. Install dependencies:
+   bash
+   npm install
+   
+4. Configure environment variables in a .env file:
+   env
+   DB_URI=<Your_MongoDB_URI>
+   PAYMENT_GATEWAY_KEY=<Your_Stripe_Key>
+   
+5. Start the development server:
+   bash
+   npm start
+   
+6. Access the application at http://localhost:3000.
+
+---
+
+## Usage
+
+### Customer
+- Sign up or log in.
+- Browse available cars and book rentals.
+- Manage bookings and make payments.
+
+### Retailer
+- Add, update, and manage car inventory.
+- Monitor rental statuses and revenue.
+
+### Manager/Admin
+- Oversee operations and ensure system functionality.
+- Generate reports on rentals and revenue.
+- Manage users and roles.
+
+---
+
+## System Roles
+
+1. *Customer:*
+   - Book and return cars.
+   - Manage rentals and payments.
+
+2. *Retailer:*
+   - Maintain car inventory and rental operations.
+
+3. *Manager:*
+   - Monitor daily operations and car conditions.
+
+4. *Admin (CTO, CFO, Owner):*
+   - Perform high-level administrative tasks and decision-making.
+
+---
+
+## Non-Functional Requirements
+- *Performance:* Respond to user actions within 2 seconds for 95% of transactions under a load of 10,000 concurrent users.
+- *Security:* Role-based access control and encrypted communication.
+- *Scalability:* Supports future growth in user base and features.
+- *Accessibility:* Compliant with accessibility standards for diverse users.
+
+---
+
+## Contributing
+We welcome contributions! Follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a feature branch:
+   bash
+   git checkout -b feature-name
+   
+3. Commit your changes:
+   bash
+   git commit -m "Add new feature"
+   
+4. Push to the branch:
+   bash
+   git push origin feature-name
+   
+5. Submit a pull request.
+
+---
+
+## License
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Contact
+For inquiries or support, reach out to us:
+
+*Email:* support@urbanmotion.com  
+*Website:* [urbanmotion.vercel.app](https://urbanmotion.vercel.app/)
+
+---
+
+Thank you for choosing URBANMOTION!
