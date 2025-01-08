@@ -7,7 +7,6 @@ import {
   VStack,
   HStack,
   Select,
-  Stack,
   Icon,
   Spinner,
   useToast, // Import useToast hook for displaying toasts
@@ -17,7 +16,7 @@ import {
   IconButton
 } from "@chakra-ui/react";
 import { motion } from "framer-motion"; // Import framer-motion for animations
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FaStar,
   FaRegStar,
@@ -40,7 +39,9 @@ const BookCar = () => {
   const [fuelTypeFilter, setFuelTypeFilter] = useState("");
   const [isLoading, setIsLoading] = useState(false); // State to track loading
   const [isVisible, setIsVisible] = useState(true); // State to track visibility
+  const [selectedOption, setSelectedOption] = useState(""); // State to selectedOption
   const toast = useToast(); // To display toast messages
+  const selectedOptionRef = useRef('');
 
   useEffect(() => {
     // Fetching available cars data
@@ -54,6 +55,11 @@ const BookCar = () => {
 
     fetchCars();
   }, []); // Re-run if router changes
+
+  const resetState = () => {
+    // Reset the input and select states
+    setSelectedOption("");
+  };
 
   const fetchCars = async () => {
     setIsLoading(true); // Set loading to true before fetching
@@ -117,7 +123,33 @@ const BookCar = () => {
     return stars;
   };
 
+  const handleSelectChange = (e) => {
+    const selectValue = e.target.value;
+    // Debugging log
+    selectedOptionRef.current = selectValue;
+    setSelectedOption(selectValue);
+    // Debugging log
+  };
+
+
+  // Handle input change
+  const handleInputChange = (e) => {
+    const value = parseInt(e.target.value, 10) || 0;
+    carBooked.durationGivenFor = `${value} days`;
+    // Dynamically update option disabled statuses based on the input value
+    const weeklyOption = document.getElementById("weekly");
+    const monthlyOption = document.getElementById("monthly");
+    const quarterlyOption = document.getElementById("quarterly");
+
+    // Enable or disable options based on the input value
+    weeklyOption.disabled = value <= 0;
+    monthlyOption.disabled = value <= 30;
+    quarterlyOption.disabled = value <= 90;
+  };
+
   const handleBooking = async (car, toast) => {
+    setSelectedOption("");
+    selectedOptionRef.current="";
     if (customerData) {
       if (!customerData.isVerified) {
         toast({
@@ -134,8 +166,8 @@ const BookCar = () => {
       }
       else if (customerData.carCurrentlyBookedId) {
         toast({
-          title: "Car Already Booked",
-          description: "Please return the current car before booking a new one.",
+          title: "You have already booked a car",
+          description: "Please return your current car before booking a new one.",
           status: "info",
           duration: 5000,
           isClosable: true,
@@ -149,10 +181,7 @@ const BookCar = () => {
     }
     carBooked = car;
     setCarBooked(car);
-    const handleInputChange = (e) => {
-      car.durationGivenFor = `${e.target.value} days`;
-      setCarBooked(car);
-    };
+    resetState();
     if (carBooked) {
       toast({
         title: "Confirm Booking",
@@ -187,23 +216,61 @@ const BookCar = () => {
                 size={{ base: "xs", md: "md" }}
                 placeholder="For how many days would you like to book this car?"
                 onChange={handleInputChange}
+                type="number"
                 bg="gray.100"
                 color="black"
                 mb={2}
               />
+              <Select
+                name="plan"
+                bg="rgba(255, 255, 255, 1)"
+                border="2px solid rgba(255, 255, 255, 0.8)"
+                color="black"
+                fontSize={{ base: "md", md: "lg" }}
+                fontWeight="medium"
+                borderRadius="md"
+                onChange={handleSelectChange}
+                value={selectedOptionRef.current} // Set the value of the select element to selectedOption
+                _hover={{
+                  bg: "rgba(255, 255, 255, 0.2)",
+                  borderColor: "rgba(255, 255, 255, 0.5)",
+                }}
+                _focus={{
+                  outline: "none",
+                  bg: "rgba(255, 255, 255, 0.3)",
+                  borderColor: "rgba(0, 255, 0, 0.8)",
+                  boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+                }}
+                width="100%"
+                defaultValue=""
+                mb={2}
+              >
+                <option value="" disabled style={{ color: "gray", fontWeight: "bold" }}>
+                  Select Payment Plan
+                </option>
+                <option id="weekly" value="weekly" disabled style={{ color: "gray", fontWeight: "bold" }}>Weekly</option>
+                <option id="monthly" value="monthly" disabled style={{ color: "gray", fontWeight: "bold" }}>Monthly</option>
+                <option id="quarterly" value="quarterly" disabled style={{ color: "gray", fontWeight: "bold" }}>Quarterly</option>
+              </Select>
               <HStack spacing={6}>
                 <Button
                   colorScheme="green"
                   size="lg"
+                  disabled={parseInt(carBooked.durationGivenFor) <= 0}
                   onClick={async () => {
                     try {
+
                       // Send request to book the car
-                      const response = await axios.post(
+                      const response1 = await axios.post(
                         "https://urban-motion-backend.vercel.app/api/cars/book-car",
                         { registrationNumber: carBooked.registrationNumber, customerId: customerData._id, durationGivenFor: carBooked.durationGivenFor }
                       );
+                      const response2 = await axios.patch(
+                        "https://urban-motion-backend.vercel.app/api/customers/update-plan-duration",
+                        { registrationNumber: carBooked.registrationNumber, plan: selectedOptionRef.current, durationGivenFor: carBooked.durationGivenFor }
+                      );
 
-                      if (response.status === 200) {
+                      if (response1.status === 200 && response2.status === 200) {
 
                         // Show success toast after booking the car
                         toast({
@@ -449,8 +516,9 @@ const BookCar = () => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        minHeight="200px"
+        minHeight={{base:"200px",md:"400px"}}
         flexDirection="column"
+        bgColor="black"
       >
         <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
         <Text color="greenyellow" mb={2}>

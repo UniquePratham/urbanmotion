@@ -7,7 +7,6 @@ import {
   VStack,
   HStack,
   Select,
-  Stack,
   Icon,
   Spinner,
   Wrap,
@@ -18,7 +17,7 @@ import {
   Checkbox,
   Flex
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FaStar,
   FaRegStar,
@@ -47,6 +46,8 @@ const BookCar = () => {
   const [isLoading, setIsLoading] = useState(false); // State to track loading
   const [isVisible, setIsVisible] = useState(true); // State to track Visibility
   const [isChecked, setIsChecked] = useState(false); // State to track Checkbox
+  const [selectedOption, setSelectedOption] = useState(""); // State to selectedOption
+  const selectedOptionRef = useRef('');
 
   useEffect(() => {
     // Fetching available cars data
@@ -73,6 +74,11 @@ const BookCar = () => {
     fetchCars();
     fetchDataBeforeBooking();
   }, []);
+
+  const resetState = () => {
+    // Reset the input and select states
+    setSelectedOption("");
+  };
 
   const fetchCars = async () => {
     setIsLoading(true); // Set loading to true before fetching
@@ -136,6 +142,30 @@ const BookCar = () => {
     return stars;
   };
 
+  const handleSelectChange = (e) => {
+    const selectValue = e.target.value;
+    // Debugging log
+    selectedOptionRef.current = selectValue;
+    setSelectedOption(selectValue);
+    // Debugging log
+  };
+
+
+  // Handle input change
+  const handleInputChange = (e) => {
+    const value = parseInt(e.target.value, 10) || 0;
+    carBooked.durationGivenFor = `${value} days`;
+    // Dynamically update option disabled statuses based on the input value
+    const weeklyOption = document.getElementById("weekly");
+    const monthlyOption = document.getElementById("monthly");
+    const quarterlyOption = document.getElementById("quarterly");
+
+    // Enable or disable options based on the input value
+    weeklyOption.disabled = value <= 0;
+    monthlyOption.disabled = value <= 30;
+    quarterlyOption.disabled = value <= 90;
+  };
+
   const handleBooking = async (car, toast) => {
     const userType = localStorage.getItem("userType");
     if (userType) {
@@ -156,7 +186,7 @@ const BookCar = () => {
           }
           else if (customerData.carCurrentlyBookedId) {
             toast({
-              title: "Car Already Booked",
+              title: "You have already booked a car",
               description: "Please return the current car before booking a new one.",
               status: "info",
               duration: 5000,
@@ -166,10 +196,7 @@ const BookCar = () => {
           }
           carBooked = car;
           setCarBooked(car);
-          const handleInputChange = (e) => {
-            car.durationGivenFor = `${e.target.value} days`;
-            setCarBooked(car);
-          };
+          resetState();
           if (carBooked) {
             toast({
               title: "Confirm Booking",
@@ -205,23 +232,61 @@ const BookCar = () => {
                       placeholder="For how many days would you like to book this car?"
                       onChange={handleInputChange}
                       bg="gray.100"
+                      type="number"
                       color="black"
                       mb={2}
                     />
+                    <Select
+                      name="plan"
+                      bg="rgba(255, 255, 255, 1)"
+                      border="2px solid rgba(255, 255, 255, 0.8)"
+                      color="black"
+                      fontSize={{ base: "md", md: "lg" }}
+                      fontWeight="medium"
+                      borderRadius="md"
+                      onChange={handleSelectChange}
+                      value={selectedOption} // Set the value of the select element to selectedOption
+                      _hover={{
+                        bg: "rgba(255, 255, 255, 0.2)",
+                        borderColor: "rgba(255, 255, 255, 0.5)",
+                      }}
+                      _focus={{
+                        outline: "none",
+                        bg: "rgba(255, 255, 255, 0.3)",
+                        borderColor: "rgba(0, 255, 0, 0.8)",
+                        boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
+                      }}
+                      width="100%"
+                      defaultValue=""
+                      mb={2}
+                    >
+                      <option value="" disabled style={{ color: "gray", fontWeight: "bold" }}>
+                        Select Payment Plan
+                      </option>
+                      <option id="weekly" value="weekly" disabled style={{ color: "gray", fontWeight: "bold" }}>Weekly</option>
+                      <option id="monthly" value="monthly" disabled style={{ color: "gray", fontWeight: "bold" }}>Monthly</option>
+                      <option id="quarterly" value="quarterly" disabled style={{ color: "gray", fontWeight: "bold" }}>Quarterly</option>
+                    </Select>
                     <HStack spacing={6}>
                       <Button
                         colorScheme="green"
                         size="lg"
+                        disabled={parseInt(carBooked.durationGivenFor) <= 0}
                         onClick={async () => {
                           try {
+
                             // Send request to book the car
-                            const response = await axios.post(
+                            const response1 = await axios.post(
                               "https://urban-motion-backend.vercel.app/api/cars/book-car",
                               { registrationNumber: carBooked.registrationNumber, customerId: customerData._id, durationGivenFor: carBooked.durationGivenFor }
                             );
+                            const response2 = await axios.patch(
+                              "https://urban-motion-backend.vercel.app/api/customers/update-plan-duration",
+                              { registrationNumber: carBooked.registrationNumber, plan: selectedOptionRef.current, durationGivenFor: carBooked.durationGivenFor }
+                            );
 
-                            if (response.status === 200) {
-                              setIsLoading(true);
+                            if (response1.status === 200 && response2.status === 200) {
+
                               // Show success toast after booking the car
                               toast({
                                 title: "Booking Confirmed",
@@ -248,10 +313,6 @@ const BookCar = () => {
                                 ),
                               });
                             }
-                            setTimeout(() => {
-                              setIsLoading(false);
-                              fetchCars();
-                            }, 5000);
                           } catch (error) {
                             console.error("Error booking car:", error);
                           }
@@ -270,17 +331,6 @@ const BookCar = () => {
               ),
             });
           }
-        } else {
-          toast({
-            title: "Warning",
-            description: "Please log in to our website first to proceed with booking a car.",
-            status: "warning",
-            duration: 5000,
-            isClosable: true,
-          });
-          setTimeout(() => {
-            router.push("/signin");
-          }, 500);
         }
       }
       else if (userType === "retailer") {
@@ -301,6 +351,18 @@ const BookCar = () => {
           isClosable: true,
         });
       }
+    }
+    else {
+      toast({
+        title: "Warning",
+        description: "Please log in to our website first to proceed with booking a car.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        router.push("/signin");
+      }, 500);
     }
   };
 
@@ -561,8 +623,9 @@ const BookCar = () => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        minHeight="200px"
+        minHeight={{base:"200px",md:"400px"}}
         flexDirection="column"
+        bgColor="black"
       >
         <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
         <Text color="greenyellow" mb={2}>

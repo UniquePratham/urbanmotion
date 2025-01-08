@@ -11,7 +11,8 @@ import {
   FaRedo,
   FaSave,
   FaEdit,
-  FaTimes
+  FaTimes,
+  FaRupeeSign
 } from "react-icons/fa";
 
 
@@ -172,9 +173,20 @@ const Cars = () => {
 
 
   const handleEditClick = (car) => {
-    setIsFlipped(!isFlipped);
-    setIsEditable(!isEditable);
-    setCarPricing(car.carPricing);
+    if (car.isHanded) {
+      toast({
+        title: "Edit Restricted for Car Details",
+        description: "Car details can only be edited after the booking period with the current customer ends. Please try again later.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    else {
+      setIsFlipped(!isFlipped);
+      setIsEditable(!isEditable);
+      setCarPricing(car.carPricing);
+    }
   };
   const handleCancelEditClick = () => {
     setIsFlipped(!isFlipped);
@@ -698,7 +710,7 @@ const Cars = () => {
                       Car Pricing:
                     </Text>
                     <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={1}>
-                      <Text fontSize="sm">- Weekly:   <Input
+                      <Text fontSize="sm">- Weekly:   ₹<Input
                         placeholder="Weekly Price"
                         defaultValue={car.carPricing.weekly}
                         onChange={(e) => handleInputCarPricingChange("weekly", e.target.value)}
@@ -720,7 +732,7 @@ const Cars = () => {
                           boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
                         }}
                       /></Text>
-                      <Text fontSize="sm">- Monthly:  <Input
+                      <Text fontSize="sm">- Monthly:  ₹<Input
                         placeholder="Monthly Price"
                         defaultValue={car.carPricing.monthly}
                         onChange={(e) => handleInputCarPricingChange("monthly", e.target.value)}
@@ -742,7 +754,7 @@ const Cars = () => {
                           boxShadow: "0 0 8px rgba(0, 255, 0, 0.6)",
                         }}
                       /></Text>
-                      <Text fontSize="sm">- Quarterly:  <Input
+                      <Text fontSize="sm">- Quarterly:  ₹<Input
                         placeholder="Quarterly Price"
                         defaultValue={car.carPricing.quarterly}
                         onChange={(e) => handleInputCarPricingChange("quarterly", e.target.value)}
@@ -986,9 +998,9 @@ const Cars = () => {
                         Car Pricing:
                       </Text>
                       <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={1}>
-                        <Text fontSize="sm">- Weekly: ${car.carPricing?.weekly || "N/A"}</Text>
-                        <Text fontSize="sm">- Monthly: ${car.carPricing?.monthly || "N/A"}</Text>
-                        <Text fontSize="sm">- Quarterly: ${car.carPricing?.quarterly || "N/A"}</Text>
+                        <Text fontSize="sm">- Weekly: ₹{car.carPricing?.weekly || "N/A"}</Text>
+                        <Text fontSize="sm">- Monthly: ₹{car.carPricing?.monthly || "N/A"}</Text>
+                        <Text fontSize="sm">- Quarterly: ₹{car.carPricing?.quarterly || "N/A"}</Text>
                       </Grid>
                     </Box>
                   </Box>
