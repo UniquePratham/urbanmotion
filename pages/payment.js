@@ -96,7 +96,7 @@ const PaymentPage = () => {
         };
         try {
             const response1 = await fetch(
-                "https://urban-motion-backend-liart.vercel.app /api/cars/return-car",
+                "https://urban-motion-backend-liart.vercel.app/api/cars/return-car",
                 {
                     method: "POST",
                     headers: {

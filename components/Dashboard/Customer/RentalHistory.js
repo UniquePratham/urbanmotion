@@ -27,11 +27,13 @@ const RentalHistory = () => {
         .catch((err) => console.error("Failed to fetch customer data:", err));
     }
     const fetchRentalHistory = async () => {
-      try {
-        const response = await axios.get(`https://urban-motion-backend-liart.vercel.app/api/booking/customer?customerId=${customerData._id}`);
-        setRentalHistory(response.data);
-      } catch (error) {
-        console.error("Error fetching rental history:", error);
+      if (customerData) {
+        try {
+          const response = await axios.get(`https://urban-motion-backend-liart.vercel.app/api/booking/customer?customerId=${customerData._id}`);
+          setRentalHistory(response.data);
+        } catch (error) {
+          console.error("Error fetching rental history:", error);
+        }
       }
     };
 
