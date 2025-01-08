@@ -317,13 +317,14 @@ const Bookings = () => {
     if (!carBooked) return;
     if (finalPaymentPrice - installmentsAmount === 0) {
 
-      const requestBody1 = (rating === 0) ? { registrationNumber: carBooked.registrationNumber } : {
+      const requestBody1 = (rating === 0) ? { registrationNumber: carBooked.registrationNumber,price:finalPaymentPrice } : {
         registrationNumber: carBooked.registrationNumber,
         rating: rating,
+        price: finalPaymentPrice
       };
       try {
         const response1 = await fetch(
-          "https://urban-motion-backend.vercel.app/api/cars/return-car",
+          "https://urban-motion-backend-liart.vercel.app/api/cars/return-car",
           {
             method: "POST",
             headers: {

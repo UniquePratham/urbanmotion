@@ -89,13 +89,14 @@ const PaymentPage = () => {
             }, 3000);
         }
 
-        const requestBody1 = (rating === 0) ? { registrationNumber: carId } : {
+        const requestBody1 = (rating === 0) ? { registrationNumber: carId, price: finalPrice } : {
             registrationNumber: carId,
             rating: rating,
+            price: finalPrice
         };
         try {
             const response1 = await fetch(
-                "https://urban-motion-backend.vercel.app/api/cars/return-car",
+                "https://urban-motion-backend-liart.vercel.app /api/cars/return-car",
                 {
                     method: "POST",
                     headers: {
@@ -177,7 +178,7 @@ const PaymentPage = () => {
                     <Spinner size="xl" color="green" />
                 </Box>
             )}
-            <Box bg="black" p={{base:8,md:8}} borderRadius="md" boxShadow="200px" justifyContent="center" alignItems="center" display="flex" flexDirection="column" height={{base:"700px",md:"600px"}} width={{base:"90%",md:"unset"}}>
+            <Box bg="black" p={{ base: 8, md: 8 }} borderRadius="md" boxShadow="200px" justifyContent="center" alignItems="center" display="flex" flexDirection="column" height={{ base: "700px", md: "600px" }} width={{ base: "90%", md: "unset" }}>
                 <Box display="flex" justifyContent="center" flexDirection="column" alignItems="center">
                     <Box display="flex" justifyContent="center">
                         <Image src="short.png" alt="" h="50px" mr={2} borderRadius="sm" />
