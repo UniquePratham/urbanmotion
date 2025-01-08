@@ -23,6 +23,7 @@
     "chart.js": "^4.4.7",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "dayjs": "^1.11.13",
     "dynamic": "^4.2.2",
     "emailjs": "^4.0.3",
     "emailjs-com": "^3.2.0",
