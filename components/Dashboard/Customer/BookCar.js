@@ -516,8 +516,9 @@ const BookCar = () => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        minHeight="200px"
+        minHeight={{base:"200px",md:"400px"}}
         flexDirection="column"
+        bgColor="black"
       >
         <Image src="/Resources/car-rent.png" alt="" h="50px" mb={2} />
         <Text color="greenyellow" mb={2}>
