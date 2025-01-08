@@ -4,7 +4,6 @@ import Sidebar from "../CommonDashboardComponents/SideBar";
 import AddCar from "./AddCar";
 import RemoveCar from "./RemoveCar";
 import Notifications from "./Notifications";
-import CarsBooked from "./CarsBooked";
 import Cars from "./Cars";
 import MainContent from "./MainContent";
 import { useRouter } from "next/router";
@@ -18,6 +17,7 @@ import {
   FaExchangeAlt,
   FaUser,
 } from "react-icons/fa";
+import BookHistory from "./BookHistory";
 
 const RetailerDashboard = () => {
   const [retailerData, setRetailerData] = useState(null);
@@ -53,8 +53,8 @@ const RetailerDashboard = () => {
         return <Notifications />;
       case "mycars":
         return <Cars />;
-      case "cars-booked":
-        return <CarsBooked />;
+      case "book-history":
+        return <BookHistory />;
       case "profile":
         return <MainContent retailerData={retailerData} />; // Profile component with retailer data
       default:
@@ -67,7 +67,7 @@ const RetailerDashboard = () => {
     { icon: FaCar, label: "Add Car", path: "add-car" },
     { icon: FaCalendarAlt, label: "My Cars", path: "mycars" },
     { icon: FaTrash, label: "Remove Car", path: "remove-car" },
-    { icon: FaCalendarAlt, label: "Cars Booked", path: "cars-booked" },
+    { icon: FaCalendarAlt, label: "Book History", path: "book-history" },
     { icon: FaBell, label: "Notifications", path: "notifications" },
   ];
 
