@@ -44,7 +44,7 @@ const BookHistory = () => {
       const response = await axios.post(
         `https://urban-motion-backend-liart.vercel.app/api/bookings/retailer?retailerId=${retailerData._id}`
       );
-      setBookings(response.data.data || []);
+      setBookings(response.data.bookings || []);
     } catch (error) {
       console.error("Failed to fetch booking history:", error);
       toast({
@@ -117,9 +117,12 @@ const BookHistory = () => {
                 </Text>
                 <Text mb={2}>Registration: {booking.registrationNumber}</Text>
                 <Text mb={2}>
-                  Date: {new Date(booking.date).toLocaleDateString()}
+                  Start Date: {booking.startDate}
                 </Text>
-                <Text>Status: {booking.status}</Text>
+                <Text mb={2}>
+                  End Date: {booking.endDate}
+                </Text>
+                <Text>Price: {booking.price}</Text>
               </Box>
             ))
           )}

@@ -30,7 +30,7 @@ const RentalHistory = () => {
       if (customerData) {
         try {
           const response = await axios.get(`https://urban-motion-backend-liart.vercel.app/api/booking/customer?customerId=${customerData._id}`);
-          setRentalHistory(response.data);
+          setRentalHistory(response.data.bookings);
         } catch (error) {
           console.error("Error fetching rental history:", error);
         }
@@ -78,11 +78,14 @@ const RentalHistory = () => {
       </Box>
 
       {/* Table Section */}
-      <Table variant="striped" colorScheme="green" borderRadius="md">
+      <Table variant="striped" colorScheme="green" borderRadius="md" key={rentalHistory}>
         <Thead bg="#00db00" color="white">
           <Tr>
             <Th color="white" fontWeight="bold">
-              Car
+              Car Reg No.
+            </Th>
+            <Th color="white" fontWeight="bold">
+              Car Model
             </Th>
             <Th color="white" fontWeight="bold">
               Start Date
@@ -108,7 +111,7 @@ const RentalHistory = () => {
 
               return (
                 <Tr
-                  key={rental.id}
+                  key={rental._id}
                   transition="all 0.3s ease-in-out"
                   _hover={{
                     bg: "rgba(0, 219, 0, 0.1)",
@@ -117,7 +120,10 @@ const RentalHistory = () => {
                   }}
                 >
                   <Td fontWeight="medium" color="gray.700">
-                    {rental.car}
+                    {rental.registrationNumber}
+                  </Td>
+                  <Td fontWeight="medium" color="gray.700">
+                    {rental.carModel}
                   </Td>
                   <Td fontWeight="medium" color="gray.600">
                     {rental.startDate}
